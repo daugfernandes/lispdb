@@ -2,9 +2,9 @@
 ;;     - filename: <self-describing>
 ;;     - returns:  file content
 
-(defun s7-cat-file (filename) 
-  (if (probe-file filename)
-    (with-open-file (stream filename)
+(defun s7-cat-file (fname) 
+  (if (probe-file fname)           ; complete-file name or nil
+    (with-open-file (stream fname) 
       (loop for line = (read-line stream nil 'foo)
           until (equal line 'foo)
           do (print line)
