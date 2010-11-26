@@ -1,8 +1,13 @@
-(defpackage :se7ening.numbers
-  (:use :common-lisp))
+(in-package :common-lisp-user)
 
-(unexport 'base-n-to-decimal)
-(export 'bin-to-decimal)
+(defpackage :se7ening-numbers
+  (:use :common-lisp)
+  (:export  #:bin-to-decimal
+	    #:octal-to-decimal
+	    #:hex-to-decimal))
+
+(in-package :se7ening-numbers)
+
 
 (defun base-n-to-decimal (lst base)
 "Retorna o valor decimal de um suposto número em base 'base' binário representado 
