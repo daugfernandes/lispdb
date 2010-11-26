@@ -1,3 +1,9 @@
+(defpackage :se7ening.numbers
+  (:use :common-lisp))
+
+(unexport 'base-n-to-decimal)
+(export 'bin-to-decimal)
+
 (defun base-n-to-decimal (lst base)
 "Retorna o valor decimal de um suposto número em base 'base' binário representado 
  por uma lista de elementos nessa base.
