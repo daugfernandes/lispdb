@@ -1,16 +1,22 @@
-;;; cartesian-product (list1 list2)
-;;         Retorna lista composta pelo produto cartesiano de duas listas.
+;;;  cartesian-product (list1 list2)
+;;          Retorna lista composta pelo produto cartesiano de duas listas.
 ;;
-;;  Autor: David Fernandes
-;;         <daugfernandes@aim.com>
+;;   Copyright (C) 2010  David Fernandes
+;;                       <daugfernandes@aim.com>
 ;;
-;;   Data: 29-11-2010
+;;   This program is free software: you can redistribute it and/or modify
+;;   it under the terms of the GNU General Public License as published by
+;;   the Free Software Foundation, either version 3 of the License, or
+;;   (at your option) any later version.
 ;;
-;;   Nota: O código aqui apresentado deve funcionar com ele acha que deve.
-;;         Eu, o seu autor, não tenho qualquer poder sobre isso.
-;;         Nessa medida, é pouco natural que este mesmo código faça aquilo
-;;         que você quer. Pode acontecer, mas não é garantido.
+;;   This program is distributed in the hope that it will be useful,
+;;   but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;   GNU General Public License for more details.
 ;;
+;;   You should have received a copy of the GNU General Public License
+;;   along with this program named license.txt.
+;;   If not, see <http://www.gnu.org/licenses/>
 
 (defun cartesian-product(L1 L2)
   (if

@@ -1,18 +1,22 @@
-;;; unique (list)
-;;         Retorna lista composta pelos elementos únicos da lista ordenada L.
+;;;  unique (list)
+;;          Retorna lista composta pelos elementos únicos da lista ordenada L.
 ;;
-;;  Autor: David Fernandes
-;;         <daugfernandes@aim.com>
+;;   Copyright (C) 2010  David Fernandes
+;;                       <daugfernandes@aim.com>
 ;;
-;;   Data: 21-11-2010
+;;   This program is free software: you can redistribute it and/or modify
+;;   it under the terms of the GNU General Public License as published by
+;;   the Free Software Foundation, either version 3 of the License, or
+;;   (at your option) any later version.
 ;;
-;;   Nota: O código aqui apresentado deve funcionar como ele acha que deve.
-;;         Eu, o seu autor, não tenho qualquer poder sobre isso.
-;;         Nessa medida, é pouco natural que este mesmo código faça aquilo
-;;         que você quer. Pode acontecer, mas não é garantido.
+;;   This program is distributed in the hope that it will be useful,
+;;   but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;   GNU General Public License for more details.
 ;;
-;;    Obs: É mesmo obrigatório que a lista L esteja ordenada. Como se deve
-;;         perceber pela leitura do código da função.
+;;   You should have received a copy of the GNU General Public License
+;;   along with this program named license.txt.
+;;   If not, see <http://www.gnu.org/licenses/>
 
 (defun unique (L)
   (if (null L)
