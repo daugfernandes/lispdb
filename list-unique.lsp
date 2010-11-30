@@ -24,7 +24,7 @@
     (if 
        (eq (first L) (second L))
        (unique (rest L))
-       (append (list (first L)) (unique (reat L)))
+       (cons (first L) (unique (rest L))))
     )
   )
 )

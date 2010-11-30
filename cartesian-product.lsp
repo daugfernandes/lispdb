@@ -20,14 +20,11 @@
 
 (defun cartesian-product(L1 L2)
   (if
-    (not (null L1))
+    (and (not (null L1)) (not (null L2)))
     (append
-      (if
-        (not (null L2))
-        (append 
-          (list (list (first L1) (first L2)))
-          (cartesian-product (list (first L1)) (rest L2))
-        )
+      (append 
+        (list (list (first L1) (first L2)))
+        (cartesian-product (list (first L1)) (rest L2))
       )
       (cartesian-product (rest L1) L2)
     )
