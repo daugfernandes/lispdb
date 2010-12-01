@@ -1,0 +1,31 @@
+INTRODUçÃO
+
+Inspirado por um trabalho académico a implementar em OCaml, resolvi tentar a implemantação do mesmo em LISP.
+
+Aqui se tratará de registar o andamento do projecto.
+
+Note-se que o código apresentado é escrito por um amador da LISP nos dois sentidos: apaixonado por e quase completo ignorante do cânone (há-de haver, seguramente, outras formas de fazer isto, talvez mais performantes, mais elegantes, mais ... tudo).
+
+Se alguém alguma vez ler isto e tiver algo a dizer, a corrigir, a sugerir, a criticar, por favor não se iniba de me contactar para o endereço gmail associado ao site, ou para daugfernandes@aim.com
+
+Let the party begin; shall we??? 
+
+O PROJECTO
+
+Implementar um conjunto de "mecanismos" para tratar polinómios e algumas operações básicas com polinómios, a saber:
+
+a) Obter a forma canónica de um polinómio, isto é, os monómios devem aparecer por ordem decrescente de expoente.
+b) Efectuar as 4 operações básicas, sendo que a divisão deve retornar quociente e resto.
+c) Derivada de ordem N de um polinomio
+d) Valor de um polinomo para um determinado X.
+e) Primitiva, admitindo que a constante resultante da primitivação é nula.
+f) Calcular os zeros de polinomios de grau 1 e 2.
+
+O METODO
+
+Vai tantar-se implementar o projecto em passos sucessivos, sem grande análise prévia, confiando nessa possibilidade tão "lispiana" que é o desenvolvimento "incremental".
+
+Veremos.
+
+Stay in touch.
+
