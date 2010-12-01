@@ -1,4 +1,4 @@
-;;;  polynomial
+;;;  s7-polynomials.lsp
 ;;
 ;;   Copyright (C) 2010  David Fernandes
 ;;                       <daugfernandes@aim.com>
@@ -41,7 +41,7 @@
   (funcall func (getf m1 :e) (getf m2 :e))
 )
 
-(defun monomial-compare-coefficient-smaller (m1 m2 func)
+(defun monomial-compare-coefficient (m1 m2 func)
   (funcall func (getf m1 :c) (getf m2 :c))
 )
 
@@ -49,28 +49,37 @@
   (* (getf m :c) (expt x (getf m :e)))
 )
 
-(defun monomials-group (m)
-  (if 
-    (null (cdr m))
-    (list (car m))
-    (if
-      (not (equal
-        (getf (car m) :e)
-        (getf (car (cdr m)) :e))
-      )
-      (append
-        (list (car m))
-        (monomials-group (cdr m))
-      )
-      (monomials-group
-        (append
-          (list (monomial 
-            (+ (getf (car m) :c) (getf (car (cdr m)) :c))
-            (getf (car m) :e))
-          )
-          (cdr (cdr m))
+(defun monomial-symmetric (m)
+  (monomial (- (getf m :c)) (getf m :e))
+)
+
+(defun monomial-inverse (m)
+  (monomial (getf m :c) (- (getf m :e)))
+)
+
+(defun monomials-simplify (m)
+  (monomials-canonical
+    (if (null (cdr m))
+      (list (car m))
+      (if 
+        (not (equal (getf (car m) :e)
+                      (getf (car (cdr m)) :e))
         )
-      )   
+
+        (append
+          (list (car m))
+          (monomials-group (cdr m))
+        )
+
+        (monomials-group
+          (append
+            (list (monomial 
+              (+ (getf (car m) :c) (getf (car (cdr m)) :c))
+              (getf (car m) :e))
+            )
+            (cdr (cdr m)))
+        )   
+      )
     )
   )
 )
@@ -78,17 +87,26 @@
 (defun polynomial-value (p x)
   (if (null (getf p :monomials))
     0
-    (+
-      (monomial-value (car (getf p :monomials)) x)
-      (polynomial-value (polynomial (cdr (getf p :monomials))) x)
-    )
+    (+ (monomial-value (car (getf p :monomials)) x)
+       (polynomial-value (polynomial (cdr (getf p :monomials))) x))
   )
 )
 
 (defun polynomial (monomials)
   (list 
-    :monomials (monomials-group monomials) 
+    :monomials (monomials-canonical (monomials-group monomials))
     :degree (getf (aggregate monomials #'monomial-greater-exponent) :e)
+  )
+)
+
+(defun monomials-canonical (m)
+  (sort m #'monomial-smaller-exponent)
+)
+
+(defun polynomial-symmetric (p)
+  (let ((return-value '()))
+    (dolist (m (getf p :monomials)) (push (monomial-symmetric m) return-value))
+      (polynomial return-value)
   )
 )
 
@@ -96,4 +114,3 @@
   (getf p :degree)  
 )
 
-(defun polynomial-add-monomial(p m))
