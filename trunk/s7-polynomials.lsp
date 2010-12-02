@@ -17,65 +17,65 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
-(defun monomial (coefficient exponent)
-  (list :c coefficient :e exponent)
+(defun monomio (coeficiente expoente)
+  (list "coeficiente" coeficiente "expoente" expoente)
 )
 
-(defun monomial-greater-exponent (m1 m2)
-  (if (monomial-compare-exponent m1 m2 #'>) m1 m2)
+(defun monomio-expoente-maior (m1 m2)
+  (if (monomio-compara-expoente m1 m2 #'>) m1 m2)
 )
 
-(defun monomial-smaller-exponent (m1 m2)
-  (if (monomial-compare-exponent m1 m2 #'<) m1 m2) 
+(defun monomio-expoente-menor (m1 m2)
+  (if (monomio-compara-expoente m1 m2 #'<) m1 m2) 
 )
 
-(defun monomial-greater-coefficient (m1 m2)
-  (if (monomial-compare-coefficient m1 m2 #'>) m1 m2)
+(defun monomio-coeficiente-maior (m1 m2)
+  (if (monomio-compara-coeficiente m1 m2 #'>) m1 m2)
 )
 
-(defun monomial-smaller-coefficient (m1 m2)
-  (if (monomial-compare-coefficient m1 m2 #'<) m1 m2) 
+(defun monomio-coeficiente-menor (m1 m2)
+  (if (monomio-compara-coeficiente m1 m2 #'<) m1 m2) 
 )
 
-(defun monomial-compare-exponent (m1 m2 func)
-  (funcall func (getf m1 :e) (getf m2 :e))
+(defun monomio-compara-expoente (m1 m2 func)
+  (funcall func (get-param m1 "expoente") (get-param m2 "expoente"))
 )
 
-(defun monomial-compare-coefficient (m1 m2 func)
-  (funcall func (getf m1 :c) (getf m2 :c))
+(defun monomio-compara-coeficiente (m1 m2 func)
+  (funcall func (get-param m1 "coeficiente") (get-param m2 "coeficiente"))
 )
 
-(defun monomial-value (m x)
-  (* (getf m :c) (expt x (getf m :e)))
+(defun monomio-valor (m x)
+  (* (get-param m "coeficiente") (expt x (get-param m "expoente")))
 )
 
-(defun monomial-symmetric (m)
-  (monomial (- (getf m :c)) (getf m :e))
+(defun monomio-simetrico (m)
+  (monomio (- (get-param m "coeficiente")) (get-param m "expoente"))
 )
 
-(defun monomial-inverse (m)
-  (monomial (getf m :c) (- (getf m :e)))
+(defun monomio-inverso (m)
+  (monomio (get-param m "coeficiente") (- (get-param m "expoente")))
 )
 
-(defun monomials-simplify (m)
-  (monomials-canonical
+(defun monomios-simplificados (m)
+  (monomios-forma-canonica
     (if (null (cdr m))
       (list (car m))
       (if 
-        (not (equal (getf (car m) :e)
-                      (getf (car (cdr m)) :e))
+        (not (equal (get-param (car m) "expoente")
+                      (get-param (car (cdr m)) "expoente"))
         )
 
         (append
           (list (car m))
-          (monomials-group (cdr m))
+          (monomios-simplificados (cdr m))
         )
 
-        (monomials-group
+        (monomios-simplificados
           (append
-            (list (monomial 
-              (+ (getf (car m) :c) (getf (car (cdr m)) :c))
-              (getf (car m) :e))
+            (list (monomio 
+              (+ (get-param (car m) "coeficiente") (get-param (car (cdr m)) "coeficiente"))
+              (get-param (car m) "expoente"))
             )
             (cdr (cdr m)))
         )   
@@ -84,33 +84,33 @@
   )
 )
 
-(defun polynomial-value (p x)
-  (if (null (getf p :monomials))
+(defun polinomio-valor (p x)
+  (if (null (get-param p "monomios"))
     0
-    (+ (monomial-value (car (getf p :monomials)) x)
-       (polynomial-value (polynomial (cdr (getf p :monomials))) x))
+    (+ (monomio-valor (car (get-param p "monomios")) x)
+       (polinomio-valor (polinomio (cdr (get-param p "monomios"))) x))
   )
 )
 
-(defun polynomial (monomials)
+(defun polinomio (monomios)
   (list 
-    :monomials (monomials-canonical (monomials-group monomials))
-    :degree (getf (aggregate monomials #'monomial-greater-exponent) :e)
+    "monomios" (monomios-simplificados monomios)
+    "grau" (get-param (list-aggregate monomios #'monomio-expoente-maior) "expoente")
   )
 )
 
-(defun monomials-canonical (m)
-  (sort m #'monomial-smaller-exponent)
+(defun monomios-forma-canonica (m)
+  (sort (copy-seq m) #'monomio-expoente-maior)
 )
 
-(defun polynomial-symmetric (p)
+(defun polinomio-simetrico (p)
   (let ((return-value '()))
-    (dolist (m (getf p :monomials)) (push (monomial-symmetric m) return-value))
-      (polynomial return-value)
+    (dolist (m (get-param p "monomios")) (push (monomio-simetrico m) return-value))
+      (polinomio return-value)
   )
 )
 
-(defun polynomial-degree (p)
-  (getf p :degree)  
+(defun polinomio-grau (p)
+  (get-param p "grau")  
 )
 
