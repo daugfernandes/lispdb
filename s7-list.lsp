@@ -42,10 +42,10 @@
   )
 )
 
-(defun aggregate (L select-function)
+(defun list-aggregate (L select-function)
   (if (null (cdr L))
     (car L)
-    (funcall select-function (car L) (aggregate (list-except-first-n L 1) select-function))
+    (funcall select-function (car L) (list-aggregate (list-except-first-n L 1) select-function))
   )
 )
 
@@ -59,12 +59,58 @@
   )
 )
 
+;; get-param[-list]
+;
+;  numa lista especialmente composta por pares de elementos 
+;  (key_1 valor_1 ... key_n valor_n) procura key_i = param 
+;  e retorna valor_i (ou nil se não encontrar)
+;
+;  em duas versões:
+;    get-param      retorna apenas um elemento
+;    get-param-list retorna SEMPRE uma lista (de 1 ou mais elementos)
+;
+;  exemplos de utilização:
+;
+;     (setq L (list :nome "david" :idade 43 :sexo "M"))
+;
+;     ; uso similar a 'getf'
+;     (get-param L :nome) => "david"
+;
+;     (setq L (list "a" 10 "b" 30 "c" 40 "b" 1.4))
+;     (get-param L "b") => 30
+;     (get-param-list L "a") => (10)
+;     (get-param-list L "b") => (30 2.4)
+;
+
+(defun get-param (list param)
+  (if
+    (null list)
+    nil
+    (if
+      (equal (car list) param)
+      (car (cdr list))
+      (get-param (nthcdr 2 list) param)
+    )
+  )
+)
+
+(defun get-param-list (list param)
+  (if 
+    (null list)
+    nil
+    (if 
+      (equal (car list) param)
+      (cons (car (cdr list)) (get-param-list (nthcdr 2 list) param))
+      (get-param-list (nthcdr 2 list) param)
+    )
+  )
+)
 
 ;;--------------------------------------------------------------------------
 ;; unit-tests
 ;;
 
-(defun s7-lists-ut ()
+(defun s7-list-ut ()
 
   (assert (equal (list-first-n (list 1 2 3 4 5) 1) (list 1)))
   (assert (null  (list-first-n (list 1 2 3 4 5) 0)))
@@ -85,5 +131,11 @@
   (assert (equal (aggregate (list 1 2 3 4 6 2 100 2 3 4 0 3 4 2 3 4 5) #'max) 100))
 
   (assert (equal (list-unique (list 1 1 1 1 2 3 3 3 4 5 5 5 6 7 8 9 9 10 10)) (list 1 2 3 4 5 6 7 8 9 10)))
+
+  (assert (equal (get-param (list :a 1 :b 2 :c 3 :a 4) :a) 1))
+  (assert (null  (get-param (list "a" 1 "b" 2 "c" 3 "a" "david") "d")))
+  (assert (equal (get-param (list "a" 1 "b" 2 "c" 3 "a" "david") "b") 2))
+  (assert (equal (get-param-list (list "a" 1 "b" 2 "c" 3 "a" "david") "b") (list 2)))
+  (assert (equal (get-param-list (list "a" 1 "b" 2 "c" 3 "a" "david") "a") (list 1 "david")))
 
 )
