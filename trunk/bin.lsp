@@ -1,4 +1,4 @@
-;;   Copyright (C) 2010  David Fernandes
+qq;;   Copyright (C) 2010  David Fernandes
 ;;                       <daugfernandes@aim.com>
 ;;
 ;;   This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 	    #:hex-to-decimal))
 
 (in-package :se7ening-numbers)
-
 
 (defun base-n-to-decimal (lst base)
 "Retorna o valor decimal de um suposto número em base 'base' binário representado 

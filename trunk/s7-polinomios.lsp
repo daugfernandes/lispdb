@@ -17,7 +17,14 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
-(defun monomio (c e) (list c e))
+(defun monomio (coeficiente expoente) 
+  (list coeficiente expoente)
+)
 
-(defmacro coeficiente (m) (first m))
-(defmacro expoente (m) (second m))
+(defmacro coeficiente (monomio) 
+  `(car ,monomio)
+)
+
+(defmacro expoente (monomio) 
+  `(car (cdr ,monomio))
+)
