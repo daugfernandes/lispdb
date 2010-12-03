@@ -42,3 +42,10 @@
 (tr (list 2 4 12 4) (lambda (x) (if (null (car (cdr x))) (car x) (lcm (car x) (car (cdr x))))))
 ; o menor de cada dois elementos consecutivos (sendo que o ultimo é ele próprio :( )
 (tr (list 1 5 3 12 24 48 9) (lambda (x) (if (null (car (cdr x))) (car x) (if (< (car x) (car (cdr x))) (car x) (car (cdr x))))))
+
+(defun random-list (ncons min max)
+   (if (<= ncons 1)
+      (list (random (+ (1+ (- max min)) min)))
+      (cons (random (+ (1+ (- max min)) min)) (random-list (1- ncons) min max))
+   )
+)
