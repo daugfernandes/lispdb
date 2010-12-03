@@ -59,6 +59,13 @@
   )
 )
 
+(defun random-list (ncons min max)
+   (if (<= ncons 1)
+      (list (random (+ (1+ (- max min)) min)))
+      (cons (random (+ (1+ (- max min)) min)) (random-list (1- ncons) min max))
+   )
+)
+
 ;; get-param[-list]
 ;
 ;  numa lista especialmente composta por pares de elementos 
