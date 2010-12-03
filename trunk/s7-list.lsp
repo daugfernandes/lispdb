@@ -134,8 +134,8 @@
   (assert (equal (list-except-first-n (list 1 2 3 4 5 6 7 8 9) 3) (list 4 5 6 7 8 9)))
   (assert (equal (list-except-first-n (list 1 2 3 4 5 6 7 8 9) 0) (list 1 2 3 4 5 6 7 8 9)))
 
-  (assert (equal (aggregate (list 1 2 3 4 6 2 100 2 3 4 0 3 4 2 3 4 5) #'min) 0))
-  (assert (equal (aggregate (list 1 2 3 4 6 2 100 2 3 4 0 3 4 2 3 4 5) #'max) 100))
+  (assert (equal (list-aggregate (list 1 2 3 4 6 2 100 2 3 4 0 3 4 2 3 4 5) #'min) 0))
+  (assert (equal (list-aggregate (list 1 2 3 4 6 2 100 2 3 4 0 3 4 2 3 4 5) #'max) 100))
 
   (assert (equal (list-unique (list 1 1 1 1 2 3 3 3 4 5 5 5 6 7 8 9 9 10 10)) (list 1 2 3 4 5 6 7 8 9 10)))
 

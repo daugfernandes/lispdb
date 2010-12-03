@@ -17,8 +17,8 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
-(defun monomio (coeficiente expoente) 
-  (list coeficiente expoente)
+(defmacro monomio (coeficiente expoente) 
+  `(list ,coeficiente ,expoente)
 )
 
 (defmacro coeficiente (monomio) 
@@ -28,3 +28,70 @@
 (defmacro expoente (monomio) 
   `(car (cdr ,monomio))
 )
+
+(defun monomios-grau (monomios)
+  (car monomios)
+)
+
+(defun monomio-compara-expoente (monomio1 monomio2 func)
+  (funcall func (expoente monomio1) (expoente monomio2))
+)
+
+(defun monomio-compara-coeficiente (monomio1 monomio2 func)
+  (funcall func (coeficiente monomio1) (coeficiente monomio2))
+)
+
+(defun monomio-expoente-maior (monomio1 monomio2)
+  (if (monomio-compara-expoente monomio1 monomio2 #'>) monomio1 monomio2)
+)
+
+(defun monomio-expoente-menor (monomio1 monomio2)
+  (if (monomio-compara-expoente monomio1 monomio2 #'<) monomio1 monomio2) 
+)
+
+(defun monomio-coeficiente-maior (monomio1 monomio2)
+  (if (monomio-compara-coeficiente monomio1 monomio2 #'>) monomio1 monomio2)
+)
+
+(defun monomio-coeficiente-menor (monomio1 monomio2)
+  (if (monomio-compara-coeficiente monomio1 monomio2 #'<) monomio1 monomio2) 
+)
+
+(defun polinomio (monomios)
+  (list 
+    (monomios-simplificados monomios)
+    (expoente (list-aggregate monomios #'monomio-expoente-maior))
+  )
+)
+
+(defun monomios-forma-canonica (m)
+  (sort (copy-seq m) #'monomio-expoente-maior)
+)
+
+(defun monomios-simplificados (m)
+  (monomios-forma-canonica
+    (if (null (cdr m))
+      (list (car m))
+      (if 
+        (not (equal (expoente (car m))
+                    (expoente (car (cdr m))))
+        )
+
+        (append
+          (list (car m))
+          (monomios-simplificados (cdr m))
+        )
+
+        (monomios-simplificados
+          (append
+            (list (monomio 
+              (+ (coeficiente (car m)) (coeficiente (car (cdr m))))
+              (expoente (car m)))
+            )
+            (cdr (cdr m)))
+        )   
+      )
+    )
+  )
+)
+
