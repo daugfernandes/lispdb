@@ -15,6 +15,14 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
+(defun fib(n)
+  (if (<= n 2)
+    1
+    (+ (fib (- n 1)) (fib (- n 2)))
+  )
+)
+
+
 ; com duas pequenas adaptações a coisa fica mais aberta
 (defun tr (L funcao)  
   (if (null L)
