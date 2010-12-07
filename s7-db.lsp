@@ -1,4 +1,4 @@
-;;;  s7-relational-algebra
+;;;  s7-db
 ;;
 ;;   Db
 ;;
@@ -26,7 +26,7 @@
 ;; ----------------------------------------------------------------------
 
 ;;  returns attributes list
-(defun attributes (relation)
+(defun fields (relation)
   (let ((aux nil) 
         (pcdr (car relation)))
     (dolist (field (car relation))
@@ -40,15 +40,56 @@
 )
 
 ;;=======================================================================
-;; primitive operators
+;                          PRIMITIVE OPERATORS
+; -----------------------------------------------------------------------
+;  Selection (sigma)
+;
+;  Based on Peter Siebel's PRATICAL COMMON LISP sample CDs database
 
-;; selection (sigma)
-(defun select (relation selector-fn)
-   (remove-if-not selector-fn relation)
+;-----------------------------------------------------------------------
+; USAGE:
+;          (make-comparison-expr :name #'EQUAL "JOHN")
+;       => (FUNCALL #<SYSTEM-FUNCTION EQUAL> (GETF TUPLE :NAME) "JOHN")
+;
+;          (make-comparison-expr :age #'< 50)
+;       => (FUNCALL #<SYSTEM-FUNCTION <> (GETF TUPLE :AGE) 50)
+;
+(defun make-comparison-expr (field comparison value)
+  `(funcall ,comparison (getf tuple ,field) ,value)
 )
 
-(defun selector (attr value)
-  #'(lambda (item) (equal (getf item attr) value))
+;-----------------------------------------------------------------------
+; USAGE:
+;          (make-comparisons-list (list :age #'> 40 :country #'EQUAL "USA"))
+;
+;       => ((FUNCALL #<SYSTEM-FUNCTION >> (GETF TUPLE :AGE) 40)
+;           (FUNCALL #<SYSTEM-FUNCTION EQUAL> (GETF TUPLE :COUNTRY) "USA"))
+;
+(defun make-comparisons-list (fields)
+  (loop while fields
+    collecting (make-comparison-expr (pop fields) (pop fields) (pop fields)))
+)
+
+;-----------------------------------------------------------------------
+; USAGE:
+;          (where :age #'> 40 :country #'EQUAL "USA")
+;
+;       => #<FUNCTION :LAMBDA (TUPLE)
+;            (AND (FUNCALL #'> (GETF TUPLE :AGE) 40)
+;             (FUNCALL #'EQUAL (GETF TUPLE :COUNTRY) "USA"))>
+;
+(defmacro where (&rest clauses)  
+  `#'(lambda (tuple) (and ,@(make-comparisons-list clauses)))
+)
+
+;-----------------------------------------------------------------------
+; USAGE:
+;          (select costumers (where :name #'equal "MANUEL" :age #'< 50))
+;
+;       => ((:NAME "MANUEL" :ADDRESS "OAK ST" :CITY "CHICAGO" :AGE 43))
+;
+(defun select (relation selector-fn)
+   (remove-if-not selector-fn relation)
 )
 
 ;; TODO cartesian-product ()
@@ -78,7 +119,7 @@
 ;; rename (rho)
 (defun rename (relation from to)
   (if (not (null relation))
-    (let ((new))
+    (let ((newtuple))
       (dolist (tuple relation)
         (let 
           ((proj)) 
@@ -95,15 +136,12 @@
               )
             )
           )
-          (setf new 
-            (append 
-              (list proj)
-	      new
-            )
+          (setf newtuple 
+            (append (list proj) newtuple)
           )
         )
       )
-      new
+      newtuple
     )
   )
 )
@@ -115,7 +153,7 @@
 ;
 ;  example:    (projection people (list :name :age :birthdate))
 ;
-(defun projection (relation attrs)
+(defun projection (relation fields)
   (if (not (null relation))
     (let ((newtuple))
       (dolist (tuple relation)
@@ -123,13 +161,13 @@
           ((proj 
             (cons 
               (list 
-                (car attrs) 
-                (getf tuple (car attrs))
+                (car fields) 
+                (getf tuple (car fields))
               )
               nil
             )
           ))
-          (dolist (attr (cdr attrs))
+          (dolist (field (cdr fields))
             (setf 
               (cdr 
 	        (nthcdr 
@@ -137,17 +175,11 @@
 		  (car proj)
 		)
 	      )
-              (list 
-	        attr 
-		(getf tuple attr)
-	      )
+              (list field (getf tuple field))
             )
           )
           (setf newtuple 
-            (append 
-              proj
-	      newtuple
-            )
+            (append proj newtuple)
           )
         )
       )
