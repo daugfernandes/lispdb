@@ -15,13 +15,23 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
-(defun fib(n)
-  (if (<= n 2)
-    1
-    (+ (fib (- n 1)) (fib (- n 2)))
+(defun a (L)
+  (dolist (a L)
+     a
   )
 )
 
+
+(defun combine (L)
+  (if
+    (null (cdr L))
+    L
+    (append 
+      (append (list L (combine (cdr L))))
+      (append (list (combine (cdr L)) L))
+    )
+  )
+)
 
 ; com duas pequenas adaptações a coisa fica mais aberta
 (defun tr (L funcao)  
