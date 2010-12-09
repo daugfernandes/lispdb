@@ -2,7 +2,7 @@
 
 (defpackage :s7-markup-parser
   (:use :common-lisp)
-  (:export  #:parse-stream #:test-stream))
+  (:export  #:parse-stream #:test-stream #:extract))
 
 (in-package :s7-markup-parser)
 
@@ -80,5 +80,25 @@
     (null (cdr L))
     (setf (cdr L) (cons  element nil))
     (push-tail element (cdr L))
+  )
+)
+
+(defun s7m-to-html (doc)
+)
+
+
+(defun extract (p)
+  (if
+    (not (null p))
+      (cond 
+        ((not (listp p))
+         (list p))
+        ((eq (car p) :document) 
+         (list "<body>" (extract (car (cdr p))) "</body>"))
+        ((eq (car p) :ol)
+         (list "<ol>" (extract (car (cdr p))) "</ol>"))
+        ((eq (car p) :li)
+         (list "<li>" (extract (car (cdr p))) "</li>"))
+      )
   )
 )
