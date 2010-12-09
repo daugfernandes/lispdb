@@ -57,7 +57,6 @@
 ;;  * You get a CSV-file writer, for free!  :-)
 ;;
 ;;;;
-
 
 (in-package :common-lisp-user)
 
@@ -169,7 +168,7 @@
 		(return))
 	      ,@body)))))
 
-
+
 ;;;; Utilities
 
 (defun change-state (state)
@@ -213,7 +212,7 @@
    (char= char #\Tab)
    (char= char #\Return)))	      ; For DOS style line termination
 
-
+
 ;;  States:
 ;;    * skip-white-space (initial state).
 ;;    * regular-field    handle things like ` foo bar '
@@ -322,8 +321,6 @@
 	*state*          #'skip-white-space
 	*current-field*  (make-empty-field)))
 
-
-
 ;;;; test harness
 #+(or)
 (trace skip-white-space got-first-quote got-second-quote regular-field
@@ -411,8 +408,6 @@
 		   (read-csv-line s)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 ;;;; Writing utilities
 
