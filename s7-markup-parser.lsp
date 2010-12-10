@@ -39,7 +39,7 @@
 (defvar *document* nil 
   "Parsed document.")
 
-(defvar *tree* nil     
+(defvar *tree* nil      
   "Document tree.")
 
 (defvar *current-string* nil
@@ -47,7 +47,7 @@
 
 (defun parse-stream (stream)
   "Parse a stream of chars."
-  (let ((*state* #'document)
+  (let* ((*state* #'document)
 	(*document* (list :document))
         (*tree* (list *document*))
 	(*current-string* (make-empty-string)))
@@ -75,8 +75,29 @@
       (:list-item      #'list-item)
       (:link           #'link)
       (:document       #'document)
+      (:rgb            #'rgb)
     )
   )
+)
+
+(defun char-hexa (char)
+  (or
+    (and (char>= char #\0) (char<= char #\9))
+    (and (char>= char #\A) (char<= char #\F))
+    (and (char>= char #\a) (char<= char #\f))
+  )
+)
+
+(defun rgb (char)
+  (cond 
+    ((eq char :eof)
+      (emit-string)
+      (throw 'end-of-file nil))
+    ((not (char-hexa char))
+      (emit-string)
+    )
+  )
+  (add-char char)
 )
 
 (defun paragraph (char)
@@ -96,23 +117,26 @@
       (throw 'end-of-file nil))
     (t
       (setf li (list :list-item))
-      (push-tail li (car *tree*))
-      (push li *tree*)
-      (setf para  (list :paragraph))
-      (push-tail para (car *tree*))
-      (push para *tree*)
-      (change-state :paragraph)
+      ;(push-tail li (car *tree*))
+      ;(push li *tree*)
+      ;(setf para  (list :paragraph))
+      ;(push-tail para (car *tree*))
+      ;(push para *tree*)
+      ;(change-state :paragraph)
     )
   )
 )
 
 (defun unordered-list (char)
+  (add-char char)
 )
 
 (defun list-item (char)
+  (add-char char)
 )
 
 (defun link (char)
+  (add-char char)
 )
 
 (declaim (inline add-char))
@@ -134,10 +158,10 @@
     ((char= char #\.)
       (emit-string))
     ((char= char #\#)
-      (setf ol (list :ordered-list)
-            void1 (push-tail ol (car *tree*))
-            void2 (push ol *tree*)
-            void3 (change-state :ordered-list)))
+      (setf color (list :rgb)
+            void1 (push-tail color (car *tree*))
+            void2 (push color *tree*)
+            void3 (change-state :rgb)))
     (t 
       (add-char char))
   )
@@ -267,6 +291,7 @@
 (setf (gethash :document html) (list "<body>" "</body>"))
 (setf (gethash :paragraph html) (list "<p>" "</p>"))
 (setf (gethash :ol html) (list "<ol>" "</ol>"))
+(setf (gethash :rgb html) (list "<color>" "</color>"))
 (setf (gethash :ul html) (list "<ul>" "</ul>"))
 (setf (gethash :li html) (list "<li>" "</li>"))
 (setf (gethash :unknown-tag html) (list "<span style=\"background-color=red;\">" "</span>"))
@@ -277,9 +302,11 @@
 (setf (gethash :document pseudom) (list ":document " nil))
 (setf (gethash :paragraph pseudom) (list ":paragraph " nil))
 (setf (gethash :ol pseudom) (list ":ordered-list " nil))
+(setf (gethash :rgb pseudom)(list ":rbg " nil))
 (setf (gethash :ul pseudom) (list ":unordered-list " nil))
 (setf (gethash :li pseudom) (list ":list-item " nil))
 (setf (gethash :unknown-tag pseudom) (list ":oops " nil))
 (setf (gethash :string-suffix pseudom) " ")
 
 (setf q (list :document (list :ol (list :li (list :paragraph "cobol")) (list :li (list :paragraph "lisp")))))
+(setf p "(:DOCUMENT (:OL (:LI (:PARAGRAPH \"cobol\")) (:LI (:PARAGRAPH \"lisp\"))))")
