@@ -31,29 +31,33 @@
 
 (in-package :s7-markup-parser)
 
-(defvar *lang-definition-ht* html)
+(defvar *lang-definition-ht* nil)
 
 (defvar *current-state* nil
   "Function with current-state.")
 
-(defvar *document*
+(defvar *document* nil 
   "Parsed document.")
+
+(defvar *tree* nil     
+  "Document tree.")
 
 (defvar *current-string* nil
   "Chars so far.")
 
 (defun parse-stream (stream)
-  "Read file to parse."
-  (let ((*state* #'state0)
+  "Parse a stream of chars."
+  (let ((*state* #'document)
 	(*document* (list :document))
+        (*tree* (list *document*))
 	(*current-string* (make-empty-string)))
     (catch 'end-of-file
       (loop
        (funcall *state* (read-char stream nil :eof))
       )
     )
-    *document*
   )
+  *document*
 )
 
 (defun test-stream (str)
@@ -66,9 +70,49 @@
   (setf *state*
     (ecase state
       (:paragraph      #'paragraph)
-      (:list-starting  #'list-starting)
+      (:ordered-list   #'ordered-list)
+      (:unordered-list #'unordered-list)
+      (:list-item      #'list-item)
+      (:link           #'link)
+      (:document       #'document)
     )
   )
+)
+
+(defun paragraph (char)
+  (cond
+    ((eq char :eof)
+      (emit-string)
+      (throw 'end-of-file nil))
+    (t
+      (add-char char))
+  )
+)
+
+(defun ordered-list (char)
+  (cond
+    ((eq char :eof)
+      (emit-string)
+      (throw 'end-of-file nil))
+    (t
+      (setf li (list :list-item))
+      (push-tail li (car *tree*))
+      (push li *tree*)
+      (setf para  (list :paragraph))
+      (push-tail para (car *tree*))
+      (push para *tree*)
+      (change-state :paragraph)
+    )
+  )
+)
+
+(defun unordered-list (char)
+)
+
+(defun list-item (char)
+)
+
+(defun link (char)
 )
 
 (declaim (inline add-char))
@@ -82,13 +126,18 @@
 	      :adjustable   t
 	      :element-type 'base-char))
 
-(defun state0 (char)
+(defun document (char)
   (cond
     ((eq char :eof)
       (emit-string)
       (throw 'end-of-file nil))
     ((char= char #\.)
       (emit-string))
+    ((char= char #\#)
+      (setf ol (list :ordered-list)
+            void1 (push-tail ol (car *tree*))
+            void2 (push ol *tree*)
+            void3 (change-state :ordered-list)))
     (t 
       (add-char char))
   )
@@ -97,7 +146,7 @@
 (defun emit-string ()
   (cond
     (t
-     (push-tail *current-string* *document*)))
+     (push-tail *current-string* (car *tree*))))
 
   (setf *current-string*  (make-empty-string))
 )
