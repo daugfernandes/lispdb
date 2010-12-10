@@ -21,15 +21,15 @@
 ;;
 ;; ----------------------------------------------------------------------
 
-(in-package :common-lisp-user)
-(in-package :common-lisp)
-(in-package :ext)
+;(in-package :common-lisp-user)
+;(in-package :common-lisp)
+;(in-package :ext)
 
-(defpackage :s7-markup-parser
-  (:use :common-lisp :ext)
-  (:export  #:parse-stream #:test-stream #:extract))
-
-(in-package :s7-markup-parser)
+;(defpackage :s7-markup-parser
+;  (:use :common-lisp :ext)
+;  (:export  #:parse-stream #:test-stream #:extract))
+;
+;(in-package :s7-markup-parser)
 
 (defvar *lang-definition-ht* nil)
 
@@ -42,19 +42,21 @@
 (defvar *tree* nil      
   "Document tree.")
 
+(defvar *states* nil)
+
 (defvar *current-string* nil
   "Chars so far.")
 
 (defun parse-stream (stream)
   "Parse a stream of chars."
-  (let* ((*state* #'document)
-	(*document* (list :document))
-        (*tree* (list *document*))
-	(*current-string* (make-empty-string)))
-    (catch 'end-of-file
-      (loop
-       (funcall *state* (read-char stream nil :eof))
-      )
+  (setf *state* #'document
+        *document* (list :document)
+        *tree* (list *document*)
+        *states* (list :document)
+        *current-string* (make-empty-string))
+  (catch 'end-of-file
+    (loop
+      (funcall *state* (read-char stream nil :eof))
     )
   )
   *document*
@@ -80,6 +82,31 @@
   )
 )
 
+(defun document (char)
+  (cond
+    ((test-eof char))
+    ((char= char #\Linefeed)
+      (emit-string)
+      (pop *tree*))
+    ((char= char #\#)
+      (make-node (list :rgb))
+      (change-state :rgb)
+      (push :rgb *states*)
+      (add-char char))
+    (t
+      (make-node (list :paragraph))
+      (change-state :paragraph)
+      (push :paragraph *states*)
+      (add-char char))
+  )
+)
+
+(defun make-node (content)
+  (setf node content)
+  (push-tail node (car *tree*))
+  (push node *tree*)
+)
+
 (defun char-hexa (char)
   (or
     (and (char>= char #\0) (char<= char #\9))
@@ -90,11 +117,12 @@
 
 (defun rgb (char)
   (cond 
-    ((eq char :eof)
-      (emit-string)
-      (throw 'end-of-file nil))
+    ((test-eof char))
     ((not (char-hexa char))
       (emit-string)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
     )
   )
   (add-char char)
@@ -102,27 +130,39 @@
 
 (defun paragraph (char)
   (cond
-    ((eq char :eof)
+    ((test-eof char))
+    ((char= char #\Linefeed)
       (emit-string)
-      (throw 'end-of-file nil))
-    (t
-      (add-char char))
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*)))
+    ((char= char #\#)
+      (emit-string)
+      (make-node (list :rgb))
+      (push :rgb *states*)
+      (change-state :rgb))
+    (t (add-char char))
   )
 )
 
 (defun ordered-list (char)
   (cond
+    ((test-eof char))
+    (t (make-node (list :list-item))
+      (make-node (list :paragraph))
+      (change-state :paragraph)
+    )
+  )
+)
+
+(defun test-eof (char)
+  (cond 
     ((eq char :eof)
       (emit-string)
-      (throw 'end-of-file nil))
-    (t
-      (setf li (list :list-item))
-      ;(push-tail li (car *tree*))
-      ;(push li *tree*)
-      ;(setf para  (list :paragraph))
-      ;(push-tail para (car *tree*))
-      ;(push para *tree*)
-      ;(change-state :paragraph)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
+      (throw 'end-of-file nil)
     )
   )
 )
@@ -139,9 +179,7 @@
   (add-char char)
 )
 
-(declaim (inline add-char))
 (defun add-char (char)
-  (declare  (type base-char char))
   (vector-push-extend char *current-string*))
 
 (defun make-empty-string ()
@@ -150,30 +188,19 @@
 	      :adjustable   t
 	      :element-type 'base-char))
 
-(defun document (char)
-  (cond
-    ((eq char :eof)
-      (emit-string)
-      (throw 'end-of-file nil))
-    ((char= char #\.)
-      (emit-string))
-    ((char= char #\#)
-      (setf color (list :rgb)
-            void1 (push-tail color (car *tree*))
-            void2 (push color *tree*)
-            void3 (change-state :rgb)))
-    (t 
-      (add-char char))
-  )
-)
 
 (defun emit-string ()
   (cond
-    (t
-     (push-tail *current-string* (car *tree*))))
-
-  (setf *current-string*  (make-empty-string))
+    ((> (length *current-string*) 0)
+      (push-tail *current-string* (car *tree*))
+      (setf *current-string* (make-empty-string))
+    )
+  )
 )
+
+;; Utils
+
+; list related
 
 (defun push-tail (element L)
   (if 
@@ -182,6 +209,15 @@
     (push-tail element (cdr L))
   )
 )
+
+; other
+
+(defmacro what-if-nil (value if-true if-false)
+  `(if (null ,value) ,if-true ,if-false)
+)
+
+;;;==============================
+;; backend translators
 
 (defun s7m-to-html (p)
   (let ((idiom-function #'s7m-to-html))
@@ -273,18 +309,6 @@
   )
 )
 
-;; Utils
-(defun push-tail (element L)
-  (if 
-    (null (cdr L))
-    (setf (cdr L) (cons  element nil))
-    (push-tail element (cdr L))
-  )
-)
-
-(defmacro what-if-nil (value if-true if-false)
-  `(if (null ,value) ,if-true ,if-false)
-)
 
 (setf html (make-hash-table))
 (setf (gethash :idiom-function html) #'s7m-to-html)
