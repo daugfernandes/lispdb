@@ -1,4 +1,28 @@
+;;;  s7-markup-parser
+;;
+;; ----------------------------------------------------------------------
+;;
+;;   Copyright (C) 2010  David Fernandes
+;;                       <daugfernandes@aim.com>
+;;
+;;   This program is free software: you can redistribute it and/or modify
+;;   it under the terms of the GNU General Public License as published by
+;;   the Free Software Foundation, either version 3 of the License, or
+;;   (at your option) any later version.
+;;
+;;   This program is distributed in the hope that it will be useful,
+;;   but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;   GNU General Public License for more details.
+;;
+;;   You should have received a copy of the GNU General Public License
+;;   along with this program named license.txt.
+;;   If not, see <http://www.gnu.org/licenses/>
+;;
+;; ----------------------------------------------------------------------
+
 (in-package :common-lisp-user)
+(in-package :common-lisp)
 
 (defpackage :s7-markup-parser
   (:use :common-lisp)
@@ -83,22 +107,77 @@
   )
 )
 
-(defun s7m-to-html (doc)
+(defun s7m-to-html (p)
+  (let ((idiom-function #'s7m-to-html))
+    (cond 
+      ((null p))
+      ((not (listp  p))
+       (concatenate 'string p))
+      ((eq (car p) :document) 
+       (concatenate 'string "<body>" 
+                            (extract p idiom-function) 
+                            "</body>"))
+      ((eq (car p) :ol)
+       (concatenate 'string "<ol>" 
+                            (extract p idiom-function) 
+                            "</ol>"))
+      ((eq (car p) :paragraph)
+       (concatenate 'string "<p>" 
+                            (extract p idiom-function) 
+                            "</p>"))
+      ((eq (car p) :ul)
+       (concatenate 'string "<ul>" 
+                            (extract p idiom-function) 
+                            "</ul>"))
+      ((eq (car p) :li)
+       (concatenate 'string "<li>" 
+                            (extract p idiom-function) 
+                            "</li>"))
+      (t 
+       (concatenate 'string "<oops>" 
+                            (extract p idiom-function) 
+                            "</oops>"))
+    )
+  )
+)
+
+(defun s7m-to-m (p)
+  (let ((idiom-function #'s7m-to-m))
+    (cond 
+      ((null p))
+      ((not (listp  p))
+       (concatenate 'string p " ")) ; necessary as there is no end-tag
+      ((eq (car p) :document) 
+       (concatenate 'string ":document " 
+                             (extract p idiom-function)))
+      ((eq (car p) :paragraph)
+       (concatenate 'string ":paragraph " 
+                             (extract p idiom-function)))
+      ((eq (car p) :ol)
+       (concatenate 'string ":ol " 
+                             (extract p idiom-function)))
+      ((eq (car p) :ul)
+       (concatenate 'string ":ul " 
+                             (extract p idiom-function)))
+      ((eq (car p) :li)
+       (concatenate 'string ":li " 
+                             (extract p idiom-function)))
+      (t 
+       (concatenate 'string ":oops " 
+                             (extract p idiom-function)))
+      )
+    )
+  )
 )
 
 
-(defun extract (p)
-  (if
-    (not (null p))
-      (cond 
-        ((not (listp p))
-         (list p))
-        ((eq (car p) :document) 
-         (list "<body>" (extract (car (cdr p))) "</body>"))
-        ((eq (car p) :ol)
-         (list "<ol>" (extract (car (cdr p))) "</ol>"))
-        ((eq (car p) :li)
-         (list "<li>" (extract (car (cdr p))) "</li>"))
+(defun extract (p idiom-function)
+  (let ((st ""))
+    (loop for i in (cdr p) do 
+      (setf st 
+        (concatenate 'string st (funcall idiom-function i))
       )
+    )
+    st
   )
 )

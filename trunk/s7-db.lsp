@@ -25,7 +25,30 @@
 ;;
 ;; ----------------------------------------------------------------------
 
-;;  returns attributes list
+(defun l ()
+  (load "s7-db.lsp")
+)
+
+;; ======================================================================
+;; Save/load relation to file
+;
+;  Based on Peter Siebel's PRATICAL COMMON LISP Chapter 2 sample code
+;------------------------------------------------------------------------
+(defun save-relation (relation filename)
+  (with-open-file (out filename
+                   :direction :output
+                   :if-exists :supersede)
+    (with-standard-io-syntax
+      (print relation out)))
+)
+
+(defun load-relation (filename)
+  (with-open-file (in filename)
+    (with-standard-io-syntax
+      (read in)))
+)
+
+;;  returns fields list
 (defun fields (relation)
   (let ((aux nil) 
         (pcdr (car relation)))
@@ -42,11 +65,12 @@
 ;;=======================================================================
 ;                          PRIMITIVE OPERATORS
 ; -----------------------------------------------------------------------
-;  Selection (sigma)
+; Selection (sigma)
 ;
-;  Based on Peter Siebel's PRATICAL COMMON LISP sample CDs database
+; Based on Peter Siebel's PRATICAL COMMON LISP sample CDs database
 
 ;-----------------------------------------------------------------------
+;
 ; USAGE:
 ;          (make-comparison-expr :name #'EQUAL "JOHN")
 ;       => (FUNCALL #<SYSTEM-FUNCTION EQUAL> (GETF TUPLE :NAME) "JOHN")
@@ -55,6 +79,7 @@
 ;       => (FUNCALL #<SYSTEM-FUNCTION <> (GETF TUPLE :AGE) 50)
 ;
 (defun make-comparison-expr (field comparison value)
+  "Builds comparison expression"
   `(funcall ,comparison (getf tuple ,field) ,value)
 )
 
@@ -66,6 +91,7 @@
 ;           (FUNCALL #<SYSTEM-FUNCTION EQUAL> (GETF TUPLE :COUNTRY) "USA"))
 ;
 (defun make-comparisons-list (fields)
+  "Builds a complex comparison expressions list"
   (loop while fields
     collecting (make-comparison-expr (pop fields) (pop fields) (pop fields)))
 )
@@ -79,6 +105,7 @@
 ;             (FUNCALL #'EQUAL (GETF TUPLE :COUNTRY) "USA"))>
 ;
 (defmacro where (&rest clauses)  
+  "Selector function"
   `#'(lambda (tuple) (and ,@(make-comparisons-list clauses)))
 )
 
@@ -89,7 +116,16 @@
 ;       => ((:NAME "MANUEL" :ADDRESS "OAK ST" :CITY "CHICAGO" :AGE 43))
 ;
 (defun select (relation selector-fn)
-   (remove-if-not selector-fn relation)
+  "Select function based on a 'where' selector function"
+  (remove-if-not selector-fn relation)
+)
+
+;; union-compatible tests if two relations have the same fields
+(defun union-compatible (relation1 relation2)
+  (equal                                ;compares both lists os field names
+    (sort (fields relation1) #'STRING<) ;sort field names alphabeticaly
+    (sort (fields relation2) #'STRING<) ;
+  )
 )
 
 ;; TODO cartesian-product ()
@@ -97,7 +133,57 @@
 )
 
 ;; TODO set-union ()
+
+;  (setq r1 (list 
+;     (list :nome "manuel" :age 33) 
+;     (list :age 40 :nome "david")))
+;
+;  => ((:NOME "manuel" :AGE 33) 
+;      (:AGE 40 :NOME "david"))
+;
+;  (setq r2 (list 
+;     (list :nome "patricia" :idade 38 :cidade "PORTO") 
+;     (list :idade 14 :nome "beatriz" :cidade "MAIA")))
+;
+;  => ((:NOME "patricia" :IDADE 38 :CIDADE "PORTO")
+;      (:IDADE 14 :NOME "beatriz" :CIDADE "MAIA"))
+;
+;  NOTE that r1 and r2 are not union-compatible but with the help
+;       of PROJECTION and RENAME operators:
+;
+;  (set-union (projection r2 (list :nome :idade)) (rename r1 :age :idade))
+;
+;  => ((:NOME "patricia" :IDADE 38) 
+;      (:NOME "beatriz" :IDADE 14) 
+;      (:NOME "david" :IDADE 40)
+;      (:NOME "manuel" :IDADE 33))
 (defun set-union (relation1 relation2)
+  (if (union-compatible relation1 relation2)
+    (unique-tuples 
+      (projection (append relation1 relation2) (fields relation1))
+    )
+  )
+)
+
+(defun tuple-as-string (tuple)
+  (format nil "~a" tuple)
+)
+
+(defun sort-ascending (tuple1 tuple2)
+  (string< (tuple-as-string tuple1) (tuple-as-string tuple2))
+)
+
+(defun sort-descending (tuple1 tuple2)
+  (string> (tuple-as-string tuple1) (tuple-as-string tuple2))
+)
+
+; todo
+(defun unique-tuples (relation)
+; sort fields
+; projection
+; sort tuples
+; remove duplicates as they are sorted and so consecutive
+  relation
 )
 
 ;; TODO difference ()
@@ -116,7 +202,14 @@
 (defun natural-join (relation1 relation2)
 )
 
-;; rename (rho)
+;-----------------------------------------------------------------------
+; Rename (rho)
+;-----------------------------------------------------------------------
+; USAGE:
+;          (rename costumers :name :newname)
+;
+;       => ((:NEWNAME "MANUEL" :ADDRESS "OAK ST" :CITY "CHICAGO" :AGE 43))
+;
 (defun rename (relation from to)
   (if (not (null relation))
     (let ((newtuple))
@@ -128,10 +221,7 @@
               (append 
                 proj
                 (list
-                  (if (equal field from)
-                    to
-                    field
-                  )
+                  (if (equal field from) to field)
 		)
               )
             )
@@ -147,11 +237,14 @@
 )
 
 
-;; projection (pi)
+;-----------------------------------------------------------------------
+; Projection (pi)
+;-----------------------------------------------------------------------
+; USAGE:
+;          (projection people (list :name :age :birthdate))
 ;
-;  see (defun s7-db-uc1) bellow on how to build a database
-;
-;  example:    (projection people (list :name :age :birthdate))
+;       => ((:NAME "MANUEL" :AGE 56 :BIRTHDATE "2011-01-05")
+;           (:NAME "DAVID" :AGE 44 :BIRTHDATE "2011-11-01"))
 ;
 (defun projection (relation fields)
   (if (not (null relation))
@@ -159,13 +252,9 @@
       (dolist (tuple relation)
         (let 
           ((proj 
-            (cons 
-              (list 
-                (car fields) 
-                (getf tuple (car fields))
-              )
-              nil
-            )
+            (cons (list (car fields) 
+                        (getf tuple (car fields)))
+                   nil)
           ))
           (dolist (field (cdr fields))
             (setf 
@@ -178,9 +267,7 @@
               (list field (getf tuple field))
             )
           )
-          (setf newtuple 
-            (append proj newtuple)
-          )
+          (setf newtuple (append proj newtuple))
         )
       )
       newtuple

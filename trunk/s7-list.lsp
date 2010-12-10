@@ -52,7 +52,7 @@
 (defun list-unique (L)
   (if (null L)
     nil
-    (if (eq (first L) (second L))
+    (if (equal (first L) (second L))
         (list-unique (rest L))
         (cons (first L) (list-unique (rest L)))
     )
@@ -111,6 +111,25 @@
       (get-param-list (nthcdr 2 list) param)
     )
   )
+)
+
+;; destructive
+(defmacro push-tail (element L)
+  `(if (null ,L)
+    (setf ,L (cons ,element nil))
+    (push-tail ,element (cdr ,L))
+  ) 
+)
+
+;; destructive
+(defmacro pop-tail (L)
+  `(if (null (cdr ,L))
+    (let ((tmp (car ,L)))
+      (setf ,L nil)
+      tmp
+    )
+    (pop-tail (cdr ,L))
+  ) 
 )
 
 ;;--------------------------------------------------------------------------
