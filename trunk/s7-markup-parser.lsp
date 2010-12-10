@@ -52,8 +52,8 @@
   (setf *state* #'document
         *document* (list :document)
         *tree* (list *document*)
-        *states* (list :document)
         *current-string* (make-empty-string))
+  (push :document *states*)
   (catch 'end-of-file
     (loop
       (funcall *state* (read-char stream nil :eof))
@@ -65,6 +65,12 @@
 (defun test-stream (str)
   (with-input-from-string (s str)
     (parse-stream s)
+  )
+)
+
+(defun test-file (filename)
+  (with-open-file (stream filename :direction :input)
+    (parse-stream stream)
   )
 )
 
@@ -135,6 +141,7 @@
       (emit-string)
       (pop *tree*)
       (pop *states*)
+      (if (null *states*)(push :document *states))
       (change-state (car *states*)))
     ((char= char #\#)
       (emit-string)
