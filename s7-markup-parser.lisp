@@ -23,9 +23,10 @@
 
 (in-package :common-lisp-user)
 (in-package :common-lisp)
+(in-package :ext)
 
 (defpackage :s7-markup-parser
-  (:use :common-lisp)
+  (:use :common-lisp :ext)
   (:export  #:parse-stream #:test-stream #:extract))
 
 (in-package :s7-markup-parser)
@@ -141,8 +142,8 @@
   )
 )
 
-(defun s7m-to-m (p)
-  (let ((idiom-function #'s7m-to-m))
+(defun s7m-to-mstr (p)
+  (let ((idiom-function (gethash :idiom-function mstr)))
     (cond 
       ((null p))
       ((not (listp  p))
@@ -165,7 +166,7 @@
       (t 
        (concatenate 'string ":oops " 
                              (extract p idiom-function)))
-      )
+      
     )
   )
 )
@@ -181,3 +182,20 @@
     st
   )
 )
+
+(setf html (make-hash-table))
+(setf (gethash :idiom-function html) #'s7m-to-html)
+(setf (gethash :document html) (list "<body>" "</body>"))
+(setf (gethash :paragraph html) (list "<p>" "</p>"))
+(setf (gethash :ol html) (list "<ol>" "</ol>"))
+(setf (gethash :ul html) (list "<ul>" "</ul>"))
+(setf (gethash :li html) (list "<li>" "</li>"))
+
+(setf mstr (make-hash-table))
+(setf (gethash :idiom-function mstr) #'s7m-to-mstr)
+(setf (gethash :document mstr) (list ":document" nil))
+(setf (gethash :paragraph mstr) (list ":paragraph" nil))
+(setf (gethash :ol mstr) (list ":ordered-list" nil))
+(setf (gethash :ul mstr) (list ":unordered-list" nil))
+(setf (gethash :li mstr) (list ":list-item" nil))
+
