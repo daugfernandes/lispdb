@@ -21,34 +21,27 @@
 ;;
 ;; ----------------------------------------------------------------------
 
-;(in-package :common-lisp-user)
-;(in-package :common-lisp)
-;(in-package :ext)
 
-;(defpackage :s7-markup-parser
-;  (:use :common-lisp :ext)
-;  (:export  #:parse-stream #:test-stream #:extract))
-;
-;(in-package :s7-markup-parser)
-
-(defvar *lang-definition-ht* nil)
+(defvar *lang-definition-ht* nil
+  "Language definition hash-table for backend translator.")
 
 (defvar *current-state* nil
   "Function with current-state.")
 
 (defvar *document* nil 
-  "Parsed document.")
+  "Parsed document root node.")
 
 (defvar *tree* nil      
-  "Document tree.")
+  "Document pushdown tree. (car *tree*) is the last element in use.")
 
-(defvar *states* nil)
+(defvar *states* nil
+  "Pushdown list os states so far.")
 
 (defvar *current-string* nil
-  "Chars so far.")
+  "Characters processed so far.")
 
 (defun parse-stream (stream)
-  "Parse a stream of chars."
+  "Parse a stream of characters."
   (setf *state* #'document
         *document* (list :document)
         *tree* (list *document*)
@@ -63,18 +56,21 @@
 )
 
 (defun test-stream (str)
+  "Aux function to parse a string."
   (with-input-from-string (s str)
     (parse-stream s)
   )
 )
 
 (defun test-file (filename)
+  "Aux function to parse an entire text file."
   (with-open-file (stream filename :direction :input)
     (parse-stream stream)
   )
 )
 
 (defun change-state (state)
+  "Changes the actal state processing function."
   (setf *state*
     (ecase state
       (:paragraph      #'paragraph)
@@ -84,40 +80,44 @@
       (:link           #'link)
       (:document       #'document)
       (:rgb            #'rgb)
+      (:text           #'text)
+      (:line-feed      #'first-linefeed)
     )
   )
 )
 
+;; states
+
 (defun document (char)
+  "Document state. Nothing interesting happened, yet."
   (cond
+
     ((test-eof char))
+
     ((char= char #\Linefeed)
-      (emit-string)
-      (pop *tree*))
+      (cond 
+        ((zerop (length *current-string*))
+          (make-node (list :paragraph))
+          (pop *tree*)
+        )
+      (t (use-chars-read)))
+    )
+
     ((char= char #\#)
       (make-node (list :rgb))
       (change-state :rgb)
       (push :rgb *states*)
       (add-char char))
+
     (t
       (make-node (list :paragraph))
       (change-state :paragraph)
       (push :paragraph *states*)
+      (make-node (list :text))
+      (change-state :text)
+      (push :text *states*)
       (add-char char))
-  )
-)
 
-(defun make-node (content)
-  (setf node content)
-  (push-tail node (car *tree*))
-  (push node *tree*)
-)
-
-(defun char-hexa (char)
-  (or
-    (and (char>= char #\0) (char<= char #\9))
-    (and (char>= char #\A) (char<= char #\F))
-    (and (char>= char #\a) (char<= char #\f))
   )
 )
 
@@ -125,10 +125,11 @@
   (cond 
     ((test-eof char))
     ((not (char-hexa char))
-      (emit-string)
+      (use-chars-read)
       (pop *tree*)
       (pop *states*)
       (change-state (car *states*))
+      (make-node (list :text))
     )
   )
   (add-char char)
@@ -138,17 +139,21 @@
   (cond
     ((test-eof char))
     ((char= char #\Linefeed)
-      (emit-string)
+      (use-chars-read)
       (pop *tree*)
       (pop *states*)
-      (if (null *states*)(push :document *states))
+      (if (null *states*) (push :document *states*))
       (change-state (car *states*)))
     ((char= char #\#)
-      (emit-string)
+      (use-chars-read)
       (make-node (list :rgb))
       (push :rgb *states*)
       (change-state :rgb))
-    (t (add-char char))
+    (t 
+      (make-node (list :text))
+      (push :text *states*)
+      (change-state :text)
+      (add-char char))
   )
 )
 
@@ -158,18 +163,6 @@
     (t (make-node (list :list-item))
       (make-node (list :paragraph))
       (change-state :paragraph)
-    )
-  )
-)
-
-(defun test-eof (char)
-  (cond 
-    ((eq char :eof)
-      (emit-string)
-      (pop *tree*)
-      (pop *states*)
-      (change-state (car *states*))
-      (throw 'end-of-file nil)
     )
   )
 )
@@ -186,6 +179,81 @@
   (add-char char)
 )
 
+(defun text (char)
+  (cond
+    ((test-eof char))
+    ((char= char #\Linefeed)
+      (push :line-feed *states*)
+      (change-state :line-feed)
+      ;(use-chars-read)
+      ;(pop *tree*)
+      ;(pop *states*)
+      ;(if (null *states*) (push :document *states))
+      ;(change-state (car *states*))
+    )
+    ((char= char #\#)
+      (use-chars-read)
+      (make-node (list :rgb))
+      (push :rgb *states*)
+      (change-state :rgb))
+    (t (add-char char))
+  )
+)
+
+(defun first-linefeed (char)
+  "A first Linefeed was found."
+  (cond
+    ((test-eof char))
+    ((char= char #\Linefeed) ;second one
+      (use-chars-read)
+      (pop *tree*)
+      (pop *states*) ;removes linefeed state
+      (pop *states*) ;removes previous state
+      (if (null *states*) (push :document *states))
+      (change-state (car *states*)))
+    ((char= char #\#)
+      (use-chars-read)
+      (make-node (list :rgb))
+      (push :rgb *states*)
+      (change-state :rgb))
+    (t 
+      (pop *states*)
+      (change-state (car *states*))
+      (add-char #\Linefeed) ;adds the first linefeed
+      (add-char char)
+    )
+  )
+)
+
+
+(defun make-node (content)
+  "Creates a new node." 
+  (setf node content)
+  (push-tail node (car *tree*)) ;sets it in the document structure
+  (push node *tree*)            ;and in the document pushdown tree
+)
+
+(defun char-hexa (char)
+  "Tests for a hexa char."
+  (or
+    (and (char>= char #\0) (char<= char #\9))
+    (and (char>= char #\A) (char<= char #\F))
+    (and (char>= char #\a) (char<= char #\f))
+  )
+)
+
+(defun test-eof (char)
+  (cond 
+    ((eq char :eof)
+      (use-chars-read)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
+      (throw 'end-of-file nil)
+    )
+  )
+)
+
 (defun add-char (char)
   (vector-push-extend char *current-string*))
 
@@ -196,7 +264,8 @@
 	      :element-type 'base-char))
 
 
-(defun emit-string ()
+(defun use-chars-read ()
+  "Gives effective use to the characters read so far."
   (cond
     ((> (length *current-string*) 0)
       (push-tail *current-string* (car *tree*))
@@ -210,115 +279,62 @@
 ; list related
 
 (defun push-tail (element L)
+  "Recursively pushes a new cons to the tail of list."
   (if 
     (null (cdr L))
     (setf (cdr L) (cons  element nil))
-    (push-tail element (cdr L))
+    (push-tail element (cdr L))        ; TODO: iteration instead?!?!?!
   )
 )
 
 ; other
 
+; NIL substitution macro.
 (defmacro what-if-nil (value if-true if-false)
   `(if (null ,value) ,if-true ,if-false)
 )
 
 ;;;==============================
-;; backend translators
+;; backend translator
 
-(defun s7m-to-html (p)
-  (let ((idiom-function #'s7m-to-html))
-    (cond 
-      ((null p))
-      ((not (listp  p))
-       (concatenate 'string p))
-      ((eq (car p) :document) 
-       (concatenate 'string "<body>" 
-                            (extract p idiom-function) 
-                            "</body>"))
-      ((eq (car p) :ol)
-       (concatenate 'string "<ol>" 
-                            (extract p idiom-function) 
-                            "</ol>"))
-      ((eq (car p) :paragraph)
-       (concatenate 'string "<p>" 
-                            (extract p idiom-function) 
-                            "</p>"))
-      ((eq (car p) :ul)
-       (concatenate 'string "<ul>" 
-                            (extract p idiom-function) 
-                            "</ul>"))
-      ((eq (car p) :li)
-       (concatenate 'string "<li>" 
-                            (extract p idiom-function) 
-                            "</li>"))
-      (t 
-       (concatenate 'string "<oops>" 
-                            (extract p idiom-function) 
-                            "</oops>"))
-    )
-  )
-)
-
-(defun s7m-to-pseudom (p)
-  (let ((idiom-function (nth-value 0 (gethash :idiom-function pseudom))))
-    (cond 
-      ((null p))
-      ((not (listp  p))
-       (concatenate 'string p " ")) ; necessary as there is no end-tag
-      ((eq (car p) :document) 
-       (concatenate 'string ":document " 
-                             (extract p idiom-function)))
-      ((eq (car p) :paragraph)
-       (concatenate 'string ":paragraph " 
-                             (extract p idiom-function)))
-      ((eq (car p) :ol)
-       (concatenate 'string ":ol " 
-                             (extract p idiom-function)))
-      ((eq (car p) :ul)
-       (concatenate 'string ":ul " 
-                             (extract p idiom-function)))
-      ((eq (car p) :li)
-       (concatenate 'string ":li " 
-                             (extract p idiom-function)))
-      (t 
-       (concatenate 'string ":oops " 
-                             (extract p idiom-function)))
-    )
-  )
-)
-
-(defun s7m-to-lang (p)
+(defun mir-to-lang (p)
+  "Translator from Markup Intermediate Representation to what-ever language defined by the hash-table in *lang-definition-ht*."
   (cond 
     ((null p))
     ((not (listp  p))
-     (concatenate 'string p " ")) ; necessary as there is no end-tag
+     (concatenate        ; necessary as a separator if there is no closing tag
+       'string 
+       p 
+       (car (nth-value 0 (gethash :text-suffix *lang-definition-ht*)))
+     )
+    )
     (t 
       (let 
         (
           (prefix (car (nth-value 0 (gethash (car p) *lang-definition-ht*))))
           (suffix (car (cdr (nth-value 0 (gethash (car p) *lang-definition-ht*)))))
         )
-        (concatenate 'string prefix (extract p #'s7m-to-lang) suffix)
+        (concatenate 'string prefix (extract p) suffix)
       )
     )
   )
 )
 
-(defun extract (p idiom-function)
+(defun extract (p)
   (let ((st ""))
     (loop for i in (cdr p) do 
       (setf st 
-        (concatenate 'string st (funcall idiom-function i))
+        (concatenate 'string st (mir-to-lang i))
       )
     )
     st
   )
 )
 
+;; language definition tables
 
+;; HTML
 (setf html (make-hash-table))
-(setf (gethash :idiom-function html) #'s7m-to-html)
 (setf (gethash :document html) (list "<body>" "</body>"))
 (setf (gethash :paragraph html) (list "<p>" "</p>"))
 (setf (gethash :ol html) (list "<ol>" "</ol>"))
@@ -326,10 +342,9 @@
 (setf (gethash :ul html) (list "<ul>" "</ul>"))
 (setf (gethash :li html) (list "<li>" "</li>"))
 (setf (gethash :unknown-tag html) (list "<span style=\"background-color=red;\">" "</span>"))
-(setf (gethash :string-suffix html) nil)
+(setf (gethash :text-suffix html) nil)
 
 (setf pseudom (make-hash-table))
-(setf (gethash :idiom-function pseudom) #'s7m-to-pseudom)
 (setf (gethash :document pseudom) (list ":document " nil))
 (setf (gethash :paragraph pseudom) (list ":paragraph " nil))
 (setf (gethash :ol pseudom) (list ":ordered-list " nil))
@@ -337,7 +352,9 @@
 (setf (gethash :ul pseudom) (list ":unordered-list " nil))
 (setf (gethash :li pseudom) (list ":list-item " nil))
 (setf (gethash :unknown-tag pseudom) (list ":oops " nil))
-(setf (gethash :string-suffix pseudom) " ")
+(setf (gethash :text-suffix pseudom) " ")
+
+;; temp aux stuff
 
 (setf q (list :document (list :ol (list :li (list :paragraph "cobol")) (list :li (list :paragraph "lisp")))))
 (setf p "(:DOCUMENT (:OL (:LI (:PARAGRAPH \"cobol\")) (:LI (:PARAGRAPH \"lisp\"))))")
