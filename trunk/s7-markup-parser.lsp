@@ -40,6 +40,17 @@
 (defvar *current-string* nil
   "Characters processed so far.")
 
+(defconstant *escaped-chars* "\\{}*"
+  "Characters that need special prefixing.")
+(defconstant *eol* #\.
+  "End-of-line character.")
+(defconstant *void-chars* (string #\Return)
+  "Characters that should be ignored.")
+
+(defun is-escaped-char (c)
+  (not (null (search (string c) *escaped-chars*)))
+)
+
 (defun parse-stream (stream)
   "Parse a stream of characters."
   (setf *state* #'document
@@ -49,13 +60,17 @@
   (push :document *states*)
   (catch 'end-of-file
     (loop
-      (funcall *state* (read-char stream nil :eof))
+      (let ((c (read-char stream nil :eof)))
+        (if (null (search (string c) *void-chars*))
+          (funcall *state* c)
+        )
+      )
     )
   )
   *document*
 )
 
-(defun test-stream (str)
+(defun test-string (str)
   "Aux function to parse a string."
   (with-input-from-string (s str)
     (parse-stream s)
@@ -70,7 +85,7 @@
 )
 
 (defun change-state (state)
-  "Changes the actal state processing function."
+  "Changes the actual state-processing function."
   (setf *state*
     (ecase state
       (:paragraph      #'paragraph)
@@ -82,6 +97,7 @@
       (:rgb            #'rgb)
       (:text           #'text)
       (:line-feed      #'first-linefeed)
+      (:esc            #'escape)
     )
   )
 )
@@ -94,13 +110,25 @@
 
     ((test-eof char))
 
-    ((char= char #\Linefeed)
+    ((char= char *eol*)
       (cond 
         ((zerop (length *current-string*))
           (make-node (list :paragraph))
           (pop *tree*)
         )
       (t (use-chars-read)))
+    )
+
+    ((is-escaped-char char)
+      (use-chars-read)
+      (make-node (list :esc))
+      (push :esc *states*)
+      (add-char char)
+      (use-chars-read)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
+      (make-node (list :text))
     )
 
     ((char= char #\#)
@@ -123,7 +151,9 @@
 
 (defun rgb (char)
   (cond 
+
     ((test-eof char))
+
     ((not (char-hexa char))
       (use-chars-read)
       (pop *tree*)
@@ -137,18 +167,19 @@
 
 (defun paragraph (char)
   (cond
+
     ((test-eof char))
-    ((char= char #\Linefeed)
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (if (null *states*) (push :document *states*))
-      (change-state (car *states*)))
+
+    ((char= char *eol*)
+      (push :line-feed *states*)
+      (change-state :line-feed))
+
     ((char= char #\#)
       (use-chars-read)
       (make-node (list :rgb))
       (push :rgb *states*)
       (change-state :rgb))
+
     (t 
       (make-node (list :text))
       (push :text *states*)
@@ -182,7 +213,7 @@
 (defun text (char)
   (cond
     ((test-eof char))
-    ((char= char #\Linefeed)
+    ((char= char *eol*)
       (push :line-feed *states*)
       (change-state :line-feed)
       ;(use-chars-read)
@@ -191,11 +222,24 @@
       ;(if (null *states*) (push :document *states))
       ;(change-state (car *states*))
     )
+
+    ((is-escaped-char char)
+      (use-chars-read)
+      (pop *tree*)
+      (make-node (list :esc))
+      (add-char char)
+      (use-chars-read)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
+    )
+
     ((char= char #\#)
       (use-chars-read)
       (make-node (list :rgb))
       (push :rgb *states*)
       (change-state :rgb))
+
     (t (add-char char))
   )
 )
@@ -204,22 +248,37 @@
   "A first Linefeed was found."
   (cond
     ((test-eof char))
-    ((char= char #\Linefeed) ;second one
+
+    ((char= char *eol*) ;second one
       (use-chars-read)
-      (pop *tree*)
+      (pop *tree*) (pop *tree*)
       (pop *states*) ;removes linefeed state
+      (pop *states*) ;removes previous state
       (pop *states*) ;removes previous state
       (if (null *states*) (push :document *states))
       (change-state (car *states*)))
+
+    ((is-escaped-char char)
+      (use-chars-read)
+      (make-node (list :esc))
+      (push :esc *states*)
+      (use-chars-read)
+      (pop *tree*)
+      (pop *states*)
+      (change-state (car *states*))
+      (make-node (list :text))
+    )
+
     ((char= char #\#)
       (use-chars-read)
       (make-node (list :rgb))
       (push :rgb *states*)
       (change-state :rgb))
+
     (t 
       (pop *states*)
       (change-state (car *states*))
-      (add-char #\Linefeed) ;adds the first linefeed
+      (add-char *eol*) ;adds the first linefeed
       (add-char char)
     )
   )
@@ -268,7 +327,10 @@
   "Gives effective use to the characters read so far."
   (cond
     ((> (length *current-string*) 0)
-      (push-tail *current-string* (car *tree*))
+      (push-tail 
+        (string-right-trim " " *current-string*)
+        (car *tree*)
+      )
       (setf *current-string* (make-empty-string))
     )
   )
@@ -276,7 +338,7 @@
 
 ;; Utils
 
-; list related
+;  list related
 
 (defun push-tail (element L)
   "Recursively pushes a new cons to the tail of list."
@@ -285,13 +347,6 @@
     (setf (cdr L) (cons  element nil))
     (push-tail element (cdr L))        ; TODO: iteration instead?!?!?!
   )
-)
-
-; other
-
-; NIL substitution macro.
-(defmacro what-if-nil (value if-true if-false)
-  `(if (null ,value) ,if-true ,if-false)
 )
 
 ;;;==============================
@@ -309,10 +364,11 @@
      )
     )
     (t 
-      (let 
+      (let* 
         (
-          (prefix (car (nth-value 0 (gethash (car p) *lang-definition-ht*))))
-          (suffix (car (cdr (nth-value 0 (gethash (car p) *lang-definition-ht*)))))
+          (tag (car p))
+          (prefix (car (nth-value 0 (gethash tag *lang-definition-ht*))))
+          (suffix (car (cdr (nth-value 0 (gethash tag *lang-definition-ht*)))))
         )
         (concatenate 'string prefix (extract p) suffix)
       )
@@ -337,22 +393,26 @@
 (setf html (make-hash-table))
 (setf (gethash :document html) (list "<body>" "</body>"))
 (setf (gethash :paragraph html) (list "<p>" "</p>"))
+(setf (gethash :text html) (list "" ""))
 (setf (gethash :ol html) (list "<ol>" "</ol>"))
 (setf (gethash :rgb html) (list "<color>" "</color>"))
 (setf (gethash :ul html) (list "<ul>" "</ul>"))
 (setf (gethash :li html) (list "<li>" "</li>"))
+(setf (gethash :esc html) (list "" ""))
 (setf (gethash :unknown-tag html) (list "<span style=\"background-color=red;\">" "</span>"))
-(setf (gethash :text-suffix html) nil)
+(setf (gethash :text-suffix html) (list ""))
 
 (setf pseudom (make-hash-table))
 (setf (gethash :document pseudom) (list ":document " nil))
 (setf (gethash :paragraph pseudom) (list ":paragraph " nil))
+(setf (gethash :text pseudom) (list "<" ">"))
 (setf (gethash :ol pseudom) (list ":ordered-list " nil))
 (setf (gethash :rgb pseudom)(list ":rbg " nil))
 (setf (gethash :ul pseudom) (list ":unordered-list " nil))
 (setf (gethash :li pseudom) (list ":list-item " nil))
+(setf (gethash :esc pseudom) (list "\\" nil))
 (setf (gethash :unknown-tag pseudom) (list ":oops " nil))
-(setf (gethash :text-suffix pseudom) " ")
+(setf (gethash :text-suffix pseudom) (list ""))
 
 ;; temp aux stuff
 
