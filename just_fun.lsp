@@ -15,11 +15,20 @@
 ;;   along with this program named license.txt.
 ;;   If not, see <http://www.gnu.org/licenses/>
 
-(defun a (L)
-  (dolist (a L)
-     a
+(defun crc (value polinom)
+  (let ((nlogp) (floor (log polinom 2)))
+    (values
+      (+
+        (* value
+           (power 2 (values nlogp)))
+        (* value
+           (mod value polinom)
+        )
+      )
+    )
   )
 )
+  
 
 
 (defun combine (L)
