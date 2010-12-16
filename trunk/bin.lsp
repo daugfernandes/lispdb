@@ -1,4 +1,4 @@
-qq;;   Copyright (C) 2010  David Fernandes
+;;   Copyright (C) 2010  David Fernandes
 ;;                       <daugfernandes@aim.com>
 ;;
 ;;   This program is free software: you can redistribute it and/or modify
