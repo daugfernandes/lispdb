@@ -25,9 +25,6 @@
 (defvar *lang-definition-ht* nil
   "Language definition hash-table for backend translator.")
 
-(defvar *current-state* nil
-  "Function with current-state.")
-
 (defvar *document* nil 
   "Parsed document root node.")
 
@@ -37,6 +34,9 @@
 (defvar *states* nil
   "Pushdown list os states so far.")
 
+(defvar *header-count* 0
+  "Counts *")
+
 (defvar *current-string* nil
   "Characters processed so far.")
 
@@ -44,6 +44,9 @@
   "Characters that need special prefixing.")
 (defconstant *eol* #\.
   "End-of-line character.")
+(defconstant *eof* :eof
+  "End-of-file indicator.")
+
 (defconstant *void-chars* (string #\Return)
   "Characters that should be ignored.")
 
@@ -53,16 +56,18 @@
 
 (defun parse-stream (stream)
   "Parse a stream of characters."
-  (setf *state* #'document
-        *document* (list :document)
+  (setf *document* (list :document)
         *tree* (list *document*)
         *current-string* (make-empty-string))
-  (push :document *states*)
+  (push #'document *states*)
+  (make-node (list :body))
+  (push #'body *states*)
+
   (catch 'end-of-file
     (loop
-      (let ((c (read-char stream nil :eof)))
+      (let ((c (read-char stream nil *eof*)))
         (if (null (search (string c) *void-chars*))
-          (funcall *state* c)
+          (funcall (car *states*) c)
         )
       )
     )
@@ -84,206 +89,38 @@
   )
 )
 
-(defun change-state (state)
-  "Changes the actual state-processing function."
-  (setf *state*
-    (ecase state
-      (:paragraph      #'paragraph)
-      (:ordered-list   #'ordered-list)
-      (:unordered-list #'unordered-list)
-      (:list-item      #'list-item)
-      (:link           #'link)
-      (:document       #'document)
-      (:rgb            #'rgb)
-      (:text           #'text)
-      (:line-feed      #'first-linefeed)
-      (:esc            #'escape)
-    )
-  )
-)
-
 ;; states
 
-(defun document (char)
-  "Document state. Nothing interesting happened, yet."
+(defun body (c)
+  "Body state. Nothing interesting happened, yet."
   (cond
 
+    ((test-eof c))
+
+    ((char= c \*)
+     (incf *header-count*)
+     (push #'header0 *states*))
+  )
+)
+
+(defun header0 (char)
+  "Header state *'s running."
+  (cond
     ((test-eof char))
-
-    ((char= char *eol*)
-      (cond 
-        ((zerop (length *current-string*))
-          (make-node (list :paragraph))
-          (pop *tree*)
-        )
-      (t (use-chars-read)))
-    )
-
-    ((is-escaped-char char)
-      (use-chars-read)
-      (make-node (list :esc))
-      (push :esc *states*)
-      (add-char char)
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (change-state (car *states*))
-      (make-node (list :text))
-    )
-
-    ((char= char #\#)
-      (make-node (list :rgb))
-      (change-state :rgb)
-      (push :rgb *states*)
-      (add-char char))
-
+    ((char= c \*)
+     (incf *header-count*))
+    ((char= c #\Space)
+     (make-node (list :header *header-count*))
+     (push #'text *states*)
     (t
-      (make-node (list :paragraph))
-      (change-state :paragraph)
-      (push :paragraph *states*)
-      (make-node (list :text))
-      (change-state :text)
-      (push :text *states*)
-      (add-char char))
-
+     (make-node (list :text))
+     (push #'text *states*)
+     (add-char char))
   )
 )
 
-(defun rgb (char)
-  (cond 
-
-    ((test-eof char))
-
-    ((not (char-hexa char))
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (change-state (car *states*))
-      (make-node (list :text))
-    )
-  )
-  (add-char char)
-)
-
-(defun paragraph (char)
-  (cond
-
-    ((test-eof char))
-
-    ((char= char *eol*)
-      (push :line-feed *states*)
-      (change-state :line-feed))
-
-    ((char= char #\#)
-      (use-chars-read)
-      (make-node (list :rgb))
-      (push :rgb *states*)
-      (change-state :rgb))
-
-    (t 
-      (make-node (list :text))
-      (push :text *states*)
-      (change-state :text)
-      (add-char char))
-  )
-)
-
-(defun ordered-list (char)
-  (cond
-    ((test-eof char))
-    (t (make-node (list :list-item))
-      (make-node (list :paragraph))
-      (change-state :paragraph)
-    )
-  )
-)
-
-(defun unordered-list (char)
-  (add-char char)
-)
-
-(defun list-item (char)
-  (add-char char)
-)
-
-(defun link (char)
-  (add-char char)
-)
-
-(defun text (char)
-  (cond
-    ((test-eof char))
-    ((char= char *eol*)
-      (push :line-feed *states*)
-      (change-state :line-feed)
-      ;(use-chars-read)
-      ;(pop *tree*)
-      ;(pop *states*)
-      ;(if (null *states*) (push :document *states))
-      ;(change-state (car *states*))
-    )
-
-    ((is-escaped-char char)
-      (use-chars-read)
-      (pop *tree*)
-      (make-node (list :esc))
-      (add-char char)
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (change-state (car *states*))
-    )
-
-    ((char= char #\#)
-      (use-chars-read)
-      (make-node (list :rgb))
-      (push :rgb *states*)
-      (change-state :rgb))
-
-    (t (add-char char))
-  )
-)
-
-(defun first-linefeed (char)
-  "A first Linefeed was found."
-  (cond
-    ((test-eof char))
-
-    ((char= char *eol*) ;second one
-      (use-chars-read)
-      (pop *tree*) (pop *tree*)
-      (pop *states*) ;removes linefeed state
-      (pop *states*) ;removes previous state
-      (pop *states*) ;removes previous state
-      (if (null *states*) (push :document *states))
-      (change-state (car *states*)))
-
-    ((is-escaped-char char)
-      (use-chars-read)
-      (make-node (list :esc))
-      (push :esc *states*)
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (change-state (car *states*))
-      (make-node (list :text))
-    )
-
-    ((char= char #\#)
-      (use-chars-read)
-      (make-node (list :rgb))
-      (push :rgb *states*)
-      (change-state :rgb))
-
-    (t 
-      (pop *states*)
-      (change-state (car *states*))
-      (add-char *eol*) ;adds the first linefeed
-      (add-char char)
-    )
-  )
-)
-
+(defun text (c)
+  (add-char c))
 
 (defun make-node (content)
   "Creates a new node." 
@@ -292,18 +129,18 @@
   (push node *tree*)            ;and in the document pushdown tree
 )
 
-(defun char-hexa (char)
+(defun char-hexa (c)
   "Tests for a hexa char."
   (or
-    (and (char>= char #\0) (char<= char #\9))
-    (and (char>= char #\A) (char<= char #\F))
-    (and (char>= char #\a) (char<= char #\f))
+    (and (char>= c #\0) (char<= c #\9))
+    (and (char>= c #\A) (char<= c #\F))
+    (and (char>= c #\a) (char<= c #\f))
   )
 )
 
-(defun test-eof (char)
+(defun test-eof (c)
   (cond 
-    ((eq char :eof)
+    ((char= c *eof*)
       (use-chars-read)
       (pop *tree*)
       (pop *states*)
@@ -313,8 +150,8 @@
   )
 )
 
-(defun add-char (char)
-  (vector-push-extend char *current-string*))
+(defun add-char (c)
+  (vector-push-extend c *current-string*))
 
 (defun make-empty-string ()
   (make-array 0
