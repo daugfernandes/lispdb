@@ -42,10 +42,9 @@
 
 (defconstant *escaped-chars* "\\{}*"
   "Characters that need special prefixing.")
+
 (defconstant *eol* #\.
   "End-of-line character.")
-(defconstant *eof* :eof
-  "End-of-file indicator.")
 
 (defconstant *void-chars* (string #\Return)
   "Characters that should be ignored.")
@@ -58,14 +57,15 @@
   "Parse a stream of characters."
   (setf *document* (list :document)
         *tree* (list *document*)
-        *current-string* (make-empty-string))
+        *current-string* (make-empty-string)
+	*header-count* 0)
   (push #'document *states*)
   (make-node (list :body))
   (push #'body *states*)
 
   (catch 'end-of-file
     (loop
-      (let ((c (read-char stream nil *eof*)))
+      (let ((c (read-char stream nil :eof)))
         (if (null (search (string c) *void-chars*))
           (funcall (car *states*) c)
         )
@@ -91,36 +91,68 @@
 
 ;; states
 
+(defun document ())
+
 (defun body (c)
   "Body state. Nothing interesting happened, yet."
   (cond
-
     ((test-eof c))
-
-    ((char= c \*)
+    ((char= c #\*)
      (incf *header-count*)
-     (push #'header0 *states*))
+     (push #'header0 *states*)
+     (add-char c))
+    ((char= c #\\)
+     (push #'special0 *states*)
+     (add-char c))
+    (t
+     (make-node (list :paragraph))
+     (make-node (list :text))
+     (push #'text *states*)
+     (add-char c))
   )
 )
 
-(defun header0 (char)
+(defun special0 (c)
+  "Escaped or other unknown tags."
+  (cond
+    ((test-eof c))
+    ((is-escaped-char c)
+     (make-node (list :esc))
+     (setf *current-string* (make-empty-string))
+     (add-char c)
+     (use-chars-read)
+     (pop *states*))
+  )
+)
+
+
+(defun header0 (c)
   "Header state *'s running."
   (cond
-    ((test-eof char))
-    ((char= c \*)
-     (incf *header-count*))
+    ((test-eof c))
+    ((char= c #\*)
+     (incf *header-count*)
+     (add-char c))
     ((char= c #\Space)
-     (make-node (list :header *header-count*))
-     (push #'text *states*)
-    (t
+     (make-node (list :header (list *header-count*)))
      (make-node (list :text))
      (push #'text *states*)
-     (add-char char))
+     (setf *current-string* (make-empty-string))) ;clear *'s as is valid header
+    (t
+     (make-node (list :paragraph))
+     (make-node (list :text))
+     (push #'text *states*)
+     (add-char c))
   )
 )
 
 (defun text (c)
-  (add-char c))
+  (cond
+    ((test-eof c))
+    (t
+     (add-char c))
+  )
+)
 
 (defun make-node (content)
   "Creates a new node." 
@@ -132,19 +164,41 @@
 (defun char-hexa (c)
   "Tests for a hexa char."
   (or
-    (and (char>= c #\0) (char<= c #\9))
+    (char-numeric c)
     (and (char>= c #\A) (char<= c #\F))
     (and (char>= c #\a) (char<= c #\f))
   )
 )
 
+(defun char-alfa (c)
+  "Tests for a alphabetic char."
+  (or
+    (and (char>= c #\A) (char<= c #\Z))
+    (and (char>= c #\a) (char<= c #\z))
+  )
+)
+
+(defun char-numeric (c)
+  "Tests for a numeric char."
+  (and (char>= c #\0) (char<= c #\9))
+)
+
+(defun char-alfanumeric (c)
+  "Tests for a alphanumeric char."
+  (or
+    (char-alfa c)
+    (char-numeric c)
+  )
+)
+
+
+
 (defun test-eof (c)
   (cond 
-    ((char= c *eof*)
+    ((eq c :eof)
       (use-chars-read)
       (pop *tree*)
       (pop *states*)
-      (change-state (car *states*))
       (throw 'end-of-file nil)
     )
   )
