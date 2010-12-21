@@ -261,29 +261,29 @@
       (let* 
         (
           (tag (car p))
-          (prefix (get-tag-prefix tag *lang-definition-ht*))
-          (suffix (get-tag-sufix  tag *lang-definition-ht*))
+          (prefix (get-tag-prefix tag *lang-definition-ht* ident))
+          (suffix (get-tag-suffix tag *lang-definition-ht* ident))
         )
-	(concatenate 'string prefix (extract p ident) suffix))
+	(concatenate 'string ident prefix (extract p ident) suffix))
     )
   )
 )
 
-(defun get-tag-prefix (tag ht)
-  (setf ret (cadr (gethash tag ht)))
-  (when (null ret)
-    (setf ret (get-tag-prefix :unknown-tag ht)))
-  (if
-   (car (gethash tag ht))
-   (concatenate 'string *ident-space* ret)
-   ret)
+(defun get-tag-prefix (tag ht ident)
+  (let ((ret (cadr (gethash tag ht))))
+    (cond 
+      ((null ret)
+       (setf ret (get-tag-prefix :unknown-tag ht ident)))
+      ((car (gethash tag ht))
+       (setf ret (concatenate 'string *ident-space* ret))))
+    ret)
 )
 
-(defun get-tag-suffix (tag ht)
-  (let (ret (cadddr (gethash tag ht)))
+(defun get-tag-suffix (tag ht ident)
+  (let ((ret (cadddr (gethash tag ht))))
     (cond
       ((null ret)
-       (setf ret (get-tag-suffix :unknown-tag ht)))
+       (setf ret (get-tag-suffix :unknown-tag ht ident)))
       ((caddr (gethash tag ht))
        (setf ret (concatenate 'string *ident-space* ret))))
     ret)
@@ -293,7 +293,7 @@
   (let ((st ""))
     (loop for i in (cdr p) do 
       (setf st 
-        (concatenate 'string st (mir-to-lang i (concatenate 'string ident ident)))))
+        (concatenate 'string st (mir-to-lang i ident))))
     st
   )
 )
@@ -305,7 +305,7 @@
 (setf (gethash :document html) (list t (format nil "~%<html>~%") t (format nil "~%</html>~%")))
 (setf (gethash :body html) (list t (format nil "<body>~%") t (format nil "</body>~%")))
 (setf (gethash :paragraph html) (list t "<p>" t (format nil "</p>~%")))
-(setf (gethash :text html) (list t "" t ""))
+(setf (gethash :text html) (list nil "" nil ""))
 (setf (gethash :ol html) (list t "<ol>" t "</ol>"))
 (setf (gethash :rgb html) (list t "<color>" t "</color>"))
 (setf (gethash :ul html) (list t "<ul>" t "</ul>"))
