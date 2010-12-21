@@ -25,6 +25,9 @@
 (defvar *lang-definition-ht* nil
   "Language definition hash-table for backend translator.")
 
+(defconstant *ident-space* "    "
+  "Identation characters.")
+
 (defvar *document* nil 
   "Parsed document root node.")
 
@@ -243,7 +246,7 @@
 ;;;==============================
 ;; backend translator
 
-(defun mir-to-lang (p)
+(defun mir-to-lang (p ident)
   "Translator from Markup Intermediate Representation to what-ever language defined by the hash-table in *lang-definition-ht*."
   (cond 
     ((null p))
@@ -251,29 +254,46 @@
      (concatenate        ; necessary as a separator if there is no closing tag
        'string 
        p 
-       (car (nth-value 0 (gethash :text-suffix *lang-definition-ht*)))
+       (car (gethash :text-suffix *lang-definition-ht*))
      )
     )
     (t 
       (let* 
         (
           (tag (car p))
-          (prefix (car (nth-value 0 (gethash tag *lang-definition-ht*))))
-          (suffix (car (cdr (nth-value 0 (gethash tag *lang-definition-ht*)))))
+          (prefix (get-tag-prefix tag *lang-definition-ht*))
+          (suffix (get-tag-sufix  tag *lang-definition-ht*))
         )
-        (concatenate 'string prefix (extract p) suffix)
-      )
+	(concatenate 'string prefix (extract p ident) suffix))
     )
   )
 )
 
-(defun extract (p)
+(defun get-tag-prefix (tag ht)
+  (setf ret (cadr (gethash tag ht)))
+  (when (null ret)
+    (setf ret (get-tag-prefix :unknown-tag ht)))
+  (if
+   (car (gethash tag ht))
+   (concatenate 'string *ident-space* ret)
+   ret)
+)
+
+(defun get-tag-suffix (tag ht)
+  (let (ret (cadddr (gethash tag ht)))
+    (cond
+      ((null ret)
+       (setf ret (get-tag-suffix :unknown-tag ht)))
+      ((caddr (gethash tag ht))
+       (setf ret (concatenate 'string *ident-space* ret))))
+    ret)
+)
+
+(defun extract (p ident)
   (let ((st ""))
     (loop for i in (cdr p) do 
       (setf st 
-        (concatenate 'string st (mir-to-lang i))
-      )
-    )
+        (concatenate 'string st (mir-to-lang i (concatenate 'string ident ident)))))
     st
   )
 )
@@ -282,19 +302,21 @@
 
 ;; HTML
 (setf html (make-hash-table))
-(setf (gethash :document html) (list "<body>" "</body>"))
-(setf (gethash :paragraph html) (list "<p>" "</p>"))
-(setf (gethash :text html) (list "" ""))
-(setf (gethash :ol html) (list "<ol>" "</ol>"))
-(setf (gethash :rgb html) (list "<color>" "</color>"))
-(setf (gethash :ul html) (list "<ul>" "</ul>"))
-(setf (gethash :li html) (list "<li>" "</li>"))
-(setf (gethash :esc html) (list "" ""))
-(setf (gethash :unknown-tag html) (list "<span style=\"background-color=red;\">" "</span>"))
+(setf (gethash :document html) (list t (format nil "~%<html>~%") t (format nil "~%</html>~%")))
+(setf (gethash :body html) (list t (format nil "<body>~%") t (format nil "</body>~%")))
+(setf (gethash :paragraph html) (list t "<p>" t (format nil "</p>~%")))
+(setf (gethash :text html) (list t "" t ""))
+(setf (gethash :ol html) (list t "<ol>" t "</ol>"))
+(setf (gethash :rgb html) (list t "<color>" t "</color>"))
+(setf (gethash :ul html) (list t "<ul>" t "</ul>"))
+(setf (gethash :li html) (list t "<li>" t "</li>"))
+(setf (gethash :esc html) (list t "" t ""))
+(setf (gethash :unknown-tag html) (list t "<span style=\"background-color=red;\">" t "</span>"))
 (setf (gethash :text-suffix html) (list ""))
 
 (setf pseudom (make-hash-table))
 (setf (gethash :document pseudom) (list ":document " nil))
+(setf (gethash :body pseudom) (list ":body " nil))
 (setf (gethash :paragraph pseudom) (list ":paragraph " nil))
 (setf (gethash :text pseudom) (list "<" ">"))
 (setf (gethash :ol pseudom) (list ":ordered-list " nil))
