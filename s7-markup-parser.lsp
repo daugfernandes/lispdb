@@ -35,7 +35,10 @@
   "Document pushdown tree. (car *tree*) is the last element in use.")
 
 (defvar *states* nil
-  "Pushdown list os states so far.")
+  "Pushdown list of states so far.")
+
+(defvar *block-modes* nil
+  "Block-modes vector.")
 
 (defvar *header-count* 0
   "Counts *")
@@ -61,10 +64,12 @@
   (setf *document* (list :document)
         *tree* (list *document*)
         *current-string* (make-empty-string)
-	*header-count* 0)
+	*header-count* 0
+	*block-modes* nil)
   (push #'document *states*)
   (make-node (list :body))
   (push #'body *states*)
+  (push :body *block-modes*)
 
   (catch 'end-of-file
     (loop
@@ -102,16 +107,19 @@
     ((test-eof c))
     ((char= c #\*)
      (incf *header-count*)
-     (push #'header0 *states*)
+     (push #'header *states*)
      (add-char c))
     ((char= c #\\)
      (push #'special0 *states*)
      (add-char c))
     ((char= c #\Space)
-     (push #'space0 *states*))
+     (push #'first-space *states*))
     (t
-     (if (and (equal (caar *tree*) :quote) (equal *current-string* (make-empty-string)))
-	 (pop *tree*))
+     (if 
+      (equal (car *block-modes*) :quote)
+      (if 
+       (equal *current-string* (make-empty-string))
+       (progn (pop *tree*))))
      (make-node (list :paragraph))
      (make-node (list :text))
      (push #'text *states*)
@@ -119,12 +127,12 @@
   )
 )
 
-(defun space0 (c)
+(defun first-space (c)
   "At least one-space tags: lists, quotes, verbatins."
   (cond
     ((test-eof c))
     ((char= c #\Space)
-     (push #'space1 *states*))
+     (push #'second-space *states*))
     (t ; it is just text
      (make-node (list :paragraph))
      (make-node (list :text))
@@ -133,37 +141,41 @@
      (add-char c)))
 )
 
-(defun space1 (c)
+(defun second-space (c)
   "At least two-spaces tags: lists, quotes, verbatins."
   (cond
     ((test-eof c))
     ((char= c #\Space)
-     (push #'space2 *states*))
+     (push #'third-space *states*))
     ((char= c #\#)
-     (push #'maybe-ulist *states*))
+     (push #'ulist *states*))
     ((char= c #\-)
-     (push #'maybe-olist *states*))
+     (push #'olist *states*))
     (t ; 2 spaces + char is blockquote
-     (if (not (equal (caar *tree*) :quote))
-	 (make-node (list :quote)))
+     (if 
+      (not (equal (car *block-modes*) :quote))
+      (progn
+	(make-node (list :quote))
+	(push :quote *block-modes*)))
      (add-char c)
      (push #'body *states*)))
-)     
+)
 
-(defun space2 (c)
+(defun third-space (c)
   "Third space."
   (cond
     ((test-eof c))
     ((char= c #\Space) ; fourth space (= as it was second)
       (pop *states*))
     (t
-     (if (not (equal (caar *tree*) :verbatim))
-	 (make-node (list :verbatim)))
+     (when (not (equal (car *block-modes*) :verbatim))
+       (make-node (list :verbatim))
+       (push :verbatim *block-modes*))
      (add-char c)
-     (push #'text *states*)))
+     (push #'body *states*)))
 )
 
-(defun maybe-ulist (c)
+(defun ulist (c)
   "Unordered list."
   (cond
     ((test-eof c))
@@ -181,7 +193,7 @@
      (push #'text *states*)))
 )
 
-(defun maybe-olist (c)
+(defun olist (c)
   "Ordered list."
   (cond
     ((test-eof c))
@@ -209,7 +221,7 @@
 )
 
 
-(defun header0 (c)
+(defun header (c)
   "Header state *'s running."
   (cond
     ((test-eof c))
@@ -234,13 +246,13 @@
   (cond
    ((test-eof c))
    ((char= c *eol*)
-    (push #'linefeed0 *states*))
+    (push #'first-linefeed *states*))
    (t
     (add-char c))
   )
 )
 
-(defun linefeed0 (c)
+(defun first-linefeed (c)
   (cond
     ((test-eof c))
     ((char= c *eol*) ;second linefeed
