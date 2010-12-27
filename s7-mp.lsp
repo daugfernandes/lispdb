@@ -32,10 +32,13 @@
   "Parsed document root node.")
 
 (defvar *tree* nil      
-  "Document pushdown tree. (car *tree*) is the last element in use.")
+  "Stack of elements. (car *tree*) -> element in use.")
 
-(defvar *states* nil
-  "Pushdown list os states so far.")
+(defvar *state* nil
+  "Current state processing function.")
+
+(defvar *what-if-eol* nil
+  "Stack of eol treatment functions.")
 
 (defvar *header-count* 0
   "Counts *")
@@ -61,16 +64,21 @@
   (setf *document* (list :document)
         *tree* (list *document*)
         *current-string* (make-empty-string)
-	*header-count* 0)
-  (push #'document *states*)
+	*header-count* 0
+	*state* #'i-state)
   (make-node (list :body))
-  (push #'body *states*)
 
   (catch 'end-of-file
     (loop
       (let ((c (read-char stream nil :eof)))
         (if (null (search (string c) *void-chars*))
-          (funcall (car *states*) c)
+	    (progn
+	      (if (eq c :eof)
+		  (progn
+		    (use-chars-read)
+		    (throw 'end-of-file nil))
+		(funcall *state* c))
+	    )
         )
       )
     )
@@ -96,164 +104,114 @@
 
 (defun document ())
 
-(defun body (c)
-  "Body state. Nothing interesting happened, yet."
+(defun i-state (c)
+  "Initial state. Nothing interesting happened, yet."
   (cond
-    ((test-eof c))
-    ((char= c #\*)
+    ((char= c #\*)                 ; header starting
      (incf *header-count*)
-     (push #'header0 *states*)
+     (setf *state* #'h1-state)
      (add-char c))
-    ((char= c #\\)
-     (push #'special0 *states*)
-     (add-char c))
-    ((char= c #\Space)
-     (push #'space0 *states*))
-    (t
-     (if (and (equal (caar *tree*) :quote) (equal *current-string* (make-empty-string)))
-	 (pop *tree*))
+    ((char= c #\Space)             ; first space -> maybe block section
+     (setf *state* #'s1-state))
+    (t                             ; plain text paragraph
+     (setf *state*  #'t-state)
      (make-node (list :paragraph))
      (make-node (list :text))
-     (push #'text *states*)
      (add-char c))
   )
 )
 
-(defun space0 (c)
-  "At least one-space tags: lists, quotes, verbatins."
+(defun h1-state (c)
+  "Header-maybe state."
   (cond
-    ((test-eof c))
-    ((char= c #\Space)
-     (push #'space1 *states*))
-    (t ; it is just text
-     (make-node (list :paragraph))
-     (make-node (list :text))
-     (push #'text *states*)
-     (add-char #\Space)
-     (add-char c)))
-)
-
-(defun space1 (c)
-  "At least two-spaces tags: lists, quotes, verbatins."
-  (cond
-    ((test-eof c))
-    ((char= c #\Space)
-     (push #'space2 *states*))
-    ((char= c #\#)
-     (push #'maybe-ulist *states*))
-    ((char= c #\-)
-     (push #'maybe-olist *states*))
-    (t ; 2 spaces + char is blockquote
-     (if (not (equal (caar *tree*) :quote))
-	 (make-node (list :quote)))
-     (add-char c)
-     (push #'body *states*)))
-)     
-
-(defun space2 (c)
-  "Third space."
-  (cond
-    ((test-eof c))
-    ((char= c #\Space) ; fourth space (= as it was second)
-      (pop *states*))
-    (t
-     (if (not (equal (caar *tree*) :verbatim))
-	 (make-node (list :verbatim)))
-     (add-char c)
-     (push #'text *states*)))
-)
-
-(defun maybe-ulist (c)
-  "Unordered list."
-  (cond
-    ((test-eof c))
-    ((char= c #\Space)
-     (cond 
-      ((not (equal (caar *tree*) :ulist))
-       (make-node (list :ulist)))
-      (t (pop *tree*)))
-     (make-node (list :item))
-     (push #'body *states*))
-    (t ;just text starting with #
-     (make-node (list :paragraph))
-     (add-char #\#)
-     (add-char c)
-     (push #'text *states*)))
-)
-
-(defun maybe-olist (c)
-  "Ordered list."
-  (cond
-    ((test-eof c))
-    ((char= c #\Space)
-     (make-node (list :olist))
-     (push #'body *states*))
-    (t ;just text starting with #
-     (make-node (list :paragraph))
-     (add-char #\-)
-     (add-char c)
-     (push #'text *states*)))
-)
-
-(defun special0 (c)
-  "Escaped or other unknown tags."
-  (cond
-    ((test-eof c))
-    ((is-escaped-char c)
-     (make-node (list :esc))
-     (setf *current-string* (make-empty-string))
-     (add-char c)
-     (use-chars-read)
-     (pop *states*))
-  )
-)
-
-
-(defun header0 (c)
-  "Header state *'s running."
-  (cond
-    ((test-eof c))
-    ((char= c #\*)
+    ((char= c #\*)                 ; header +1 level
      (incf *header-count*)
      (add-char c))
-    ((char= c #\Space)
+    ((char= c #\Space)             ; header confirmation; clean *'s
      (make-node (list :header *header-count*))
-     (setf *header-count* 0)
      (make-node (list :text))
-     (push #'text *states*)
-     (setf *current-string* (make-empty-string))) ;clear *'s as is valid header
-    (t
+     (setf *state* #'t-state
+           *current-string* (make-empty-string)
+           *header-count* 0))
+    (t                             ; plain text paragraph <- (*'s w/o space)
      (make-node (list :paragraph))
      (make-node (list :text))
-     (push #'text *states*)
+     (setf *state* #'t-state
+	   *header-count* p)
      (add-char c))
   )
 )
 
-(defun text (c)
+(defun s1-state (c)
+  "First space found."
   (cond
-   ((test-eof c))
-   ((char= c *eol*)
-    (push #'linefeed0 *states*))
-   (t
-    (add-char c))
+    ((char= c #\Space)
+     (setf *state* #'bl-state))
+    (t
+     (make-node (list :paragraph))
+     (make-node (list :text))
+     (setf *state* #'t-state)
+     (add-char c))
   )
 )
 
-(defun linefeed0 (c)
+(defun bl-state (c)
+  "Block state."
   (cond
-    ((test-eof c))
-    ((char= c *eol*) ;second linefeed
-     (use-chars-read)
-     (pop *states*)
-     (pop *states*)
-     (pop *tree*)
-     (setf q (pop *tree*)))
-;     (make-node (list (car q)))
+    ((char= c #\Space)
+     (setf *state* #'v1-state))
+    ((char= c #\#))
+    ((char= c #\-))
     (t
-     (add-char #\Linefeed) ; for first Linefeed
+     (make-node (list :quote))
+     (make-node (list :paragraph))
+     (make-node (list :text))
+     (setf *state* #'t-state
+	   *current-string* (make-empty-string))
+     (add-char c))
+  )
+)
+
+(defun v1-state (c)
+  "Maybe VERBATIM."
+  (cond
+    ((char= c #\Space)
+     (setf *state* #'bl-state))
+    (t
+     (make-node (list :verbatim))
+     (setf *state* #'i-state
+	   *current-string* (make-empty-string))
+     (add-char c))
+  )
+)
+
+(defun p-state (c)
+  "Paragraph state."
+  (add-char c)
+)
+
+(defun t-state (c)
+  "Text state."
+  (cond
+    ((char= c *eol*)
+     (setf *state* #'t1-state))
+    (t
+     (add-char c))
+  )
+)
+
+(defun t1-state (c)
+  (cond
+    ((char= c *eol*)
+     (use-chars-read)
+     (setf q (caadr *tree*))
+     (pop *tree*) (pop *tree*)
+     (make-node (list (car *tree*)))
+     (setf *state* #'i-state)) ;TODO: change this
+    (t
+     ;(add-char #\Space)
      (add-char c)
-     (pop *states*))
+     (setf *state* #'t-state))
   )
 )
 
@@ -263,10 +221,6 @@
   (push-tail node (car *tree*)) ;sets it in the document structure
   (push node *tree*)            ;and in the document pushdown tree
 )
-
-(defun inside-tag (tag)
-  "testes if current TAG is inside a tag."
-  (equal (caadr *tree*) tag)) 
 
 (defun char-hexa (c)
   "Tests for a hexa char."
@@ -298,17 +252,6 @@
   )
 )
 
-(defun test-eof (c)
-  (cond 
-    ((eq c :eof)
-      (use-chars-read)
-      (pop *tree*)
-      (pop *states*)
-      (throw 'end-of-file nil)
-    )
-  )
-)
-
 (defun last-char-of (s)
   (char s (1- (length s)))
 )
@@ -317,11 +260,11 @@
   (cond
    ((zerop (length *current-string*))
     (vector-push-extend c *current-string*))
-   ((not (char= #\Linefeed (last-char-of *current-string*)))
+   ((not (char= *eol* (last-char-of *current-string*)))
     (vector-push-extend c *current-string*))
    ((not (char= #\Space c))
     (cond 
-     ((char= #\Linefeed (last-char-of *current-string*))
+     ((char= *eol* (last-char-of *current-string*))
       (vector-pop *current-string*)
       (vector-push-extend #\Space *current-string*)))
     (vector-push-extend c *current-string*)))
@@ -462,20 +405,14 @@
   (assert 
    (equal 
     (test-file "07_headers.txt")
-    (list :DOCUMENT
-	  (list :BODY 
-		(list :HEADER 1 (list :TEXT "This is a primary header.")) 
-		(list :HEADER 2 (list :TEXT "This is a secondary header."))
-		(list :HEADER 3 (list :TEXT "This is a tertiary header.")) 
-		(list :HEADER 4 (list :TEXT "This is a quaternary header."))
-		(list :HEADER 5 (list :TEXT "This is a quinary header.")) 
-		(list :HEADER 6 (list :TEXT "This is a senary header."))
-		(list :HEADER 7 (list :TEXT "This is a septenary header.")) 
-		(list :HEADER 8 (list :TEXT "This is a octonary header."))
-		(list :HEADER 9 (list :TEXT "This is a nonary header.")) 
-		(list :HEADER 10 (list :TEXT "This is a denary header."))
-		(list :HEADER 11 (list :TEXT "There's no name for what kind of header this is.")) 
-		(list :HEADER 12 (list :TEXT "This is a duodenary header."))))))
+(list :DOCUMENT
+ (list :BODY (list :HEADER 1 (list :TEXT "This is a primary header.")) (list :HEADER 2 (list :TEXT "This is a secondary header."))
+  (list :HEADER 3 (list :TEXT "This is a tertiary header.")) (list :HEADER 4 (list :TEXT "This is a quaternary header."))
+  (list :HEADER 5 (list :TEXT "This is a quinary header.")) (list :HEADER 6 (list :TEXT "This is a senary header."))
+  (list :HEADER 7 (list :TEXT "This is a septenary header.")) (list :HEADER 8 (list :TEXT "This is a octonary header."))
+  (list :HEADER 9 (list :TEXT "This is a nonary header.")) (list :HEADER 10 (list :TEXT "This is a denary header."))
+  (list :HEADER 11 (list :TEXT "There's no name for what kind of header this is.")) (list :HEADER 12 (list :TEXT "This is a duodenary header."))))))
+
 
   (assert 
    (equal 
