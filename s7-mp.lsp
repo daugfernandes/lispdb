@@ -163,6 +163,7 @@
     ((char= c #\#))
     ((char= c #\-))
     (t
+     (push-tail (list :aa (car (car *tree*))) (car *tree*))
      (make-node (list :quote))
      (make-node (list :paragraph))
      (make-node (list :text))
@@ -194,6 +195,7 @@
   "Text state."
   (cond
     ((char= c *eol*)
+;     (add-char c)
      (setf *state* #'t1-state))
     (t
      (add-char c))
@@ -203,13 +205,13 @@
 (defun t1-state (c)
   (cond
     ((char= c *eol*)
+;     (add-char c)
      (use-chars-read)
      (setf q (caadr *tree*))
      (pop *tree*) (pop *tree*)
-     (make-node (list (car *tree*)))
      (setf *state* #'i-state)) ;TODO: change this
     (t
-     ;(add-char #\Space)
+     (add-char #\Space)
      (add-char c)
      (setf *state* #'t-state))
   )
@@ -260,13 +262,13 @@
   (cond
    ((zerop (length *current-string*))
     (vector-push-extend c *current-string*))
-   ((not (char= *eol* (last-char-of *current-string*)))
-    (vector-push-extend c *current-string*))
    ((not (char= #\Space c))
     (cond 
      ((char= *eol* (last-char-of *current-string*))
       (vector-pop *current-string*)
       (vector-push-extend #\Space *current-string*)))
+    (vector-push-extend c *current-string*))
+   ((not (char= *eol* (last-char-of *current-string*)))
     (vector-push-extend c *current-string*)))
 )
 
