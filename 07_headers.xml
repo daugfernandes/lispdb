@@ -1,0 +1,18 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type></HEAD>
+<BODY><PRE>&lt;body&gt;
+    &lt;h1&gt;This is a primary header.&lt;/h1&gt;
+    &lt;h2&gt;This is a secondary header.&lt;/h2&gt;
+    &lt;h3&gt;This is a tertiary header.&lt;/h3&gt;
+    &lt;h4&gt;This is a quaternary header.&lt;/h4&gt;
+    &lt;h5&gt;This is a quinary header.&lt;/h5&gt;
+    &lt;h6&gt;This is a senary header.&lt;/h6&gt;
+    &lt;h7&gt;This is a septenary header.&lt;/h7&gt;
+    &lt;h8&gt;This is a octonary header.&lt;/h8&gt;
+    &lt;h9&gt;This is a nonary header.&lt;/h9&gt;
+    &lt;h10&gt;This is a denary header.&lt;/h10&gt;
+    &lt;h11&gt;There's no name for what kind of header this is.&lt;/h11&gt;
+    &lt;h12&gt;This is a duodenary header.&lt;/h12&gt;
+&lt;/body&gt;
+</PRE></BODY></HTML>

@@ -1,0 +1,13 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type></HEAD>
+<BODY><PRE>&lt;body&gt;
+    &lt;p&gt;Regular &lt;link&gt;text&lt;/link&gt; with &lt;link&gt;links&lt;key&gt;foo&lt;/key&gt;&lt;/link&gt; blah.&lt;/p&gt;
+    &lt;link_def&gt;
+        &lt;link&gt;text&lt;/link&gt;&lt;url&gt;http://www.example.com/text/&lt;/url&gt;
+    &lt;/link_def&gt;
+    &lt;link_def&gt;
+        &lt;link&gt;foo&lt;/link&gt;&lt;url&gt;http://www.example.com/foo/&lt;/url&gt;
+    &lt;/link_def&gt;
+&lt;/body&gt;
+</PRE></BODY></HTML>

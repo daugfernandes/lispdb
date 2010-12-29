@@ -1,0 +1,7 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type></HEAD>
+<BODY><PRE>&lt;body&gt;
+    &lt;p&gt;These chars \ { } must be escaped if they are not to have their special meanings.&lt;/p&gt;
+&lt;/body&gt;
+</PRE></BODY></HTML>
