@@ -1,0 +1,15 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type></HEAD>
+<BODY><PRE>&lt;body&gt;
+    &lt;p&gt;This is a regular paragraph.
+    &lt;note&gt;
+        &lt;p&gt;This is an embedded note.&lt;/p&gt;
+        &lt;blockquote&gt;
+            &lt;p&gt;This is a blockquote in the note.&lt;/p&gt;
+        &lt;/blockquote&gt;
+        &lt;p&gt;Back to regular.&lt;/p&gt;
+    &lt;/note&gt;
+     Here's the rest of the outer paragraph.&lt;/p&gt;
+&lt;/body&gt;
+</PRE></BODY></HTML>

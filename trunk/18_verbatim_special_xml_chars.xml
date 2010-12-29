@@ -1,0 +1,12 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type></HEAD>
+<BODY><PRE>&lt;body&gt;
+    &lt;p&gt;This a paragraph with a &amp;lt; and and &amp;gt; and an &amp;amp;.&lt;/p&gt;
+    &lt;pre&gt;/* Some verbatim code */
+
+if (i &amp;lt; 10) {
+  &amp;amp;x.foo &amp;gt; 20 ? "foo" : "bar";
+}&lt;/pre&gt;
+&lt;/body&gt;
+</PRE></BODY></HTML>
