@@ -112,10 +112,17 @@
      (setf *state* #'h1-state)
      (add-char c))
     ((char= c #\Space)             ; first space -> maybe block section
+     (add-char c)
      (setf *state* #'s1-state))
+    ((char= c *eol*)
+     (setf *state* #'t1-state))
     (t                             ; plain text paragraph
+     (if (equal (caar *tree*) :quote) 
+	 (pop *tree*))
      (setf *state*  #'t-state)
-     (make-node (list :paragraph))
+     (if (not (equal (caar *tree*) :verbatim))
+	 (progn
+	   (make-node (list :paragraph))))
      (make-node (list :text))
      (add-char c))
   )
@@ -146,6 +153,7 @@
   "First space found."
   (cond
     ((char= c #\Space)
+     (add-char c)
      (setf *state* #'bl-state))
     (t
      (make-node (list :paragraph))
@@ -159,16 +167,22 @@
   "Block state."
   (cond
     ((char= c #\Space)
+     (add-char c)
      (setf *state* #'v1-state))
     ((char= c #\#))
     ((char= c #\-))
     (t
+<<<<<<< .mine
+     (if (not (equal (caar *tree*) :quote))
+	 (make-node (list :quote)))
+=======
      (push-tail (list :aa (car (car *tree*))) (car *tree*))
      (make-node (list :quote))
+>>>>>>> .r71
      (make-node (list :paragraph))
      (make-node (list :text))
-     (setf *state* #'t-state
-	   *current-string* (make-empty-string))
+     (setf *state* #'t-state)
+;	   *current-string* (make-empty-string))
      (add-char c))
   )
 )
@@ -179,9 +193,12 @@
     ((char= c #\Space)
      (setf *state* #'bl-state))
     (t
-     (make-node (list :verbatim))
-     (setf *state* #'i-state
-	   *current-string* (make-empty-string))
+     (if (not (equal (caadr *tree*) :verbatim))
+	 (progn
+	   (make-node (list :verbatim)))
+       (make-node (list :text)))
+     (setf *state* #'i-state)
+;	   *current-string* (make-empty-string))
      (add-char c))
   )
 )
@@ -207,11 +224,24 @@
     ((char= c *eol*)
 ;     (add-char c)
      (use-chars-read)
+<<<<<<< .mine
+     (if (not (equal (caadr *tree*) :verbatim))
+	 (progn
+	   (pop *tree*)
+	   (pop *tree*)))
+=======
      (setf q (caadr *tree*))
      (pop *tree*) (pop *tree*)
+>>>>>>> .r71
      (setf *state* #'i-state)) ;TODO: change this
     (t
+<<<<<<< .mine
+     (use-chars-read)
+     (pop *tree*)
+     (make-node (list :text))
+=======
      (add-char #\Space)
+>>>>>>> .r71
      (add-char c)
      (setf *state* #'t-state))
   )
@@ -284,7 +314,13 @@
   (cond
     ((> (length *current-string*) 0)
       (push-tail 
-        (string-right-trim " " *current-string*)
+        (cond
+	    ((equal (caaddr *tree*) :quote)
+	     (subseq (string-right-trim " " *current-string*) 2))
+	    ((equal (caadr *tree*) :verbatim)
+	     (subseq *current-string* 3))
+	    (t
+	     (string-right-trim " " *current-string*)))
         (car *tree*)
       )
       (setf *current-string* (make-empty-string))
@@ -360,105 +396,231 @@
   )
 )
 
+(defmacro t1 () `(test-file "01_empty.txt"))
+(defmacro t2 () `(test-file "02_simple_paragraph.txt"))
+(defmacro t3 () `(test-file "03_multiline_paragraph.txt"))
+(defmacro t4 () `(test-file "04_two_paragraphs.txt"))
+(defmacro t5 () `(test-file "05_several_multiline_paragraphs.txt"))
+(defmacro t6 () `(test-file "06_header.txt"))
+(defmacro t7 () `(test-file "07_headers.txt"))
+(defmacro t8 () `(test-file "08_crazy_header.txt"))
+(defmacro t9 () `(test-file "09_headers_and_paragraphs.txt"))
+(defmacro t10() `(test-file "10_blockquote.txt"))
+(defmacro t11() `(test-file "11_multiline_blockquote.txt"))
+(defmacro t12() `(test-file "12_multi_paragraph_blockquote.txt"))
+(defmacro t13() `(test-file "13_paragraphs_and_blockquotes.txt"))
+(defmacro t14() `(test-file "14_simple_verbatim.txt"))
+(defmacro t15() `(test-file "15_useful_verbatim.txt"))
+(defmacro t16() `(test-file "16_verbatim_with_indentation.txt"))
+(defmacro t17() `(test-file "17_verbatim_first_line_extra_indented.txt"))
+(defmacro t18() `(test-file ""))
+(defmacro t19() `(test-file ""))
+(defmacro t20() `(test-file ""))
+(defmacro t21() `(test-file ""))
+(defmacro t22() `(test-file ""))
+(defmacro t23() `(test-file ""))
+(defmacro t24() `(test-file ""))
+(defmacro t25() `(test-file ""))
+(defmacro t26() `(test-file ""))
+(defmacro t27() `(test-file ""))
+(defmacro t28() `(test-file ""))
+(defmacro t29() `(test-file ""))
+(defmacro t30() `(test-file ""))
+(defmacro t31() `(test-file ""))
+(defmacro t32() `(test-file ""))
+
+
 ;; utests
 (defun ut ()
   (assert 
    (equal 
-    (test-file "01_empty.txt") 
+    (t1) 
     (list :document (list :body))))
   (assert 
    (equal 
-    (test-file "02_simple_paragraph.txt") 
+    (t2) 
     (list :document (list :body (list :paragraph (list :text "This is a simple paragraph."))))))
   (assert 
    (equal 
-    (test-file "03_multiline_paragraph.txt") 
-    (list :document (list :body (list :paragraph (list :text "This is a multiline paragraph. It crosses multiple lines."))))))
+    (t3) 
+    (list :document (list :body (list :paragraph (list :text "This is a multiline paragraph.") (list :text "It crosses multiple lines."))))))
   (assert 
    (equal 
-    (test-file "04_two_paragraphs.txt")
+    (t4)
     (list :document (list :body (list :paragraph (list :text "This is paragraph number one.")) (list :paragraph (list :text "This is paragraph number two."))))))
   (assert 
    (equal 
-    (test-file "05_several_multiline_paragraphs.txt")
+    (t5)
     (list :DOCUMENT
-	  (list :BODY
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent interdum, ipsum vitae luctus placerat, turpis risus ornare tellus, eget dictum elit libero sit amet enim. Phasellus malesuada libero at sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna. Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus lobortis condimentum. Pellentesque tempus leo at ante sodales a molestie metus feugiat. Fusce et nisi non mauris pretium euismod. Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula. Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus odio mi, pretium nec condimentum in, fermentum convallis mi."))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem, lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus nisl. Quisque non sem egestas massa posuere venenatis auctor quis lacus. Donec consequat, velit a scelerisque convallis, diam velit rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et accumsan ante facilisis et. Fusce in mauris ligula, eget placerat odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit vel."))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor, scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti. Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros, viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec eget velit felis. Curabitur tempor tristique augue, vel eleifend mi posuere et."))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo accumsan eu. Cras ut lectus risus. In iaculis laoreet eros, a ultricies justo pharetra ac. Suspendisse egestas consequat mauris id porta. Suspendisse euismod luctus arcu vel accumsan. Ut id neque consequat mauris aliquet accumsan eget sed justo. Vestibulum lobortis interdum enim, vitae ultrices massa aliquam at. Maecenas eu purus egestas metus aliquet mollis a ac quam. Praesent vitae tellus eu sapien fringilla venenatis quis sit amet libero. Maecenas id malesuada dui. Suspendisse porta aliquet nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas sapien sem, imperdiet id convallis in, gravida at urna. Curabitur interdum scelerisque libero, semper tempor metus pharetra a. Mauris eu lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis eleifend sem. Suspendisse imperdiet velit at justo fermentum vel facilisis nibh tempus. Suspendisse porta, ipsum non aliquet consequat, orci purus viverra nisi, in suscipit elit nulla at neque. Aenean lobortis, est sed rutrum dapibus, mauris nulla suscipit nulla, vitae dictum leo ligula ut nisi."))))))
+	  (list :body
+		(list :PARAGRAPH 
+		      (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer")
+		      (list :TEXT "dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent")
+		      (list :TEXT "interdum, ipsum vitae luctus placerat, turpis risus ornare tellus,")
+		      (list :TEXT "eget dictum elit libero sit amet enim. Phasellus malesuada libero at")
+		      (list :TEXT "sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna.")
+		      (list :TEXT "Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur")
+		      (list :TEXT "tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus")
+		      (list :TEXT "luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis")
+		      (list :TEXT "feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus")
+		      (list :TEXT "lobortis condimentum. Pellentesque tempus leo at ante sodales a")
+		      (list :TEXT "molestie metus feugiat. Fusce et nisi non mauris pretium euismod.")
+		      (list :TEXT "Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula.")
+		      (list :TEXT "Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum")
+		      (list :TEXT "pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum")
+		      (list :TEXT "ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus")
+		      (list :TEXT "odio mi, pretium nec condimentum in, fermentum convallis mi."))
+		(list :PARAGRAPH 
+		      (list :TEXT "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem,")
+		      (list :TEXT "lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus")
+		      (list :TEXT "nisl. Quisque non sem egestas massa posuere venenatis auctor quis")
+		      (list :TEXT "lacus. Donec consequat, velit a scelerisque convallis, diam velit")
+		      (list :TEXT "rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat")
+		      (list :TEXT "volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et")
+		      (list :TEXT "ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et")
+		      (list :TEXT "accumsan ante facilisis et. Fusce in mauris ligula, eget placerat")
+		      (list :TEXT "odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit") 
+		      (list :TEXT "vel."))
+		(list :PARAGRAPH 
+		      (list :TEXT "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor,")
+		      (list :TEXT "scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti.")
+		      (list :TEXT "Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros,")
+		      (list :TEXT "viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id")
+		      (list :TEXT "nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat")
+		      (list :TEXT "hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus")
+		      (list :TEXT "eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a")
+		      (list :TEXT "condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec")
+		      (list :TEXT "eget velit felis. Curabitur tempor tristique augue, vel eleifend mi") 
+		      (list :TEXT "posuere et."))
+		(list :PARAGRAPH 
+		      (list :TEXT "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur")
+		      (list :TEXT "ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo accumsan")
+		      (list :TEXT "eu. Cras ut lectus risus. In iaculis laoreet eros, a ultricies justo")
+		      (list :TEXT "pharetra ac. Suspendisse egestas consequat mauris id porta.")
+		      (list :TEXT "Suspendisse euismod luctus arcu vel accumsan. Ut id neque consequat")
+		      (list :TEXT "mauris aliquet accumsan eget sed justo. Vestibulum lobortis interdum")
+		      (list :TEXT "enim, vitae ultrices massa aliquam at. Maecenas eu purus egestas metus")
+		      (list :TEXT "aliquet mollis a ac quam. Praesent vitae tellus eu sapien fringilla")
+		      (list :TEXT "venenatis quis sit amet libero. Maecenas id malesuada dui. Suspendisse")
+		      (list :TEXT "porta aliquet nisi. Class aptent taciti sociosqu ad litora torquent") 
+		      (list :TEXT "per conubia nostra, per inceptos himenaeos."))
+		(list :PARAGRAPH 
+		      (list :TEXT "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis")
+		      (list :TEXT "malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas")
+		      (list :TEXT "sapien sem, imperdiet id convallis in, gravida at urna. Curabitur")
+		      (list :TEXT "interdum scelerisque libero, semper tempor metus pharetra a. Mauris eu")
+		      (list :TEXT "lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed")
+		      (list :TEXT "auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis")
+		      (list :TEXT "eleifend sem. Suspendisse imperdiet velit at justo fermentum vel")
+		      (list :TEXT "facilisis nibh tempus. Suspendisse porta, ipsum non aliquet consequat,")
+		      (list :TEXT "orci purus viverra nisi, in suscipit elit nulla at neque. Aenean")
+		      (list :TEXT "lobortis, est sed rutrum dapibus, mauris nulla suscipit nulla, vitae") 
+		      (list :TEXT "dictum leo ligula ut nisi."))))))
 
   (assert 
    (equal 
-    (test-file "06_header.txt")
+    (t6)
     (list :DOCUMENT (list :BODY (list :HEADER 1 (list :TEXT "This is a top level header"))))))
 
   (assert 
    (equal 
-    (test-file "07_headers.txt")
-(list :DOCUMENT
- (list :BODY (list :HEADER 1 (list :TEXT "This is a primary header.")) (list :HEADER 2 (list :TEXT "This is a secondary header."))
-  (list :HEADER 3 (list :TEXT "This is a tertiary header.")) (list :HEADER 4 (list :TEXT "This is a quaternary header."))
-  (list :HEADER 5 (list :TEXT "This is a quinary header.")) (list :HEADER 6 (list :TEXT "This is a senary header."))
-  (list :HEADER 7 (list :TEXT "This is a septenary header.")) (list :HEADER 8 (list :TEXT "This is a octonary header."))
-  (list :HEADER 9 (list :TEXT "This is a nonary header.")) (list :HEADER 10 (list :TEXT "This is a denary header."))
-  (list :HEADER 11 (list :TEXT "There's no name for what kind of header this is.")) (list :HEADER 12 (list :TEXT "This is a duodenary header."))))))
+    (t7)
+    (list :DOCUMENT
+	  (list :BODY (list :HEADER 1 (list :TEXT "This is a primary header.")) (list :HEADER 2 (list :TEXT "This is a secondary header."))
+		(list :HEADER 3 (list :TEXT "This is a tertiary header.")) (list :HEADER 4 (list :TEXT "This is a quaternary header."))
+		(list :HEADER 5 (list :TEXT "This is a quinary header.")) (list :HEADER 6 (list :TEXT "This is a senary header."))
+		(list :HEADER 7 (list :TEXT "This is a septenary header.")) (list :HEADER 8 (list :TEXT "This is a octonary header."))
+		(list :HEADER 9 (list :TEXT "This is a nonary header.")) (list :HEADER 10 (list :TEXT "This is a denary header."))
+		(list :HEADER 11 (list :TEXT "There's no name for what kind of header this is.")) (list :HEADER 12 (list :TEXT "This is a duodenary header."))))))
 
 
   (assert 
    (equal 
-    (test-file "08_crazy_header.txt")
+    (t8)
     (list :DOCUMENT (list :BODY (list :HEADER 100 (list :TEXT "This is a very low-level header"))))))
 
-
   (assert 
    (equal 
-    (test-file "09_headers_and_paragraphs.txt")
+    (t9)
     (list :DOCUMENT
 	  (list :BODY (list :HEADER 1 (list :TEXT "Header 1.1"))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent interdum, ipsum vitae luctus placerat, turpis risus ornare tellus, eget dictum elit libero sit amet enim. Phasellus malesuada libero at sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna. Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus lobortis condimentum. Pellentesque tempus leo at ante sodales a molestie metus feugiat. Fusce et nisi non mauris pretium euismod. Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula. Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus odio mi, pretium nec condimentum in, fermentum convallis mi."))
+		(list :PARAGRAPH (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer")
+		      (list :TEXT "dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent")
+		      (list :TEXT "interdum, ipsum vitae luctus placerat, turpis risus ornare tellus,")
+		      (list :TEXT "eget dictum elit libero sit amet enim. Phasellus malesuada libero at")
+		      (list :TEXT "sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna.")
+		      (list :TEXT "Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur")
+		      (list :TEXT "tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus")
+		      (list :TEXT "luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis")
+		      (list :TEXT "feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus")
+		      (list :TEXT "lobortis condimentum. Pellentesque tempus leo at ante sodales a")
+		      (list :TEXT "molestie metus feugiat. Fusce et nisi non mauris pretium euismod.")
+		      (list :TEXT "Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula.")
+		      (list :TEXT "Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum")
+		      (list :TEXT "pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum")
+		      (list :TEXT "ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus")
+		      (list :TEXT "odio mi, pretium nec condimentum in, fermentum convallis mi."))
 		(list :HEADER 2 (list :TEXT "Header 2.1"))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem, lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus nisl. Quisque non sem egestas massa posuere venenatis auctor quis lacus. Donec consequat, velit a scelerisque convallis, diam velit rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et accumsan ante facilisis et. Fusce in mauris ligula, eget placerat odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit vel."))
+		(list :PARAGRAPH (list :TEXT "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem,")
+		      (list :TEXT "lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus")
+		      (list :TEXT "nisl. Quisque non sem egestas massa posuere venenatis auctor quis")
+		      (list :TEXT "lacus. Donec consequat, velit a scelerisque convallis, diam velit")
+		      (list :TEXT "rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat")
+		      (list :TEXT "volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et")
+		      (list :TEXT "ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et")
+		      (list :TEXT "accumsan ante facilisis et. Fusce in mauris ligula, eget placerat")
+		      (list :TEXT "odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit")
+		      (list :TEXT "vel."))
 		(list :HEADER 2 (list :TEXT "Header 2.2"))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor, scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti. Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros, viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec eget velit felis. Curabitur tempor tristique augue, vel eleifend mi posuere et."))
+		(list :PARAGRAPH (list :TEXT "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor,")
+		      (list :TEXT "scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti.")
+		      (list :TEXT "Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros,")
+		      (list :TEXT "viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id")
+		      (list :TEXT "nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat")
+		      (list :TEXT "hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus")
+		      (list :TEXT "eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a")
+		      (list :TEXT "condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec")
+		      (list :TEXT "eget velit felis. Curabitur tempor tristique augue, vel eleifend mi") 
+		      (list :TEXT "posuere et."))
 		(list :HEADER 1 (list :TEXT "Header 1.2"))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo accumsan eu. Cras ut lectus risus. In iaculis laoreet eros, a ultricies justo pharetra ac. Suspendisse egestas consequat mauris id porta. Suspendisse euismod luctus arcu vel accumsan. Ut id neque consequat mauris aliquet accumsan eget sed justo. Vestibulum lobortis interdum enim, vitae ultrices massa aliquam at. Maecenas eu purus egestas metus aliquet mollis a ac quam. Praesent vitae tellus eu sapien fringilla venenatis quis sit amet libero. Maecenas id malesuada dui. Suspendisse porta aliquet nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."))
-		(list :PARAGRAPH
-		      (list :TEXT
-			    "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas sapien sem, imperdiet id convallis in, gravida at urna. Curabitur interdum scelerisque libero, semper tempor metus pharetra a. Mauris eu lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis eleifend sem. Suspendisse imperdiet velit at justo fermentum vel facilisis nibh tempus. Suspendisse porta, ipsum non aliquet consequat, orci purus viverra nisi, in suscipit elit nulla at neque. Aenean lobortis, est sed rutrum dapibus, mauris nulla suscipit nulla, vitae dictum leo ligula ut nisi."))))))
+		(list :PARAGRAPH (list :TEXT "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur")
+		      (list :TEXT "ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo accumsan")
+		      (list :TEXT "eu. Cras ut lectus risus. In iaculis laoreet eros, a ultricies justo")
+		      (list :TEXT "pharetra ac. Suspendisse egestas consequat mauris id porta.")
+		      (list :TEXT "Suspendisse euismod luctus arcu vel accumsan. Ut id neque consequat")
+		      (list :TEXT "mauris aliquet accumsan eget sed justo. Vestibulum lobortis interdum")
+		      (list :TEXT "enim, vitae ultrices massa aliquam at. Maecenas eu purus egestas metus")
+		      (list :TEXT "aliquet mollis a ac quam. Praesent vitae tellus eu sapien fringilla")
+		      (list :TEXT "venenatis quis sit amet libero. Maecenas id malesuada dui. Suspendisse")
+		      (list :TEXT "porta aliquet nisi. Class aptent taciti sociosqu ad litora torquent") 
+		      (list :TEXT "per conubia nostra, per inceptos himenaeos."))
+		(list :PARAGRAPH (list :TEXT "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis")
+		      (list :TEXT "malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas")
+		      (list :TEXT "sapien sem, imperdiet id convallis in, gravida at urna. Curabitur")
+		      (list :TEXT "interdum scelerisque libero, semper tempor metus pharetra a. Mauris eu")
+		      (list :TEXT "lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed")
+		      (list :TEXT "auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis")
+		      (list :TEXT "eleifend sem. Suspendisse imperdiet velit at justo fermentum vel")
+		      (list :TEXT "facilisis nibh tempus. Suspendisse porta, ipsum non aliquet consequat,")
+		      (list :TEXT "orci purus viverra nisi, in suscipit elit nulla at neque. Aenean")
+		      (list :TEXT "lobortis, est sed rutrum dapibus, mauris nulla suscipit nulla, vitae") 
+		      (list :TEXT "dictum leo ligula ut nisi."))))))
+  
+  (assert 
+   (equal 
+    (t10)
+    (list :DOCUMENT 
+	  (list :BODY (list :QUOTE (list :PARAGRAPH (list :TEXT "This is a blockquote paragraph")))))))
+  
+  (assert 
+   (equal 
+    (t11)
+    (list :DOCUMENT 
+	  (list :BODY (list :QUOTE (list :PARAGRAPH (list :TEXT "This is a blockquote") (list :text "that spans multiple lines.")))))))
 
   (assert 
    (equal 
-    (test-file "10_blockquote.txt")
-    (list :DOCUMENT (list :BODY (list :QUOTE (list :PARAGRAPH (list :TEXT "This is a blockquote paragraph")))))))
-
-  (assert 
-   (equal 
-    (test-file "11_multiline_blockquote.txt")
-    (list :DOCUMENT (list :BODY (list :QUOTE (list :PARAGRAPH (list :TEXT "This is a blockquote that spans multiple lines.")))))))
-
-  (assert 
-   (equal 
-    (test-file "12_multi_paragraph_blockquote.txt")
+    (t12)
     (list :DOCUMENT
 	  (list :BODY
 		(list :QUOTE 
@@ -468,29 +630,95 @@
 
   (assert 
    (equal 
-    (test-file "13_paragraphs_and_blockquotes.txt")
+    (t13)
     (list :DOCUMENT
 	  (list :BODY
-		(list :PARAGRAPH
-		      (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent interdum, ipsum vitae luctus placerat, turpis risus ornare tellus, eget dictum elit libero sit amet enim. Phasellus malesuada libero at sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna. Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus lobortis condimentum. Pellentesque tempus leo at ante sodales a molestie metus feugiat. Fusce et nisi non mauris pretium euismod. Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula. Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus odio mi, pretium nec condimentum in, fermentum convallis mi."))
+		(list :PARAGRAPH 
+		      (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer")
+		      (list :TEXT "dapibus ultricies justo, ut convallis sapien condimentum vel. Praesent")
+		      (list :TEXT "interdum, ipsum vitae luctus placerat, turpis risus ornare tellus,")
+		      (list :TEXT "eget dictum elit libero sit amet enim. Phasellus malesuada libero at")
+		      (list :TEXT "sapien bibendum pretium. Sed ut ligula nunc, consectetur sodales urna.")
+		      (list :TEXT "Integer nibh arcu, consectetur id dapibus a, blandit a urna. Curabitur")
+		      (list :TEXT "tincidunt vulputate tellus, quis faucibus leo vestibulum ut. Phasellus")
+		      (list :TEXT "luctus sem vel turpis pharetra in consequat tortor tincidunt. Duis")
+		      (list :TEXT "feugiat nibh eu odio malesuada et eleifend sem sodales. Quisque tempus")
+		      (list :TEXT "lobortis condimentum. Pellentesque tempus leo at ante sodales a")
+		      (list :TEXT "molestie metus feugiat. Fusce et nisi non mauris pretium euismod.")
+		      (list :TEXT "Proin nisl turpis, ornare id molestie tempor, tincidunt varius ligula.")
+		      (list :TEXT "Sed at commodo ligula. Aliquam congue aliquam aliquet. Nam bibendum")
+		      (list :TEXT "pretium lectus nec interdum. Curabitur a quam id velit lobortis rutrum")
+		      (list :TEXT "ac nec massa. Aliquam sit amet risus ligula, at euismod sem. Phasellus")
+		      (list :TEXT "odio mi, pretium nec condimentum in, fermentum convallis mi."))
 		(list :QUOTE
-		      (list :PARAGRAPH
-			    (list :TEXT "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem, lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus nisl. Quisque non sem egestas massa posuere venenatis auctor quis lacus. Donec consequat, velit a scelerisque convallis, diam velit rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et accumsan ante facilisis et. Fusce in mauris ligula, eget placerat odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit vel.")))
-		(list :PARAGRAPH
-		      (list :TEXT "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor, scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti. Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros, viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec eget velit felis. Curabitur tempor tristique augue, vel eleifend mi posuere et."))
+		      (list :PARAGRAPH 
+			    (list :TEXT "Phasellus at quam arcu, a scelerisque lectus. Quisque magna sem,")
+			    (list :TEXT "lobortis vel vulputate ut, ultricies quis urna. Aenean nec lectus")
+			    (list :TEXT "nisl. Quisque non sem egestas massa posuere venenatis auctor quis")
+			    (list :TEXT "lacus. Donec consequat, velit a scelerisque convallis, diam velit")
+			    (list :TEXT "rhoncus felis, sit amet ornare felis felis non sapien. Aliquam erat")
+			    (list :TEXT "volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et")
+			    (list :TEXT "ultrices posuere cubilia Curae; Sed hendrerit lacinia lectus, et")
+			    (list :TEXT "accumsan ante facilisis et. Fusce in mauris ligula, eget placerat")
+			    (list :TEXT "odio. Donec aliquet consequat diam, venenatis viverra nulla suscipit") 
+			    (list :TEXT "vel.")))
+		(list :PARAGRAPH (list :TEXT "Aenean non mauris vel dui pulvinar molestie. Mauris mauris tortor,")
+		      (list :TEXT "scelerisque vitae sodales at, egestas ac dolor. Suspendisse potenti.")
+		      (list :TEXT "Nunc mollis erat ut lectus interdum tincidunt. Donec diam eros,")
+		      (list :TEXT "viverra sit amet posuere et, congue quis arcu. Vestibulum ac odio id")
+		      (list :TEXT "nulla posuere adipiscing in quis arcu. Phasellus sed magna sed erat")
+		      (list :TEXT "hendrerit consequat. Vivamus eget nisi eget neque hendrerit rhoncus")
+		      (list :TEXT "eget quis felis. Ut ut nibh nisi. Phasellus vehicula consequat dui a")
+		      (list :TEXT "condimentum. Vestibulum pulvinar sollicitudin tortor at euismod. Donec")
+		      (list :TEXT "eget velit felis. Curabitur tempor tristique augue, vel eleifend mi") 
+		      (list :TEXT "posuere et."))
 		(list :QUOTE
-		      (list :PARAGRAPH
-			    (list :TEXT "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo accumsan eu. Cras ut lectus risus. In iaculis laoreet eros, a ultricies justo pharetra ac. Suspendisse egestas consequat mauris id porta. Suspendisse euismod luctus arcu vel accumsan. Ut id neque consequat mauris aliquet accumsan eget sed justo. Vestibulum lobortis interdum enim, vitae ultrices massa aliquam at. Maecenas eu purus egestas metus aliquet mollis a ac quam. Praesent vitae tellus eu sapien fringilla venenatis quis sit amet libero. Maecenas id malesuada dui. Suspendisse porta aliquet nisi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."))
-		      (list :PARAGRAPH
-			    (list :TEXT "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas sapien sem, imperdiet id convallis in, gravida at urna. Curabitur interdum scelerisque libero, semper tempor metus pharetra a. Mauris eu lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis eleifend sem. Suspendisse imperdiet velit at justo fermentum vel facilisis nibh tempus. Suspendisse porta, ipsum non aliquet consequat, orci purus viverra nisi, in suscipit elit nulla at neque. Aenean lobortis, est sed rutrum dapibus, mauris nulla suscipit nulla, vitae dictum leo ligula ut nisi.")))
-		(list :PARAGRAPH
-		      (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales cursus sagittis. Proin eu mattis tortor. Duis egestas viverra ornare. Vivamus convallis nisi a enim luctus auctor. Sed rutrum facilisis risus dapibus sagittis. Proin id ligula ipsum, vitae fermentum enim. Mauris rutrum, ante a lobortis tempus, libero nulla imperdiet enim, vel accumsan sapien nulla sed sem. Nunc scelerisque, odio quis feugiat faucibus, nisl nisl adipiscing ligula, a ullamcorper sapien metus in sem. Ut tempor nisi vel eros rhoncus eu vulputate dui tempor. Cras nec diam neque. Nullam ac est et est tincidunt suscipit. Proin vitae velit vitae ante accumsan tristique. Donec justo nulla, consequat nec vestibulum a, molestie quis magna. Nulla vitae placerat neque. Proin laoreet, mauris sed accumsan ornare, ipsum elit feugiat mi, in fringilla dolor leo at felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;"))))))
+		      (list :PARAGRAPH 
+			    (list :TEXT "Cum sociis natoque penatibus et magnis dis parturient montes,")
+			    (list :TEXT "nascetur ridiculus mus. Nunc imperdiet aliquet quam, in sagittis leo")
+			    (list :TEXT "accumsan eu. Cras ut lectus risus. In iaculis laoreet eros, a")
+			    (list :TEXT "ultricies justo pharetra ac. Suspendisse egestas consequat mauris id")
+			    (list :TEXT "porta. Suspendisse euismod luctus arcu vel accumsan. Ut id neque")
+			    (list :TEXT "consequat mauris aliquet accumsan eget sed justo. Vestibulum")
+			    (list :TEXT "lobortis interdum enim, vitae ultrices massa aliquam at. Maecenas eu")
+			    (list :TEXT "purus egestas metus aliquet mollis a ac quam. Praesent vitae tellus")
+			    (list :TEXT "eu sapien fringilla venenatis quis sit amet libero. Maecenas id")
+			    (list :TEXT "malesuada dui. Suspendisse porta aliquet nisi. Class aptent taciti")
+			    (list :TEXT "sociosqu ad litora torquent per conubia nostra, per inceptos") 
+			    (list :TEXT "himenaeos."))
+		      (list :PARAGRAPH 
+			    (list :TEXT "Mauris vitae dignissim felis. Proin interdum ullamcorper turpis")
+			    (list :TEXT "malesuada euismod. Nam sit amet enim dui, nec congue nibh. Maecenas")
+			    (list :TEXT "sapien sem, imperdiet id convallis in, gravida at urna. Curabitur")
+			    (list :TEXT "interdum scelerisque libero, semper tempor metus pharetra a. Mauris")
+			    (list :TEXT "eu lorem eget arcu scelerisque sollicitudin sit amet eu libero. Sed")
+			    (list :TEXT "auctor sagittis libero ac sagittis. Vestibulum a tellus ante, quis")
+			    (list :TEXT "eleifend sem. Suspendisse imperdiet velit at justo fermentum vel")
+			    (list :TEXT "facilisis nibh tempus. Suspendisse porta, ipsum non aliquet")
+			    (list :TEXT "consequat, orci purus viverra nisi, in suscipit elit nulla at neque.")
+			    (list :TEXT "Aenean lobortis, est sed rutrum dapibus, mauris nulla suscipit") 
+			    (list :TEXT "nulla, vitae dictum leo ligula ut nisi.")))
+		(list :PARAGRAPH 
+		      (list :TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales")
+		      (list :TEXT "cursus sagittis. Proin eu mattis tortor. Duis egestas viverra ornare.")
+		      (list :TEXT "Vivamus convallis nisi a enim luctus auctor. Sed rutrum facilisis")
+		      (list :TEXT "risus dapibus sagittis. Proin id ligula ipsum, vitae fermentum enim.")
+		      (list :TEXT "Mauris rutrum, ante a lobortis tempus, libero nulla imperdiet enim,")
+		      (list :TEXT "vel accumsan sapien nulla sed sem. Nunc scelerisque, odio quis feugiat")
+		      (list :TEXT "faucibus, nisl nisl adipiscing ligula, a ullamcorper sapien metus in")
+		      (list :TEXT "sem. Ut tempor nisi vel eros rhoncus eu vulputate dui tempor. Cras nec")
+		      (list :TEXT "diam neque. Nullam ac est et est tincidunt suscipit. Proin vitae velit")
+		      (list :TEXT "vitae ante accumsan tristique. Donec justo nulla, consequat nec")
+		      (list :TEXT "vestibulum a, molestie quis magna. Nulla vitae placerat neque. Proin")
+		      (list :TEXT "laoreet, mauris sed accumsan ornare, ipsum elit feugiat mi, in")
+		      (list :TEXT "fringilla dolor leo at felis. Vestibulum ante ipsum primis in faucibus") 
+		      (list :TEXT "orci luctus et ultrices posuere cubilia Curae;"))))))
 
   (assert 
    (equal 
-    (test-file "14_simple_verbatim.txt")
-    (list :DOCUMENT (list :BODY (list :VERBATIM "This is simple verbatim text.")))))
-
+    (t14)
+    (list :DOCUMENT 
+	  (list :BODY (list :VERBATIM (list :text "This is simple verbatim text."))))))
 )
 
 
