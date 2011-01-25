@@ -1,4 +1,4 @@
-;;;  s7-mp.lsp
+;;;  s7-xml.lsp
 ;;
 ;; ----------------------------------------------------------------------
 ;;
@@ -22,12 +22,6 @@
 ;; ----------------------------------------------------------------------
 
 
-(defvar *lang-definition-ht* nil
-  "Language definition hash-table for backend translator.")
-
-(defconstant *ident-space* "    "
-  "Identation characters.")
-
 (defvar *document* nil 
   "Parsed document root node.")
 
@@ -36,12 +30,6 @@
 
 (defvar *state* nil
   "Current state processing function.")
-
-(defvar *what-if-eol* nil
-  "Stack of eol treatment functions.")
-
-(defvar *header-count* 0
-  "Counts *")
 
 (defvar *current-string* nil
   "Characters processed so far.")
