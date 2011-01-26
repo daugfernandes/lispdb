@@ -1,0 +1,114 @@
+\documentclass[a4,11pt]{article}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{anysize}
+\usepackage{multicol}
+\usepackage[portuguese]{babel}
+
+\marginsize{1cm}{1cm}{1cm}{3cm}
+\setlength{\columnsep}{0.8cm}
+
+\title{Um parser XML\footnote{Extensible Markup Language \cite{BRAY06}} em Common Lisp}
+\author{David Fernandes\\
+  Universidade Aberta,\\
+  \texttt{daugfernandes@aim.com}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\begin{multicols}{2}
+
+Com o advento da Internet e com os consequente aumento, por um lado, do mercado potencial consumidor de informa\c{c}\~{a}o e, por outro, da facilidade de acesso a fontes de dados diversas, operou-se uma mudan\c{c}a significativa de paradigma no que toca ao desenvolvimento de aplica\c{c}\~{o}es: a produ\c{c}\~{a}o e a utiliza\c{c}\~{a}o da informa\c{c}\~{a}o tornaram-se actividades aut\'{o}nomas, cada uma delas objecto de neg\'{o}cio por si mesma.
+
+\end{multicols}
+
+\end{abstract}
+
+\section{Introdu\c{c}\~{a}o}
+
+\subsection{Perspectiva hist\'{o}rica}
+
+Servi\c{c}os remotos, cliente servidor, etc. SOAP, SOA, WSDL, XML, etc.
+
+
+\section{XML}
+
+\subsection{Gram\'{a}tica}
+
+adsfasdfasdf
+
+\subsubsection{Documento}
+
+\begin{tabular}{p{1cm} p{3cm} c l}
+1&document&::=&( \#prolog element Misc* ) - ( Char* RestrictedChar Char* )\\
+\end{tabular}
+
+\subsubsection{Carácteres}
+
+\begin{tabular}{p{1cm} p{3cm} c l}
+2&Char&::=&[\#x1-\#xD7FF]\\
+&&&\space\textbar\space[\#xE000-\#xFFFD]\\
+&&&\space\textbar\space[\#x10000-\#x10FFFF]\\
+&&&\\
+2a&RestrictedChar&::=&[\#x1-\#x8]\\
+&&&\space\textbar\space[\#xB-\#xC]\\
+&&&\space\textbar\space[\#xE-\#x1F]\\
+&&&\space\textbar\space[\#x7F-\#x84]\\
+&&&\space\textbar\space[\#x86-\#x9F]
+\end{tabular}
+
+\subsubsection{Espa\c{c}o em branco}
+
+\begin{tabular}{p{1cm} p{3cm} c l}
+3&S&::=&(\#x20\space\textbar\space\#x9\space\textbar\space\#xD\space\textbar\space\#xA)+ 
+\end{tabular}
+
+\subsubsection{Nomes e 'tokens'}
+
+\begin{tabular}{p{1cm} p{3cm} c l}
+4&NameStartChar&::=&'':''\space\textbar\space[A-Z]\space\textbar\space''\_''\space\textbar\space[a-z]\\
+&&&\space\textbar\space[\#xC0-\#xD6]\space\textbar\space[\#xD8-\#xF6]\space\textbar\space\[\#xF8-\#x2FF]\\
+&&&\space\textbar\space[\#x370-\#x37D]\space\textbar\space[\#x37F-\#x1FFF]\space\textbar\space\[\#x200C-\#x200D]\\
+&&&\space\textbar\space[\#x2070-\#x218F]\space\textbar\space[\#x2C00-\#x2FEF]\space\textbar\space\[\#x3001-\#xD7FF]\\
+&&&\space\textbar\space[\#xF900-\#xFDCF]\space\textbar\space[\#xFDF0-\#xFFFD]\space\textbar\space[\#x10000-\#xEFFFF]\\
+&&&\\
+4a&NameChar&::=&NameStartChar\space\textbar\space''-''\space\textbar\space''.''\\
+&&&\space\textbar\space[0-9]\space\textbar\space\#xB7\\
+&&&\space\textbar\space[\#x0300-\#x036F]\space\textbar\space[\#x203F-\#x2040]\\
+&&&\\
+5&Name&::=&NameStartChar (NameChar)*\\
+&&&\\
+6&Names&::=&Name (\#x20 Name)*\\
+&&&\\
+7&Nmtoken&::=&(NameChar)+\\
+&&&\\
+8&Nmtokens&::=&Nmtoken (\#x20 Nmtoken)*
+\end{tabular}
+
+\subsubsection{Literais}
+
+\begin{tabular}{p{1cm} p{3cm} c l}
+9&EntityValue&::=&'' ([\^{}\%\&''] \space\textbar\space PEReference \space\textbar\space Reference)* ''\\
+&&&\space\textbar\space'([\^{}\%\&'] \space\textbar\space PEReference \space\textbar\space Reference)* '\\
+10&AttValue&::=&'' ([\^{}\textless\&''] \space\textbar\space Reference)* ''\\
+&&&\space\textbar\space' ([\^{}\textless\&'] \space\textbar\space Reference)* '\\
+11&SystemLiteral&::=&('' [\^{}'']* '') \space\textbar\space (' [\^']* ')\\
+12&PubidLiteral&::=&'' PubidChar* '' \space\textbar\space ' (PubidChar - ')* '\\
+13&PubidChar&::=&\#x20\space\textbar\space\#xD\space\textbar\space\#xA\space\textbar\space[a-zA-Z0-9]\space\textbar\space[-'()+,./:=?;!*\#\@\$\_\%]
+\end{tabular}
+
+\pagebreak
+
+\begin{thebibliography}{9}
+
+\bibitem{BRAY06}Bray, T., Paoli, J., Sperberg-McQueen, C. M., Maler, E., Yergeau, F., Cowan, J. (Eds.). (2006).
+ \emph{Extensible Markup Language (XML) 1.1 (Second Edition) -W3C Recommendation 16 August 2006, edited in place 29 September 2006}, [html].
+ Acedido em 26 de janeiro de 2011, no \emph{Web Site} do W3C: http://www.w3.org/TR/2006/REC-xml11-20060816/.
+
+\end{thebibliography}
+
+\end{document}
