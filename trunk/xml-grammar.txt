@@ -1,3 +1,4 @@
+/* document */
 
 [1]   	document	   ::=   	 ( prolog element Misc* ) - ( Char* RestrictedChar Char* )
 [2]   	Char	   ::=   	[#x1-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]	/* any Unicode character, excluding the surrogate blocks, FFFE, and FFFF. */
@@ -68,6 +69,7 @@ External Subset
 [30]   	extSubset	   ::=   	 TextDecl? extSubsetDecl
 [31]   	extSubsetDecl	   ::=   	( markupdecl | conditionalSect | DeclSep)*
 
+aqui
 Standalone Document Declaration
 
 [32]   	SDDecl	   ::=   	 S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))
