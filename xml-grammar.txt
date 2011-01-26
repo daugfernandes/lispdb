@@ -77,7 +77,7 @@ Standalone Document Declaration
 Element
 
 [39]   	element	   ::=   	 EmptyElemTag
-| STag content ETag	[
+| STag content ETag
 
 Start-tag
 
