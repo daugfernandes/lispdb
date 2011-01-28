@@ -5,6 +5,9 @@
 \usepackage{multicol}
 \usepackage{textcomp}
 \usepackage[portuguese]{babel}
+\usepackage{makeidx}
+
+\makeindex
 
 \marginsize{3cm}{3cm}{1cm}{3cm}
 \setlength{\columnsep}{0.8cm}
@@ -44,11 +47,23 @@ Apresentaremos de seguida a gram\'{a}tica independente de contexto formal da XML
 
 \subsection{Gram\'{a}tica da XML}
 
+\subsubsection{Constantes}
+
+Estas produ\c{c}\~{o}es adicionais \`{a}s que constam da especifica\c{c}\~{a}o oficial \cite{W3C06}, incluem-se aqui para maior facilidade de leitura de algumas da produ\c{c}\~{o}es originais.
+\\\\
+\begin{tabular}{p{1cm} p{3cm} c l}
+0a&singlequote\index{singlequote}&::=&'\\
+0b&dblquotes\index{dblquotes}&::=&''\\
+0c&minus\index{minus}&::=&-\\
+0d&dot&::=&.\\
+0e&underscore&::=&\_
+\end{tabular}
+
 \subsubsection{Documento}
 Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em \ref{Document})
 \vspace{0.5cm}
 \\\begin{tabular}{p{1cm} p{3cm} c l}
-1&document&::=&( \#prolog element Misc* ) - ( Char* RestrictedChar Char* )\\
+1&document&::=&( prolog element Misc* ) - ( Char* RestrictedChar Char* )\\
 \end{tabular}
 
 \subsubsection{Car\'{a}cteres}
@@ -68,19 +83,19 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 \subsubsection{Espa\c{c}o em branco}
 
 \begin{tabular}{p{1cm} p{3cm} c l}
-3&S&::=&(\#x20\space\textbar\space\#x9\space\textbar\space\#xD\space\textbar\space\#xA)+ 
+3&S&::=&(\#x20\space\textbar\space\#x9\space\textbar\space\#xD\space\textbar\space\#xA)+
 \end{tabular}
 
 \subsubsection{Nomes e 'tokens'}
 
 \begin{tabular}{p{1cm} p{3cm} c l}
-4&NameStartChar&::=&\textquotedblleft:\textquotedblright\space\textbar\space[A-Z]\space\textbar\space''\_''\space\textbar\space[a-z]\\
+4&NameStartChar&::=&\textquotedblright:\textquotedblright\space\textbar\space[A-Z]\space\textbar\space underscore \space\textbar\space[a-z]\\
 &&&\space\textbar\space[\#xC0-\#xD6]\space\textbar\space[\#xD8-\#xF6]\space\textbar\space[\#xF8-\#x2FF]\\
 &&&\space\textbar\space[\#x370-\#x37D]\space\textbar\space[\#x37F-\#x1FFF]\space\textbar\space\#x200C-\#x200D]\\
 &&&\space\textbar\space[\#x2070-\#x218F]\space\textbar\space[\#x2C00-\#x2FEF]\space\textbar\space[\#x3001-\#xD7FF]\\
 &&&\space\textbar\space[\#xF900-\#xFDCF]\space\textbar\space[\#xFDF0-\#xFFFD]\space\textbar\space[\#x10000-\#xEFFFF]\\
 &&&\\
-4a&NameChar&::=&NameStartChar\space\textbar\space''-''\space\textbar\space''.''\\
+4a&NameChar&::=&NameStartChar\space\textbar\space minus\index{minus} \space\textbar\space dot\\
 &&&\space\textbar\space[0-9]\space\textbar\space\#xB7\\
 &&&\space\textbar\space[\#x0300-\#x036F]\space\textbar\space[\#x203F-\#x2040]\\
 &&&\\
@@ -96,17 +111,24 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 \subsubsection{Literais}
 
 \begin{tabular}{p{1cm} p{3cm} c l}
-9&EntityValue&::=&'' ([\^{}\%\&''] \space\textbar\space PEReference \space\textbar\space Reference)* ''\\
-&&&\space\textbar\space'([\^{}\%\&'] \space\textbar\space PEReference \space\textbar\space Reference)* '\\
+9&EntityValue&::=&dblquotes\index{dblquotes} ([\^{}\%\&dblquotes\index{dblquotes}]\\
+&&&\space\textbar\space PEReference\\
+&&&\space\textbar\space Reference)*dblquotes\index{dblquotes}\\
+&&&\space\textbar\space \index{singlequote}singlequote ([\^{}\%\& \index{singlequote}singlequote]\\
+&&&\space\textbar\space PEReferenc\\
+&&&\space\textbar\space Reference)* \index{singlequote}singlequote\\
 &&&\\
-10&AttValue&::=&'' ([\^{}\textless\&''] \space\textbar\space Reference)* ''\\
-&&&\space\textbar\space' ([\^{}\textless\&'] \space\textbar\space Reference)* '\\
+10&AttValue&::=&\index{dblquotes}dblquotes ([\^{}\textless\& \index{dblquotes}dblquotes]\space\textbar\space Reference)* \index{dblquotes}dblquotes\\
+&&&\space\textbar\space \index{singlequote}singlequote ([\^{}\textless\& \index{singlequote}singlequote]\space\textbar\space Reference)* \index{singlequote}singlequote\\
 &&&\\
-11&SystemLiteral&::=&('' [\^{}'']* '') \space\textbar\space (' [\^']* ')\\
+11&SystemLiteral&::=&(\index{dblquotes}dblquotes [\^{} \index{dblquotes}dblquotes]* \index{dblquotes}dblquotes)\\
+&&&\space\textbar\space(\index{singlequote}singlequote [\^{} \index{singlequote}singlequote]* \index{singlequote}singlequote)\\
 &&&\\
-12&PubidLiteral&::=&'' PubidChar* '' \space\textbar\space ' (PubidChar - ')* '\\
+12&PubidLiteral&::=&\index{dblquotes}dblquotes PubidChar* \index{dblquotes}dblquotes\\
+&&&\space\textbar\space \index{singlequote}singlequote (PubidChar - \index{singlequote}singlequote)* \index{singlequote}singlequote\\
 &&&\\
-13&PubidChar&::=&\#x20\space\textbar\space\#xD\space\textbar\space\#xA\space\textbar\space[a-zA-Z0-9]\space\textbar\space[-'()+,./:=?;!*\#\@\$\_\%]
+13&PubidChar&::=&\#x20\space\textbar\space\#xD\space\textbar\space\#xA\\
+&&&\space\textbar\space[a-zA-Z0-9]\space\textbar\space[-'()+,./:=?;!*\#\@\$\_\%]
 \end{tabular}
 
 \subsubsection{Dados car\'{a}cter}
@@ -118,7 +140,7 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 \subsubsection{Coment\'{a}rios}
 
 \begin{tabular}{p{1cm} p{3cm} c l}
-15&Comment&::=&'\textless!--' ((Char - '-')\space\textbar\space ('-' (Char - '-')))* '--\textgreater'
+15&Comment&::=&'\textless!--' ((Char - \index{minus}minus)\space\textbar\space (\index{minus}minus (Char - \index{minus}minus)))* '--\textgreater'
 \end{tabular}
 
 \subsubsection{Instru\c{c}\~{o}es de processamento}
@@ -146,7 +168,8 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 &&&\\
 23&XMLDecl&::=&'\textless?xml' VersionInfo EncodingDecl? SDDecl? S? '?\textgreater'\\
 &&&\\
-24&VersionInfo&::=&S 'version' Eq ("'" VersionNum "'"\space\textbar\space '"' VersionNum '"')\\
+24&VersionInfo&::=&S 'version' Eq (\index{singlequote}singlequote VersionNum \index{singlequote}singlequote\\
+&&&\space\textbar\space \index{dblquotes}dblquotes VersionNum \index{dblquotes}dblquotes)\\
 &&&\\
 25&Eq&::=&S? '=' S?\\
 &&&\\
@@ -163,19 +186,26 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 &&&\\
 28b&intSubset&::=&(markupdecl\space\textbar\space DeclSep)*\\
 &&&\\
-29&markupdecl&::=&elementdecl\space\textbar\space AttlistDecl\space\textbar\space EntityDecl\space\textbar\space NotationDecl\space\textbar\space PI\space\textbar\space Comment
+29&markupdecl&::=&elementdecl\\
+&&&\space\textbar\space AttlistDecl\\
+&&&\space\textbar\space EntityDecl\\
+&&&\space\textbar\space NotationDecl\\
+&&&\space\textbar\space PI\\
+&&&\space\textbar\space Comment
 \end{tabular}
 
 \subsubsection{Subconjuntos externos}
 \begin{tabular}{p{1cm} p{3cm} c l}
 30&extSubset&::=&TextDecl? extSubsetDecl\\
 &&&\\
-31&extSubsetDecl&::=&( markupdecl\space\textbar\space conditionalSect\space\textbar\space DeclSep)*
+31&extSubsetDecl&::=&( markupdecl\\
+&&&\space\textbar\space conditionalSect\\
+&&&\space\textbar\space DeclSep)*
 \end{tabular}
 
 \subsubsection{Declara\c{c}\~{a}o de documento isolado}
 \begin{tabular}{p{1cm} p{3cm} c l}
-32&SDDecl&::=&S 'standalone' Eq ((\textquotedblright\textquotesingle\textquotedblright (\textquotesingle yes\textquotesingle \space\textbar\space \textquotesingle no\textquotesingle) \textquotedblright\textquotesingle\textquotedblright) \space\textbar\space (\textquoteright \textquotestraightdblbase\textquoteright (\textquotesingle yes\textquotesingle \space\textbar\space \textquotesingle no\textquotesingle ) \textquoteright\textquotestraightdblbase\textquoteright))
+32&SDDecl&::=&S 'standalone' Eq ((\textquotedblright\textquotesingle\textquotedblright (\textquotesingle yes\textquotesingle\\ &&&\space\textbar\space \textquotesingle no\textquotesingle) \textquotedblright\textquotesingle\textquotedblright)\\ &&&\space\textbar\space (\textquoteright \textquotestraightdblbase\textquoteright (\textquotesingle yes\textquotesingle\\ &&&\space\textbar\space \textquotesingle no\textquotesingle ) \textquoteright\textquotestraightdblbase\textquoteright))
 \end{tabular}
 
 \subsubsection{Elemento}
@@ -226,7 +256,8 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 
 \subsubsection{Declara\c{c}\~{a}o de conte\'{u}do mist0}
 \begin{tabular}{p{1cm} p{3cm} c l}
-51&Mixed&::=&'(' S? '\#PCDATA' (S? '\textbar' S? Name)* S? ')*'\space\textbar\space '(' S? '\#PCDATA' S? ')'
+51&Mixed&::=&'(' S? '\#PCDATA' (S? '\textbar' S? Name)* S? ')*'\\
+&&&\space\textbar\space '(' S? '\#PCDATA' S? ')'
 \end{tabular}
 
 \subsubsection{Declara\c{c}\~{a}o de lista de atributos}
@@ -300,7 +331,8 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 
 \subsubsection{Declara\c{c}\~{a}o de entidade externa}
 \begin{tabular}{p{1cm} p{3cm} c l}
-75&ExternalID&::=&'SYSTEM' S SystemLiteral\space\textbar\space 'PUBLIC' S PubidLiteral S SystemLiteral\\
+75&ExternalID&::=&'SYSTEM' S SystemLiteral\\
+&&&\space\textbar\space 'PUBLIC' S PubidLiteral S SystemLiteral\\
 &&&\\
 76&NDataDecl&::=&S 'NDATA' S Name	
 \end{tabular}
@@ -317,23 +349,25 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
 
 \subsubsection{Declara\c{c}\~{a}o de codifica\c{c}\~{a}o}
 \begin{tabular}{p{1cm} p{3cm} c l}
-80&EncodingDecl&::=&S 'encoding' Eq ('"' EncName '"'\space\textbar\space "'" EncName "'" )\\
+80&EncodingDecl&::=&S 'encoding' Eq\\
+&&&(\index{dblquotes}dblquotes EncName \index{dblquotes}dblquotes\space\textbar\space \index{singlequote}singlequote EncName \index{singlequote}singlequote )\\
 &&&\\
-81&EncName&::=&[A-Za-z] ([A-Za-z0-9.\_]\space\textbar\space '-')*
+81&EncName&::=&[A-Za-z] ([A-Za-z0-9.\_]\space\textbar\space \index{minus}minus)*
 \end{tabular}
 
 \subsubsection{Declara\c{c}\~{a}o de nota\c{c}\~{a}o}
 \begin{tabular}{p{1cm} p{3cm} c l}
-82&NotationDecl&::=&'\textless!NOTATION' S Name S (ExternalID\space\textbar\space PublicID) S? '\textgreater'\\
+82&NotationDecl&::=&'\textless!NOTATION' S Name S\\
+&&&(ExternalID\space\textbar\space PublicID) S? '\textgreater'\\
 &&&\\
 83&PublicID&::=&'PUBLIC' S PubidLiteral
 \end{tabular}
 
-\pagebreak 
+\pagebreak
 
 \section{Exemplos}
 
-\subsection{Documento}\label{Document} 
+\subsection{Documento}\label{Document}
 \begin{figure}[h]
 \begin{verbatim}
 <?xml version="1.0"?>
@@ -347,7 +381,7 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
     <endereco>lc@univ-ab.pt</endereco>
   </para>
   <corpo>
-    Gostaria de marcar encontro para apresentação de 
+    Gostaria de marcar encontro para apresentação de
     ideia para projecto de final de curso.
   </corpo>
 </mensagem>
@@ -365,5 +399,7 @@ Um documento XML consiste no pr\'{o}logo e no elemento ra\'{i}z. (Ver exemplo em
  \emph{Development History}, [html] Acedido em 26 de Janeiro de 2011, no \emph{Web Site} do W3C: http://www.w3.org/XML/hist2002
 
 \end{thebibliography}
+
+\printindex
 
 \end{document}
