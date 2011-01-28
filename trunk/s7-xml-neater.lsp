@@ -129,7 +129,7 @@
 (defun t3-state (c)
   "aa"
   (print "t3")
-  (setf *state* #'i-state)
+  (setf *state* #'t1-state)
 )
 
 (defun t4-state (c)
@@ -181,6 +181,7 @@
    ((char= c #\/)
     (setf *state* #'t2-state))
    ((char= c *start-tag*)
+    (use-chars-read)
     (setf *state* #'t1-state))
    ((char= c *end-tag*)
     (error "Invalid inline >."))
@@ -256,10 +257,9 @@
   (cond
     ((> (length *current-string*) 0)
       (push-tail 
-        (string-right-trim " " *current-string*)
-        (car *tree*)
-      )
-      (setf *current-string* (make-empty-string))
+       (string-right-trim " " *current-string*)
+       (car *tree*))
+     (setf *current-string* (make-empty-string))
     )
   )
 )
