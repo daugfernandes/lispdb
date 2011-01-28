@@ -45,8 +45,8 @@
 (defconstant *void-chars* (string #\Return)
   "Characters that should be ignored.")
 
-(defconstant *start-tag* #\()
-(defconstant *end-tag* #\))
+(defconstant *start-tag* (character "<"))
+(defconstant *end-tag* (character ">"))
 
 (defun is-escaped-char (c)
   (not (null (search (string c) *escaped-chars*)))
@@ -54,27 +54,22 @@
 
 (defun parse-stream (stream)
   "Parse a stream of characters."
-  (setf *document* (list :document)
+  (setf *document* (list :xml)
         *tree* (list *document*)
         *current-string* (make-empty-string)
 	*state* #'i-state)
-  (make-node (list :body))
 
   (catch 'end-of-file
     (loop
-      (let ((c (read-char stream nil :eof)))
-        (if (null (search (string c) *void-chars*))
-	    (progn
-	      (if (eq c :eof)
-		  (progn
-		    (use-chars-read)
-		    (throw 'end-of-file nil))
-		(funcall *state* c))
-	    )
-        )
-      )
+     (let ((c (read-char stream nil :eof)))
+       (if (eq c :eof)
+	   (progn
+	     (use-chars-read)
+	     (throw 'end-of-file nil))
+	 (funcall *state* c))
+       )
+     )
     )
-  )
   *document*
 )
 
@@ -96,6 +91,7 @@
 
 (defun i-state (c)
   "Initial state. Nothing interesting happened, yet."
+  (print "i")
   (cond
    ((char= c *start-tag*)
     (setf *state* #'t1-state))
@@ -106,25 +102,25 @@
 
 (defun t1-state (c)
   "aa"
+  (print "t1")
   (cond
-   ;((or (char= c #\>) (char= c #\"))
-   ; (error "Invalid start for a TAG."))
+   ((char= c *end-tag*)
+    (error "Invalid start for a TAG."))
    ((char= c #\/)
     (setf *state* #'t2-state))
-   ((not (char= #\Space))
-    (progn
-      (add-char c)
-      (setf *state* #'t4-state)))
+   (t
+    (add-char c)
+    (setf *state* #'t4-state))
    )
   )
 
 (defun t2-state (c)
   "aa"
+  (print "t2")
   (cond
    ((char= c *end-tag*)
-    (progn
-      (pop *tree*)
-      (setf *state* #'t3-state)))
+    (pop *tree*)
+    (setf *state* #'t3-state))
    ((not (char= #\Space))
     (error "Invalid char after ending /."))
    )
@@ -132,23 +128,23 @@
 
 (defun t3-state (c)
   "aa"
+  (print "t3")
   (setf *state* #'i-state)
 )
 
 (defun t4-state (c)
   "aa"
+  (print "t4")
   (cond
    ((char= c #\Space)
-    (progn
-      (make-node (list :tag))
-      (use-chars-read)
-      (setf *state* #'t5-state)))
+    (make-node (list :tag))
+    (use-chars-read)
+    (setf *state* #'t5-state))
    ((char= c *end-tag*)
-    (progn
-      (make-node (list :tag))
-      (use-chars-read)
-      ;(pop *tree*)
-      (setf *state* #'t6-state)))
+    (make-node (list :tag))
+    (use-chars-read)
+    ;(pop *tree*)
+    (setf *state* #'t6-state))
    (t
     (add-char c))
    )
@@ -156,6 +152,7 @@
 
 (defun t5-state (c)
   "aa"
+  (print "t5")
   (cond
    ((char= c #\/)
     (setf *state* #'t2-state))
@@ -166,22 +163,25 @@
 
 (defun t6-state (c)
   "aa"
+  (print "t6")
   (cond 
    ((char= c *start-tag*)
     (setf *current-string* (make-empty-string))
     (setf *state* #'t1-state))
    (t
-    (progn
-      (add-char c)
-      (setf *state #'t8-state)))
+    (add-char c)
+    (setf *state* #'t8-state))
    )
   )
 
 (defun t8-state (c)
   "aa"
+  (print "t8")
   (cond
    ((char= c #\/)
     (setf *state* #'t2-state))
+   ((char= c *start-tag*)
+    (setf *state* #'t1-state))
    ((char= c *end-tag*)
     (error "Invalid inline >."))
    (t
@@ -253,11 +253,17 @@
 
 (defun use-chars-read ()
   "Gives effective use to the characters read so far."
-  (if
-      (> (length *current-string*) 0)
-      (progn
-	(push-tail (string-right-trim " " *current-string*) 2)
-	(setf *current-string* (make-empty-string)))))
+  (cond
+    ((> (length *current-string*) 0)
+      (push-tail 
+        (string-right-trim " " *current-string*)
+        (car *tree*)
+      )
+      (setf *current-string* (make-empty-string))
+    )
+  )
+)
+
 
 ;; Utils
 
