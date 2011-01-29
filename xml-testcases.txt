@@ -13,6 +13,9 @@
 "<html id=1 name=\"david fernandes\">"
 (list :xml (list :tag "html" (list :attr "id" "1") (list :attr "name" "david fernandes")))
 
+"<a u=1 a=2>ii</a>"
+(list :XML (list :TAG "a" (list :ATTR "u" "1") (list :ATTR "a" "2") "ii"))
+
 
 "<html i=1 a=2/z>" devia dar erro no z e não dá !!!
 

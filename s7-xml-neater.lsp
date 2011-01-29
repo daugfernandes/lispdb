@@ -36,7 +36,7 @@
 (defvar *current-string* nil
   "Characters processed so far.")
 
-(defconstant *debuging* t)
+(defvar *debuging* t)
 
 (defconstant *escaped-chars* "\\{}*"
   "Characters that need special prefixing.")
@@ -68,7 +68,9 @@
 	   (progn
 	     (use-chars-read)
 	     (throw 'end-of-file nil))
-	 (funcall *state* c))
+	   (if 
+	    (not (or (char= c *eol*) (char= c #\Return)))
+	    (funcall *state* c)))
        )
      )
     )
@@ -97,6 +99,8 @@
   (cond
    ((char= c *start-tag*)        ; ok! first char's a < , good!!
     (setf *state* #'t1-state))
+   ((char= c #\Space)
+    (setf *state* #'i-state))
    (t                            ; oopd! no good!!
     (error "Invalid start!"))
    )
@@ -131,7 +135,6 @@
    ((char= c *end-tag*)            ; TAG's name complete.
     (pop *tree*)
     (setf *state* #'t3-state))
-   ((char= #\Space))
    (t
     (error "Invalid char after ending /."))
    )
@@ -147,16 +150,20 @@
   "TAG's name."
   (if *debuging* (print "t4"))
   (cond
+
    ((char= c #\Space)            ; TAG's name completed maybe a ATTR follows
     (make-node (list :tag))
     (use-chars-read)
     (setf *state* #'t5-state))
+
    ((char= c *end-tag*)          ; TAG's name completed
     (make-node (list :tag))
     (use-chars-read)
     (setf *state* #'t6-state))
+
    (t
     (add-char c))
+
    )
   )
 
@@ -201,24 +208,31 @@
   "Attribute's value"
   (if *debuging* (print "t10"))
   (cond
+
     ((char= c #\")
      (setf *state* #'t11-state))
+
     ((char= c *end-tag*)
      (use-chars-read)
      (pop *tree*)
-     (setf *state* #'t3-state))
+     (setf *state* #'t6-state))
+
     ((or (char= c #\/))
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t2-state))
+
     ((char= c *start-tag*)
      (error "Invalid inline v in attr value."))
+
     ((char= c #\Space)
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t5-state))
+
     (t
      (add-char c))
+
   )
 )
 
@@ -240,6 +254,7 @@
    ((char= c *start-tag*)
     (setf *current-string* (make-empty-string))
     (setf *state* #'t1-state))
+   ((char= c #\Space))
    (t
     (add-char c)
     (setf *state* #'t8-state))
@@ -350,6 +365,14 @@
   )
 )
 
+(defun save-list (list filename)
+  (with-open-file (out filename
+                   :direction :output
+                   :if-exists :supersede)
+    (with-standard-io-syntax
+      (print list out)))
+)
+
 ;;;==============================
 ;; backend translator
 
@@ -435,8 +458,11 @@
   (assert
    (equal
     (test-string "<html id=1 name=\"david fernandes\">")
-(list :xml (list :tag "html" (list :attr "id" "1") (list :attr "name" "david fernandes")))))
+    (list :xml (list :tag "html" (list :attr "id" "1") (list :attr "name" "david fernandes")))))
 
-
+  (assert
+   (equal
+    (test-string "<a u=1 a=2>ii</a>")
+    (list :XML (list :TAG "a" (list :ATTR "u" "1") (list :ATTR "a" "2") "ii"))))
 )
 
