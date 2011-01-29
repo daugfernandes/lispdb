@@ -152,7 +152,7 @@
     (setf *state* #'t3-state))
 
    (t
-    (error "Invalid char after ending /."))
+    (error (format t "Invalid char '~a' after ending /." c)))
 
    )
   )
@@ -250,7 +250,7 @@
      (setf *state* #'t2-state))
 
     ((char<-p c)
-     (error "Invalid inline v in attr value."))
+     (error "Invalid inline < in attr value."))
 
     ((space-p c)
      (use-chars-read)
