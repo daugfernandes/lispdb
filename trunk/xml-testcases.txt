@@ -1,0 +1,22 @@
+""
+(list :xml)
+
+"<html>"
+(list :xml (list :tag "html"))
+
+"<html id=1>"
+(list :xml (list :tag "html" (list :attr "id" "1")))
+
+"<html id=1 name=2>"
+(list :xml (list :tag "html" (list :attr "id" "1") (list :attr "name" "2")))
+
+"<html id=1 name=\"david fernandes\">"
+(list :xml (list :tag "html" (list :attr "id" "1") (list :attr "name" "david fernandes")))
+
+
+"<html i=1 a=2/z>" devia dar erro no z e não dá !!!
+
+
+
+
+
