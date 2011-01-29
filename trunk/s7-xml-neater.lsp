@@ -2,6 +2,7 @@
 ;;
 ;;   XML neater
 ;;
+;;   	$Id$	
 ;; ----------------------------------------------------------------------
 ;;
 ;;   Copyright (C) 2010  David Fernandes
@@ -40,6 +41,9 @@
   "Namespace waiting to be used.")
 
 (defvar *debuging* t)
+
+(defvar *definition* nil
+  "First line <?XML doen't end normaly with />")
 
 (defconstant *escaped-chars* "\\{}*"
   "Characters that need special prefixing.")
@@ -92,6 +96,8 @@
 )
 
 
+;; predicates
+
 (defmacro char<-p     (c) `(char= ,c #\<))
 (defmacro char>-p     (c) `(char= ,c #\>))
 (defmacro char/-p     (c) `(char= ,c #\/))
@@ -127,6 +133,9 @@
   (trc "t1")
   (cond
 
+   ((space-p c)
+    (setf *state* #'t1-state))
+
    ((char>-p c)                   ; <> is not a very good TAG!
     (error "Invalid start for a TAG."))
 
@@ -134,6 +143,7 @@
     (setf *state* #'t2a-state))
 
    (t                             ; TAG's name starting
+    (setf *definition* (char= c #\?))
     (add-char c)
     (setf *state* #'t4-state))
 
@@ -217,6 +227,11 @@
     (setf *state* #'t2-state))
 
    ((char>-p c)                        ; closed TAG
+    (if
+     *definition*
+     (progn
+       (pop *tree*)
+       (setf *definition* nil)))
     (setf *state* #'t6-state))
 
    ((space-p c)
