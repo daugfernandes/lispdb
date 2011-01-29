@@ -36,6 +36,9 @@
 (defvar *current-string* nil
   "Characters processed so far.")
 
+(defvar *ns* nil
+  "Namespace waiting to be used.")
+
 (defvar *debuging* t)
 
 (defconstant *escaped-chars* "\\{}*"
@@ -47,7 +50,7 @@
 (defconstant *start-tag* (character "<"))
 (defconstant *end-tag* (character ">"))
 
-(defun is-escaped-char (c)
+(defun escaped-char-p (c)
   (not (null (search (string c) *escaped-chars*)))
 )
 
@@ -93,14 +96,18 @@
 (defmacro char>-p     (c) `(char= ,c #\>))
 (defmacro char/-p     (c) `(char= ,c #\/))
 (defmacro char=-p     (c) `(char= ,c #\=))
+(defmacro char\:-p     (c) `(char= ,c #\:))
 (defmacro char\"-p    (c) `(char= ,c #\"))
 (defmacro space-p     (c) `(char= ,c #\Space))
+
+(defmacro trc (m)
+ `(if *debuging* (print ,m))) 
 
 ;; states
 
 (defun i-state (c)
   "Initial state. Nothing interesting happened, yet."
-  (if *debuging* (print "i"))
+  (trc "i")
   (cond
 
    ((char<-p c)                     ; ok! first char's a < , good!!
@@ -117,7 +124,7 @@
 
 (defun t1-state (c)
   "TAG starting."
-  (if *debuging* (print "t1"))
+  (trc "t1")
   (cond
 
    ((char>-p c)                   ; <> is not a very good TAG!
@@ -135,7 +142,7 @@
 
 (defun t2a-state (c)
   "/TAG like."
-  (if *debuging* (print "t2a"))
+  (trc "t2a")
   (cond
 
     ((char>-p c)
@@ -144,7 +151,7 @@
 
 (defun t2-state (c)
   "Closing TAG starting."
-  (if *debuging* (print "t2"))
+  (trc "t2")
   (cond
 
    ((char>-p c)            ; TAG's name complete.
@@ -159,23 +166,39 @@
 
 (defun t3-state (c)
   "Just an epsilon state."
-  (if *debuging* (print "t3"))
+  (trc "t3")
   (setf *state* #'t1-state)
 )
 
 (defun t4-state (c)
   "TAG's name."
-  (if *debuging* (print "t4"))
+  (trc "t4")
   (cond
 
    ((space-p c)            ; TAG's name completed maybe a ATTR follows
     (make-node (list :tag))
     (use-chars-read)
+     (if
+      (> (length *ns*) 0)
+      (progn
+	(push-tail :ns (car *tree*))
+	(push-tail *ns* (car *tree*))
+	(setf *ns* (make-empty-string))))
     (setf *state* #'t5-state))
+
+   ((char= c #\:)
+    (setf *ns* *current-string*)
+    (setf *current-string* (make-empty-string)))
 
    ((char>-p c)                ; TAG's name completed
     (make-node (list :tag))
     (use-chars-read)
+     (if
+      (> (length *ns*) 0)
+      (progn
+	(push-tail :ns (car *tree*))
+	(push-tail *ns* (car *tree*))
+	(setf *ns* (make-empty-string))))
     (setf *state* #'t6-state))
 
    (t
@@ -186,7 +209,7 @@
 
 (defun t5-state (c)
   "Maybe Attributes."
-  (if *debuging* (print "t5"))
+  (trc "t5")
   (cond
 
    ((char/-p c)                        ; closing TAG
@@ -207,13 +230,23 @@
 
 (defun t9-state (c)
   "Attribute."
-  (if *debuging* (print "t9"))
+  (trc "t9")
   (cond
 
     ((char=-p c)                   ; attribute's name complete, starting value
      (make-node (list :attr))
      (use-chars-read)
+     (if
+      (> (length *ns*) 0)
+      (progn
+	(push-tail :ns (car *tree*))
+	(push-tail *ns* (car *tree*))
+	(setf *ns* (make-empty-string))))
      (setf *state* #'t10-state))
+    
+    ((char= c #\:)
+     (setf *ns* *current-string*)
+     (setf *current-string* (make-empty-string)))
 
     ((space-p c)                   ; valueless attribute
      (make-node (list :attr))
@@ -224,7 +257,8 @@
     ((or (char>-p c) (char/-p c))
      (make-node (list :attr))
      (use-chars-read)
-     (pop *tree*))
+     (pop *tree*) (pop *tree*)
+     (setf *state* #'t3-state))
 
     (t
      (add-char c))
@@ -233,7 +267,7 @@
 
 (defun t10-state (c)
   "Attribute's value"
-  (if *debuging* (print "t10"))
+  (trc "t10")
   (cond
 
     ((char\"-p c)
@@ -265,7 +299,7 @@
 
 (defun t11-state (c)
   "Attribute's value between double-quotes."
-  (if *debuging* (print "t11"))
+  (trc "t11")
   (cond
 
     ((char\"-p c)
@@ -278,7 +312,7 @@
 
 (defun t6-state (c)
   "Inner body of element starting."
-  (if *debuging* (print "t6"))
+  (trc "t6")
   (cond 
 
    ((char<-p c)
@@ -297,7 +331,7 @@
 
 (defun t8-state (c)
   "Inner body of element."
-  (if *debuging* (print "t8"))
+  (trc "t8")
   (cond
 
    ((char/-p c)
