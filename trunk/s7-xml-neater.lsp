@@ -147,6 +147,7 @@
 
     ((char>-p c)
      (setf *current-string* (make-empty-string))
+     (pop *tree*)
      (setf *state* #'i-state))))
 
 (defun t2-state (c)

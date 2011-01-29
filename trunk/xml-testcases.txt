@@ -16,8 +16,10 @@
 "<a u=1 a=2>ii</a>"
 (list :XML (list :TAG "a" (list :ATTR "u" "1") (list :ATTR "a" "2") "ii"))
 
+"<html a=1 b="2" c d=1>ii</a>"
+(list :XML (list :TAG "a" (list :ATTR "u" "1") (list :ATTR "a" "2") "ii"))
 
-"<html i=1 a=2/z>" devia dar erro no z e não dá !!!
+
 
 
 
