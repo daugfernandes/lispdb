@@ -1,0 +1,4362 @@
+<?xml version="1.0" encoding="UTF-8">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="RegionalSettings">
+        <s:complexType/>
+      </s:element>
+      <s:element name="RegionalSettingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegionalSettingsResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="testeShell">
+        <s:complexType/>
+      </s:element>
+      <s:element name="testeShellResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="testeShellResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDocumentPDF_String">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_script" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDocumentPDF_StringResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getDocumentPDF_StringResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDocumentPDF">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_script" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDocumentPDFResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getDocumentPDFResult" type="s:base64Binary"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLayout">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_layoutID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLayoutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLayoutResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Transform">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_cssrc" type="tns:mtdReferenceSystemInfo"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_csdst" type="tns:mtdReferenceSystemInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="g10GeoPoint">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="X" type="s:double"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Y" type="s:double"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Z" type="s:double"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoGeometry" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Catalogo" type="tns:g10GeoCatalog"/>
+          <s:element minOccurs="0" maxOccurs="1" name="WKTfromDB" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10GeoCatalog">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Nome" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Objecto"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Metadata" type="tns:mtdMetadata"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdMetadata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Meta_Metadata" type="tns:mtdMetaMetadata"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Contact" type="tns:mtdContact"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceSystem" type="tns:mtdReferenceSystemInfo"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Identification" type="tns:mtdIdentificationInfo"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DataQuality" type="tns:mtdDataQualityInfo"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Distribution" type="tns:mtdDistributionInfo"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdMetaMetadata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FileIdentifier" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="HierarchyLevel" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Date" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdContact">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="OrganizationName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Facsimile" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DeliveryPoint" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PostalCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ElectronicMailAddress" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdReferenceSystemInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Object"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CodeSpace" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdIdentificationInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Description_PT" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description_EN" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Purpose_PT" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Purpose_EN" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="TopicCategory" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Citation" type="tns:mtdCitation"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Credit" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PointOfContact" type="tns:mtdContact"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ResourceConstraints" type="tns:mtdLegalConstraints"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpatialRepresentationType" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpatialResolution" type="tns:mtdSpatialResolution"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DescriptiveKeywords" type="tns:mtdKeywordsType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Extent" type="tns:mtdIdentificationInfoextent"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ResourceMaintenance" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceType" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="couplingType" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceoperatesOn" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServicecontainsOperations" type="tns:mtdServiceOperations"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdCitation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title_PT" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Title_EN" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AlternateTitle" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Edition" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EditionDate" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Series_name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CitedResponsibleParty" type="tns:mtdContact"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Date" type="tns:mtdDate"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DateType" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Date" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdLegalConstraints">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UseLimitation" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccessConstraints" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="UseConstraints" type="tns:ArrayOfString"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdSpatialResolution">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TypeSpactialResolution" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Distance" type="s:double"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Denominator" type="s:double"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdKeywordsType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="KeywordTypeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Keywords" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Thesaurus" type="tns:mtdCitation"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdIdentificationInfoextent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Extentdescription" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="GeographicElement" type="tns:mtdExtentGeographic"/>
+          <s:element minOccurs="0" maxOccurs="1" name="TemporalElement" type="tns:mtdExtentTemporal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="VerticalElement" type="tns:mtdExtentVertical"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdExtentGeographic">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ExtentTypeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Tipo" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="GeographicIdentifier" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="WestBoundLongitude" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EastBoundLongitude" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SouthBoundLatitude" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="NorthBoundLatitude" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdExtentTemporal">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BeginPosition" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EndPosition" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdExtentVertical">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="MinimumValue" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="MaximimValue" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdServiceOperations">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OperationName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DCP" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ConnectPoint" type="tns:mtdOnlineResource"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdOnlineResource">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="OnlineFunctionCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDataQualityInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="HierarchyLevel" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="HierarchyLevelDescription" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LineAge" type="tns:mtdDataQualityLineage"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Extent" type="tns:mtdIdentificationInfoextent"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDataQualityLineage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Statement_PT" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Statement_EN" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ProcessStep" type="tns:mtdQualityProcessStep"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="tns:mtdQualityProcessSource"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdQualityProcessStep">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Date" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Rationale" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdQualityProcessSource">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ScaleDenominator" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDistributionInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Format" type="tns:mtdDistributionFormat"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DistributorContact" type="tns:mtdContact"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DigitalTransfer" type="tns:mtdDigitalTransfer"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDistributionFormat">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="mtdDigitalTransfer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UnitsOfDistribution" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Size" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Linkage" type="tns:mtdOnlineResource"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10GeoMultiPoint">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Points" type="tns:ArrayOfG10GeoPoint"/>
+              <s:element minOccurs="0" maxOccurs="1" name="GetBasicGeometries" type="tns:ArrayOfG10GeoGeometry"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfG10GeoPoint">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="g10GeoPoint" nillable="true" type="tns:g10GeoPoint"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfG10GeoGeometry">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="g10GeoGeometry" nillable="true" type="tns:g10GeoGeometry"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10GeoCollection">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoLineString">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Vertices" type="tns:ArrayOfG10GeoPoint"/>
+              <s:element minOccurs="0" maxOccurs="1" name="GetBasicGeometries" type="tns:ArrayOfG10GeoGeometry"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Vertices" type="tns:ArrayOfG10GeoPoint"/>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="GetBasicGeometries" type="tns:ArrayOfG10GeoGeometry"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoRectangle">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoPolygon"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoMultiPolygon">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="GetBasicGeometries" type="tns:ArrayOfG10GeoGeometry"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="g10GeoMultiLineString">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:g10GeoGeometry">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WKT" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="GetBasicGeometries" type="tns:ArrayOfG10GeoGeometry"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="TransformResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TransformResult" type="tns:g10GeoPoint"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_cssrc" type="tns:mtdReferenceSystemInfo"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_csdst" type="tns:mtdReferenceSystemInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransformMapMetricToMap">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransformMapMetricToMapResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TransformMapMetricToMapResult" type="tns:g10GeoPoint"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapCenter">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapCenterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMapCenterResult" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MapRefresh">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MapRefreshResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="MapRefreshResult" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransformMapToMapMetric">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransformMapToMapMetricResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TransformMapToMapMetricResult" type="tns:g10GeoPoint"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_geometry" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMetricCoordinateSystem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMetricCoordinateSystemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMetricCoordinateSystemResult" type="tns:mtdReferenceSystemInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCoordinateSystem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCoordinateSystemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCoordinateSystemResult" type="tns:mtdReferenceSystemInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapa">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="centro_x" type="s:double"/>
+            <s:element minOccurs="1" maxOccurs="1" name="centro_y" type="s:double"/>
+            <s:element minOccurs="1" maxOccurs="1" name="escala" type="s:long"/>
+            <s:element minOccurs="1" maxOccurs="1" name="image_w" type="s:long"/>
+            <s:element minOccurs="1" maxOccurs="1" name="image_h" type="s:long"/>
+            <s:element minOccurs="1" maxOccurs="1" name="RefreshCache" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMapaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMapaResult" type="s:base64Binary"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetActualViewCoordsImage2Map">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_coords_image" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetActualViewCoordsImage2MapResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetActualViewCoordsImage2MapResult" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetActualViewCoordsMap2Image">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_coords_map" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetActualViewCoordsMap2ImageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetActualViewCoordsMap2ImageResult" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetActualView">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="g10MapView">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Scale" type="s:double"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Center" type="tns:g10GeoPoint"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Dpi" type="s:long"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MapWidth" type="s:double"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MapHeight" type="s:double"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageWidth" type="s:long"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageHeight" type="s:long"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetActualViewResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetActualViewResult" type="tns:g10MapView"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TestMGConnect">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TestMGConnectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestMGConnectResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLayers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="g10MapLayerSet">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Layers" type="tns:ArrayOfG10MapguideLayer"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfG10MapguideLayer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="g10MapguideLayer" nillable="true" type="tns:g10MapguideLayer"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10MapguideLayer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LegendLabel" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="GetVisibility" type="s:boolean"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getLayersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getLayersResult" type="tns:g10MapLayerSet"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setLayerVisibility">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="layername" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="visibility" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setLayerVisibilityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="setLayerVisibilityResult" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLayerVisibility">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="layername" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLayerVisibilityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="getLayerVisibilityResult" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TestHistoryLog">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TestHistoryLogResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestHistoryLogResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryCentroidById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id_entidade" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryCentroidByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getGeometryCentroidByIdResult" type="tns:g10GeoPoint"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getGeometryByIdResult" type="tns:g10GeoCollection"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryWKTById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryWKTByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getGeometryWKTByIdResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryMBRById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getGeometryMBRByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getGeometryMBRByIdResult" type="tns:g10GeoRectangle"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDistritos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Entidades">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Entidades" type="tns:ArrayOfEntidadeGeo"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntidadeGeo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntidadeGeo" nillable="true" type="tns:EntidadeGeo"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntidadeGeo" abstract="true">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Entidade" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IsNew" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Nome" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LastError" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getDistritosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getDistritosResult" type="tns:Entidades"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDistrito">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_ID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getDistritoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getDistritoResult" type="tns:cDistrito"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="cDistrito">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:EntidadeGeo">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Dicofre" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="getConcelhos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id_distrito" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getConcelhosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getConcelhosResult" type="tns:Entidades"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getConcelho">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_ID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getConcelhoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getConcelhoResult" type="tns:cConcelho"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="cConcelho">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:EntidadeGeo">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Distrito" type="tns:cDistrito"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Dicofre" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="getFreguesias">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="id_concelho" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFreguesiasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getFreguesiasResult" type="tns:Entidades"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFreguesia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="p_ID" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFreguesiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getFreguesiaResult" type="tns:cFreguesia"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="cFreguesia">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:EntidadeGeo">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Concelho" type="tns:cConcelho"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Dicofre" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="getObjects">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="layername" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="geometry" type="tns:g10GeoGeometry"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="g10MapguideObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Layer" type="tns:g10MapguideLayer"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Properties" type="tns:ArrayOfG10MapObjectProperty"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Geom" type="tns:g10GeoGeometry"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfG10MapObjectProperty">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="g10MapObjectProperty" nillable="true" type="tns:g10MapObjectProperty"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10MapObjectProperty">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="tns:g10MapObjectType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Value"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="g10MapObjectType"/>
+      <s:complexType name="ArrayOfG10MapguideObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="g10MapguideObject" nillable="true" type="tns:g10MapguideObject"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getObjectsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getObjectsResult" type="tns:ArrayOfG10MapguideObject"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getObjectsEx">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="geometry" type="tns:g10GeoGeometry"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getObjectsExResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getObjectsExResult" type="tns:ArrayOfG10MapguideObject"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getObjectOnTop">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="geometry" type="tns:g10GeoGeometry"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getObjectOnTopResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getObjectOnTopResult" type="tns:g10MapguideObject"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="HelloWorld">
+        <s:complexType/>
+      </s:element>
+      <s:element name="HelloWorldResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorldResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TestaBaseDados">
+        <s:complexType/>
+      </s:element>
+      <s:element name="TestaBaseDadosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestaBaseDadosResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaInstrumentos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCIgt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cIgt" nillable="true" type="tns:cIgt"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cIgt">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Ordem" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Parent"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="cIgtItem">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:cIgt">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Layer" type="tns:ArrayOfString"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="cIgtGrupo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:cIgt"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaInstrumentosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaInstrumentosResult" type="tns:ArrayOfCIgt"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaIGTitem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCIgtItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cIgtItem" nillable="true" type="tns:cIgtItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="webGetListaIGTitemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaIGTitemResult" type="tns:ArrayOfCIgtItem"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaCartografia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCCartografia">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cCartografia" nillable="true" type="tns:cCartografia"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cCartografia">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Ordem" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Parent"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="cCartografiaGrupo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:cCartografia"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="cCartografiaItem">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:cCartografia">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Layer" type="tns:ArrayOfString"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaCartografiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaCartografiaResult" type="tns:ArrayOfCCartografia"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetIGTitembyID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetIGTitembyIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetIGTitembyIDResult" type="tns:cIgtItem"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetCartItembyID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="Id" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetCartItembyIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetCartItembyIDResult" type="tns:cCartografiaItem"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaTipoPois">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCTipoPois">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cTipoPois" nillable="true" type="tns:cTipoPois"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cTipoPois">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Parent" type="tns:cTipoPois"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaTipoPoisResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaTipoPoisResult" type="tns:ArrayOfCTipoPois"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaPois">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="IdPai" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCPois">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cPois" nillable="true" type="tns:cPois"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cPois">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:EntidadeGeo">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Parent" type="tns:cTipoPois"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Centroide" type="tns:g10GeoPoint"/>
+              <s:element minOccurs="1" maxOccurs="1" name="CentroideX" type="s:double"/>
+              <s:element minOccurs="0" maxOccurs="1" name="WKTfromDb" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="CentroideY" type="s:double"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ParentId" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaPoisResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaPoisResult" type="tns:ArrayOfCPois"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webPesquisaPois">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="texto" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webPesquisaPoisResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webPesquisaPoisResult" type="tns:ArrayOfCPois"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChildsPoi">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="IdPai" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChildsPoiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetChildsPoiResult" type="tns:ArrayOfCPois"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaCartas">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCCartografiaItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cCartografiaItem" nillable="true" type="tns:cCartografiaItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCCarta">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cCarta" nillable="true" type="tns:cCarta"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cCarta">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ElementosCartografia" type="tns:ArrayOfCCartografiaItem"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ElementosIGT" type="tns:ArrayOfCIgtItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaCartasResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaCartasResult" type="tns:ArrayOfCCarta"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="webGetListaLayouts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiTokenId" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ltxTableRow">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Cells" type="tns:ArrayOfString"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BelowLine" type="tns:TableLineTypes"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="TableLineTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="tltNone"/>
+          <s:enumeration value="tltSingle"/>
+          <s:enumeration value="tltDouble"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ltxDocument">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Preamble" type="tns:ltxPreamble"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Body" type="tns:ltxBody"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxPreamble">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Author" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Date" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DocumentClass" type="tns:ltxDocumentClass"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLtxObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ltxObject" nillable="true" type="tns:ltxObject"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxObject" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxPackage">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Modules" type="tns:ArrayOfLtxModule"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Options" type="tns:ArrayOfLtxOption"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLtxModule">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ltxModule" nillable="true" type="tns:ltxModule"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxModule">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxSimpleString">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxAdHoc">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxCommand">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxCRLF">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxOption">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxClass">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxSimpleString"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLtxOption">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ltxOption" nillable="true" type="tns:ltxOption"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxPut">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+              <s:element minOccurs="1" maxOccurs="1" name="XOffset" type="s:double"/>
+              <s:element minOccurs="1" maxOccurs="1" name="YOffset" type="s:double"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxText">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="FontSize" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="FontLineSpace" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="RotateAngle" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Style" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Color" type="tns:ltxTextColor"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="ltxTextColor">
+        <s:restriction base="s:string">
+          <s:enumeration value="ltcNoColor"/>
+          <s:enumeration value="ltcBlue"/>
+          <s:enumeration value="ltcRed"/>
+          <s:enumeration value="ltcYellow"/>
+          <s:enumeration value="ltcGreen"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ltxCenter">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxTable">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Cols" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="HeaderCols" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ColAlignment" type="tns:ArrayOfTableColumnsAlignment"/>
+              <s:element minOccurs="0" maxOccurs="1" name="VerticalLines" type="tns:ArrayOfTableLineTypes"/>
+              <s:element minOccurs="1" maxOccurs="1" name="TopLine" type="tns:TableLineTypes"/>
+              <s:element minOccurs="1" maxOccurs="1" name="BottomLine" type="tns:TableLineTypes"/>
+              <s:element minOccurs="1" maxOccurs="1" name="LeftLine" type="tns:TableLineTypes"/>
+              <s:element minOccurs="1" maxOccurs="1" name="RightLine" type="tns:TableLineTypes"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Rows" type="tns:ArrayOfLtxTableRow"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTableColumnsAlignment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TableColumnsAlignment" type="tns:TableColumnsAlignment"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="TableColumnsAlignment">
+        <s:restriction base="s:string">
+          <s:enumeration value="tcaNone"/>
+          <s:enumeration value="tcaLeft"/>
+          <s:enumeration value="tcaCenter"/>
+          <s:enumeration value="tcaRight"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfTableLineTypes">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TableLineTypes" type="tns:TableLineTypes"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfLtxTableRow">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ltxTableRow" nillable="true" type="tns:ltxTableRow"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxPicture">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Width" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Height" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="XOffset" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="YOffset" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxBox">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Padding" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Thickness" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxGraphic">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Width" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Height" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Scale" type="s:double"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Angle" type="s:double"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Viewport" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxFigure">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ltxObject">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Caption" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ltxDocumentClass">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Class" type="tns:ltxClass"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Options" type="tns:ArrayOfLtxOption"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ltxBody">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Objects" type="tns:ArrayOfLtxObject"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ShowTitle" type="s:boolean"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCLayout">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cLayout" nillable="true" type="tns:cLayout"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cLayout">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Entidade">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Script" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Document" type="tns:ltxDocument"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="webGetListaLayoutsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="webGetListaLayoutsResult" type="tns:ArrayOfCLayout"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string"/>
+      <s:element name="base64Binary" nillable="true" type="s:base64Binary"/>
+      <s:element name="g10GeoPoint" nillable="true" type="tns:g10GeoPoint"/>
+      <s:element name="boolean" type="s:boolean"/>
+      <s:element name="mtdReferenceSystemInfo" nillable="true" type="tns:mtdReferenceSystemInfo"/>
+      <s:element name="g10MapView" nillable="true" type="tns:g10MapView"/>
+      <s:element name="g10MapLayerSet" nillable="true" type="tns:g10MapLayerSet"/>
+      <s:element name="g10GeoCollection" nillable="true" type="tns:g10GeoCollection"/>
+      <s:element name="g10GeoRectangle" nillable="true" type="tns:g10GeoRectangle"/>
+      <s:element name="Entidades" nillable="true" type="tns:Entidades"/>
+      <s:element name="cDistrito" nillable="true" type="tns:cDistrito"/>
+      <s:element name="cConcelho" nillable="true" type="tns:cConcelho"/>
+      <s:element name="cFreguesia" nillable="true" type="tns:cFreguesia"/>
+      <s:element name="ArrayOfCIgt" nillable="true" type="tns:ArrayOfCIgt"/>
+      <s:element name="ArrayOfCIgtItem" nillable="true" type="tns:ArrayOfCIgtItem"/>
+      <s:element name="ArrayOfCCartografia" nillable="true" type="tns:ArrayOfCCartografia"/>
+      <s:element name="cIgtItem" nillable="true" type="tns:cIgtItem"/>
+      <s:element name="cCartografiaItem" nillable="true" type="tns:cCartografiaItem"/>
+      <s:element name="ArrayOfCTipoPois" nillable="true" type="tns:ArrayOfCTipoPois"/>
+      <s:element name="ArrayOfCPois" nillable="true" type="tns:ArrayOfCPois"/>
+      <s:element name="ArrayOfCCarta" nillable="true" type="tns:ArrayOfCCarta"/>
+      <s:element name="ArrayOfCLayout" nillable="true" type="tns:ArrayOfCLayout"/>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="RegionalSettingsSoapIn">
+    <wsdl:part name="parameters" element="tns:RegionalSettings"/>
+  </wsdl:message>
+  <wsdl:message name="RegionalSettingsSoapOut">
+    <wsdl:part name="parameters" element="tns:RegionalSettingsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="testeShellSoapIn">
+    <wsdl:part name="parameters" element="tns:testeShell"/>
+  </wsdl:message>
+  <wsdl:message name="testeShellSoapOut">
+    <wsdl:part name="parameters" element="tns:testeShellResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringSoapIn">
+    <wsdl:part name="parameters" element="tns:getDocumentPDF_String"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringSoapOut">
+    <wsdl:part name="parameters" element="tns:getDocumentPDF_StringResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFSoapIn">
+    <wsdl:part name="parameters" element="tns:getDocumentPDF"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFSoapOut">
+    <wsdl:part name="parameters" element="tns:getDocumentPDFResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLayout"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLayoutResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TransformSoapIn">
+    <wsdl:part name="parameters" element="tns:Transform"/>
+  </wsdl:message>
+  <wsdl:message name="TransformSoapOut">
+    <wsdl:part name="parameters" element="tns:TransformResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TransformMapMetricToMapSoapIn">
+    <wsdl:part name="parameters" element="tns:TransformMapMetricToMap"/>
+  </wsdl:message>
+  <wsdl:message name="TransformMapMetricToMapSoapOut">
+    <wsdl:part name="parameters" element="tns:TransformMapMetricToMapResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMapCenter"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMapCenterResponse"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshSoapIn">
+    <wsdl:part name="parameters" element="tns:MapRefresh"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshSoapOut">
+    <wsdl:part name="parameters" element="tns:MapRefreshResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TransformMapToMapMetricSoapIn">
+    <wsdl:part name="parameters" element="tns:TransformMapToMapMetric"/>
+  </wsdl:message>
+  <wsdl:message name="TransformMapToMapMetricSoapOut">
+    <wsdl:part name="parameters" element="tns:TransformMapToMapMetricResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMetricCoordinateSystem"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMetricCoordinateSystemResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCoordinateSystem"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCoordinateSystemResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMapa"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMapaResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewCoordsImage2MapSoapIn">
+    <wsdl:part name="parameters" element="tns:GetActualViewCoordsImage2Map"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewCoordsImage2MapSoapOut">
+    <wsdl:part name="parameters" element="tns:GetActualViewCoordsImage2MapResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewCoordsMap2ImageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetActualViewCoordsMap2Image"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewCoordsMap2ImageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetActualViewCoordsMap2ImageResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewSoapIn">
+    <wsdl:part name="parameters" element="tns:GetActualView"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewSoapOut">
+    <wsdl:part name="parameters" element="tns:GetActualViewResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectSoapIn">
+    <wsdl:part name="parameters" element="tns:TestMGConnect"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectSoapOut">
+    <wsdl:part name="parameters" element="tns:TestMGConnectResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersSoapIn">
+    <wsdl:part name="parameters" element="tns:getLayers"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersSoapOut">
+    <wsdl:part name="parameters" element="tns:getLayersResponse"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilitySoapIn">
+    <wsdl:part name="parameters" element="tns:setLayerVisibility"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilitySoapOut">
+    <wsdl:part name="parameters" element="tns:setLayerVisibilityResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilitySoapIn">
+    <wsdl:part name="parameters" element="tns:getLayerVisibility"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilitySoapOut">
+    <wsdl:part name="parameters" element="tns:getLayerVisibilityResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogSoapIn">
+    <wsdl:part name="parameters" element="tns:TestHistoryLog"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogSoapOut">
+    <wsdl:part name="parameters" element="tns:TestHistoryLogResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:getGeometryCentroidById"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:getGeometryCentroidByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:getGeometryById"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:getGeometryByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:getGeometryWKTById"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:getGeometryWKTByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:getGeometryMBRById"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:getGeometryMBRByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosSoapIn">
+    <wsdl:part name="parameters" element="tns:getDistritos"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosSoapOut">
+    <wsdl:part name="parameters" element="tns:getDistritosResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoSoapIn">
+    <wsdl:part name="parameters" element="tns:getDistrito"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoSoapOut">
+    <wsdl:part name="parameters" element="tns:getDistritoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosSoapIn">
+    <wsdl:part name="parameters" element="tns:getConcelhos"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosSoapOut">
+    <wsdl:part name="parameters" element="tns:getConcelhosResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoSoapIn">
+    <wsdl:part name="parameters" element="tns:getConcelho"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoSoapOut">
+    <wsdl:part name="parameters" element="tns:getConcelhoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasSoapIn">
+    <wsdl:part name="parameters" element="tns:getFreguesias"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasSoapOut">
+    <wsdl:part name="parameters" element="tns:getFreguesiasResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaSoapIn">
+    <wsdl:part name="parameters" element="tns:getFreguesia"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaSoapOut">
+    <wsdl:part name="parameters" element="tns:getFreguesiaResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectsSoapIn">
+    <wsdl:part name="parameters" element="tns:getObjects"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectsSoapOut">
+    <wsdl:part name="parameters" element="tns:getObjectsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectsExSoapIn">
+    <wsdl:part name="parameters" element="tns:getObjectsEx"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectsExSoapOut">
+    <wsdl:part name="parameters" element="tns:getObjectsExResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectOnTopSoapIn">
+    <wsdl:part name="parameters" element="tns:getObjectOnTop"/>
+  </wsdl:message>
+  <wsdl:message name="getObjectOnTopSoapOut">
+    <wsdl:part name="parameters" element="tns:getObjectOnTopResponse"/>
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld"/>
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorldResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TestaBaseDadosSoapIn">
+    <wsdl:part name="parameters" element="tns:TestaBaseDados"/>
+  </wsdl:message>
+  <wsdl:message name="TestaBaseDadosSoapOut">
+    <wsdl:part name="parameters" element="tns:TestaBaseDadosResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaInstrumentos"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaInstrumentosResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaIGTitem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaIGTitemResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaCartografia"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaCartografiaResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetIGTitembyID"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetIGTitembyIDResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetCartItembyID"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetCartItembyIDResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaTipoPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaTipoPoisResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaPoisResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisSoapIn">
+    <wsdl:part name="parameters" element="tns:webPesquisaPois"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisSoapOut">
+    <wsdl:part name="parameters" element="tns:webPesquisaPoisResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiSoapIn">
+    <wsdl:part name="parameters" element="tns:GetChildsPoi"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiSoapOut">
+    <wsdl:part name="parameters" element="tns:GetChildsPoiResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaCartas"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaCartasResponse"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsSoapIn">
+    <wsdl:part name="parameters" element="tns:webGetListaLayouts"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsSoapOut">
+    <wsdl:part name="parameters" element="tns:webGetListaLayoutsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="RegionalSettingsHttpGetIn"/>
+  <wsdl:message name="RegionalSettingsHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="testeShellHttpGetIn"/>
+  <wsdl:message name="testeShellHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_script" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_script" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFHttpGetOut">
+    <wsdl:part name="Body" element="tns:base64Binary"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_layoutID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10GeoPoint"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemHttpGetOut">
+    <wsdl:part name="Body" element="tns:mtdReferenceSystemInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemHttpGetOut">
+    <wsdl:part name="Body" element="tns:mtdReferenceSystemInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="centro_x" type="s:string"/>
+    <wsdl:part name="centro_y" type="s:string"/>
+    <wsdl:part name="escala" type="s:string"/>
+    <wsdl:part name="image_w" type="s:string"/>
+    <wsdl:part name="image_h" type="s:string"/>
+    <wsdl:part name="RefreshCache" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaHttpGetOut">
+    <wsdl:part name="Body" element="tns:base64Binary"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10MapView"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10MapLayerSet"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilityHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="layername" type="s:string"/>
+    <wsdl:part name="visibility" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilityHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilityHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="layername" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilityHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_entidade" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10GeoPoint"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10GeoCollection"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:g10GeoRectangle"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosHttpGetOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoHttpGetOut">
+    <wsdl:part name="Body" element="tns:cDistrito"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_distrito" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosHttpGetOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoHttpGetOut">
+    <wsdl:part name="Body" element="tns:cConcelho"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_concelho" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasHttpGetOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaHttpGetIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaHttpGetOut">
+    <wsdl:part name="Body" element="tns:cFreguesia"/>
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpGetIn"/>
+  <wsdl:message name="HelloWorldHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestaBaseDadosHttpGetIn"/>
+  <wsdl:message name="TestaBaseDadosHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCIgt"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCIgtItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCCartografia"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="Id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:cIgtItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="Id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:cCartografiaItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCTipoPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="IdPai" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="texto" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="IdPai" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCCarta"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsHttpGetIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCLayout"/>
+  </wsdl:message>
+  <wsdl:message name="RegionalSettingsHttpPostIn"/>
+  <wsdl:message name="RegionalSettingsHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="testeShellHttpPostIn"/>
+  <wsdl:message name="testeShellHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_script" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDF_StringHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_script" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDocumentPDFHttpPostOut">
+    <wsdl:part name="Body" element="tns:base64Binary"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_layoutID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetLayoutHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapCenterHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10GeoPoint"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="MapRefreshHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMetricCoordinateSystemHttpPostOut">
+    <wsdl:part name="Body" element="tns:mtdReferenceSystemInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoordinateSystemHttpPostOut">
+    <wsdl:part name="Body" element="tns:mtdReferenceSystemInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="centro_x" type="s:string"/>
+    <wsdl:part name="centro_y" type="s:string"/>
+    <wsdl:part name="escala" type="s:string"/>
+    <wsdl:part name="image_w" type="s:string"/>
+    <wsdl:part name="image_h" type="s:string"/>
+    <wsdl:part name="RefreshCache" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetMapaHttpPostOut">
+    <wsdl:part name="Body" element="tns:base64Binary"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetActualViewHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10MapView"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestMGConnectHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayersHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10MapLayerSet"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilityHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="layername" type="s:string"/>
+    <wsdl:part name="visibility" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="setLayerVisibilityHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilityHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="layername" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getLayerVisibilityHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestHistoryLogHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_entidade" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryCentroidByIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10GeoPoint"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryByIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10GeoCollection"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryWKTByIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getGeometryMBRByIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:g10GeoRectangle"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritosHttpPostOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getDistritoHttpPostOut">
+    <wsdl:part name="Body" element="tns:cDistrito"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_distrito" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhosHttpPostOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getConcelhoHttpPostOut">
+    <wsdl:part name="Body" element="tns:cConcelho"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="id_concelho" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiasHttpPostOut">
+    <wsdl:part name="Body" element="tns:Entidades"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaHttpPostIn">
+    <wsdl:part name="apiTokenID" type="s:string"/>
+    <wsdl:part name="p_ID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="getFreguesiaHttpPostOut">
+    <wsdl:part name="Body" element="tns:cFreguesia"/>
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpPostIn"/>
+  <wsdl:message name="HelloWorldHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="TestaBaseDadosHttpPostIn"/>
+  <wsdl:message name="TestaBaseDadosHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaInstrumentosHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCIgt"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaIGTitemHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCIgtItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartografiaHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCCartografia"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="Id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetIGTitembyIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:cIgtItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="Id" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetCartItembyIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:cCartografiaItem"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaTipoPoisHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCTipoPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="IdPai" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaPoisHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="texto" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webPesquisaPoisHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+    <wsdl:part name="IdPai" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetChildsPoiHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCPois"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaCartasHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCCarta"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsHttpPostIn">
+    <wsdl:part name="apiTokenId" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="webGetListaLayoutsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCLayout"/>
+  </wsdl:message>
+  <wsdl:portType name="ws_dicofreSoap">
+    <wsdl:operation name="RegionalSettings">
+      <wsdl:input message="tns:RegionalSettingsSoapIn"/>
+      <wsdl:output message="tns:RegionalSettingsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <wsdl:input message="tns:testeShellSoapIn"/>
+      <wsdl:output message="tns:testeShellSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <wsdl:input message="tns:getDocumentPDF_StringSoapIn"/>
+      <wsdl:output message="tns:getDocumentPDF_StringSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <wsdl:input message="tns:getDocumentPDFSoapIn"/>
+      <wsdl:output message="tns:getDocumentPDFSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <wsdl:input message="tns:GetLayoutSoapIn"/>
+      <wsdl:output message="tns:GetLayoutSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Transform">
+      <wsdl:input message="tns:TransformSoapIn"/>
+      <wsdl:output message="tns:TransformSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapMetricToMap">
+      <wsdl:input message="tns:TransformMapMetricToMapSoapIn"/>
+      <wsdl:output message="tns:TransformMapMetricToMapSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <wsdl:input message="tns:GetMapCenterSoapIn"/>
+      <wsdl:output message="tns:GetMapCenterSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <wsdl:input message="tns:MapRefreshSoapIn"/>
+      <wsdl:output message="tns:MapRefreshSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapToMapMetric">
+      <wsdl:input message="tns:TransformMapToMapMetricSoapIn"/>
+      <wsdl:output message="tns:TransformMapToMapMetricSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <wsdl:input message="tns:GetMetricCoordinateSystemSoapIn"/>
+      <wsdl:output message="tns:GetMetricCoordinateSystemSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <wsdl:input message="tns:GetCoordinateSystemSoapIn"/>
+      <wsdl:output message="tns:GetCoordinateSystemSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <wsdl:input message="tns:GetMapaSoapIn"/>
+      <wsdl:output message="tns:GetMapaSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsImage2Map">
+      <wsdl:input message="tns:GetActualViewCoordsImage2MapSoapIn"/>
+      <wsdl:output message="tns:GetActualViewCoordsImage2MapSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsMap2Image">
+      <wsdl:input message="tns:GetActualViewCoordsMap2ImageSoapIn"/>
+      <wsdl:output message="tns:GetActualViewCoordsMap2ImageSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <wsdl:input message="tns:GetActualViewSoapIn"/>
+      <wsdl:output message="tns:GetActualViewSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <wsdl:input message="tns:TestMGConnectSoapIn"/>
+      <wsdl:output message="tns:TestMGConnectSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <wsdl:input message="tns:getLayersSoapIn"/>
+      <wsdl:output message="tns:getLayersSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <wsdl:input message="tns:setLayerVisibilitySoapIn"/>
+      <wsdl:output message="tns:setLayerVisibilitySoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <wsdl:input message="tns:getLayerVisibilitySoapIn"/>
+      <wsdl:output message="tns:getLayerVisibilitySoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <wsdl:input message="tns:TestHistoryLogSoapIn"/>
+      <wsdl:output message="tns:TestHistoryLogSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <wsdl:input message="tns:getGeometryCentroidByIdSoapIn"/>
+      <wsdl:output message="tns:getGeometryCentroidByIdSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <wsdl:input message="tns:getGeometryByIdSoapIn"/>
+      <wsdl:output message="tns:getGeometryByIdSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <wsdl:input message="tns:getGeometryWKTByIdSoapIn"/>
+      <wsdl:output message="tns:getGeometryWKTByIdSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <wsdl:input message="tns:getGeometryMBRByIdSoapIn"/>
+      <wsdl:output message="tns:getGeometryMBRByIdSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <wsdl:input message="tns:getDistritosSoapIn"/>
+      <wsdl:output message="tns:getDistritosSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <wsdl:input message="tns:getDistritoSoapIn"/>
+      <wsdl:output message="tns:getDistritoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <wsdl:input message="tns:getConcelhosSoapIn"/>
+      <wsdl:output message="tns:getConcelhosSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <wsdl:input message="tns:getConcelhoSoapIn"/>
+      <wsdl:output message="tns:getConcelhoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <wsdl:input message="tns:getFreguesiasSoapIn"/>
+      <wsdl:output message="tns:getFreguesiasSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <wsdl:input message="tns:getFreguesiaSoapIn"/>
+      <wsdl:output message="tns:getFreguesiaSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getObjects">
+      <wsdl:input message="tns:getObjectsSoapIn"/>
+      <wsdl:output message="tns:getObjectsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectsEx">
+      <wsdl:input message="tns:getObjectsExSoapIn"/>
+      <wsdl:output message="tns:getObjectsExSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectOnTop">
+      <wsdl:input message="tns:getObjectOnTopSoapIn"/>
+      <wsdl:output message="tns:getObjectOnTopSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldSoapIn"/>
+      <wsdl:output message="tns:HelloWorldSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <wsdl:input message="tns:TestaBaseDadosSoapIn"/>
+      <wsdl:output message="tns:TestaBaseDadosSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <wsdl:input message="tns:webGetListaInstrumentosSoapIn"/>
+      <wsdl:output message="tns:webGetListaInstrumentosSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <wsdl:input message="tns:webGetListaIGTitemSoapIn"/>
+      <wsdl:output message="tns:webGetListaIGTitemSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <wsdl:input message="tns:webGetListaCartografiaSoapIn"/>
+      <wsdl:output message="tns:webGetListaCartografiaSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <wsdl:input message="tns:webGetIGTitembyIDSoapIn"/>
+      <wsdl:output message="tns:webGetIGTitembyIDSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <wsdl:input message="tns:webGetCartItembyIDSoapIn"/>
+      <wsdl:output message="tns:webGetCartItembyIDSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <wsdl:input message="tns:webGetListaTipoPoisSoapIn"/>
+      <wsdl:output message="tns:webGetListaTipoPoisSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <wsdl:input message="tns:webGetListaPoisSoapIn"/>
+      <wsdl:output message="tns:webGetListaPoisSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <wsdl:input message="tns:webPesquisaPoisSoapIn"/>
+      <wsdl:output message="tns:webPesquisaPoisSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <wsdl:input message="tns:GetChildsPoiSoapIn"/>
+      <wsdl:output message="tns:GetChildsPoiSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <wsdl:input message="tns:webGetListaCartasSoapIn"/>
+      <wsdl:output message="tns:webGetListaCartasSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <wsdl:input message="tns:webGetListaLayoutsSoapIn"/>
+      <wsdl:output message="tns:webGetListaLayoutsSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ws_dicofreHttpGet">
+    <wsdl:operation name="RegionalSettings">
+      <wsdl:input message="tns:RegionalSettingsHttpGetIn"/>
+      <wsdl:output message="tns:RegionalSettingsHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <wsdl:input message="tns:testeShellHttpGetIn"/>
+      <wsdl:output message="tns:testeShellHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <wsdl:input message="tns:getDocumentPDF_StringHttpGetIn"/>
+      <wsdl:output message="tns:getDocumentPDF_StringHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <wsdl:input message="tns:getDocumentPDFHttpGetIn"/>
+      <wsdl:output message="tns:getDocumentPDFHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <wsdl:input message="tns:GetLayoutHttpGetIn"/>
+      <wsdl:output message="tns:GetLayoutHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <wsdl:input message="tns:GetMapCenterHttpGetIn"/>
+      <wsdl:output message="tns:GetMapCenterHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <wsdl:input message="tns:MapRefreshHttpGetIn"/>
+      <wsdl:output message="tns:MapRefreshHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <wsdl:input message="tns:GetMetricCoordinateSystemHttpGetIn"/>
+      <wsdl:output message="tns:GetMetricCoordinateSystemHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <wsdl:input message="tns:GetCoordinateSystemHttpGetIn"/>
+      <wsdl:output message="tns:GetCoordinateSystemHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <wsdl:input message="tns:GetMapaHttpGetIn"/>
+      <wsdl:output message="tns:GetMapaHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <wsdl:input message="tns:GetActualViewHttpGetIn"/>
+      <wsdl:output message="tns:GetActualViewHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <wsdl:input message="tns:TestMGConnectHttpGetIn"/>
+      <wsdl:output message="tns:TestMGConnectHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <wsdl:input message="tns:getLayersHttpGetIn"/>
+      <wsdl:output message="tns:getLayersHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <wsdl:input message="tns:setLayerVisibilityHttpGetIn"/>
+      <wsdl:output message="tns:setLayerVisibilityHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <wsdl:input message="tns:getLayerVisibilityHttpGetIn"/>
+      <wsdl:output message="tns:getLayerVisibilityHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <wsdl:input message="tns:TestHistoryLogHttpGetIn"/>
+      <wsdl:output message="tns:TestHistoryLogHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <wsdl:input message="tns:getGeometryCentroidByIdHttpGetIn"/>
+      <wsdl:output message="tns:getGeometryCentroidByIdHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <wsdl:input message="tns:getGeometryByIdHttpGetIn"/>
+      <wsdl:output message="tns:getGeometryByIdHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <wsdl:input message="tns:getGeometryWKTByIdHttpGetIn"/>
+      <wsdl:output message="tns:getGeometryWKTByIdHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <wsdl:input message="tns:getGeometryMBRByIdHttpGetIn"/>
+      <wsdl:output message="tns:getGeometryMBRByIdHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <wsdl:input message="tns:getDistritosHttpGetIn"/>
+      <wsdl:output message="tns:getDistritosHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <wsdl:input message="tns:getDistritoHttpGetIn"/>
+      <wsdl:output message="tns:getDistritoHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <wsdl:input message="tns:getConcelhosHttpGetIn"/>
+      <wsdl:output message="tns:getConcelhosHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <wsdl:input message="tns:getConcelhoHttpGetIn"/>
+      <wsdl:output message="tns:getConcelhoHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <wsdl:input message="tns:getFreguesiasHttpGetIn"/>
+      <wsdl:output message="tns:getFreguesiasHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <wsdl:input message="tns:getFreguesiaHttpGetIn"/>
+      <wsdl:output message="tns:getFreguesiaHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpGetIn"/>
+      <wsdl:output message="tns:HelloWorldHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <wsdl:input message="tns:TestaBaseDadosHttpGetIn"/>
+      <wsdl:output message="tns:TestaBaseDadosHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <wsdl:input message="tns:webGetListaInstrumentosHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaInstrumentosHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <wsdl:input message="tns:webGetListaIGTitemHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaIGTitemHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <wsdl:input message="tns:webGetListaCartografiaHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaCartografiaHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <wsdl:input message="tns:webGetIGTitembyIDHttpGetIn"/>
+      <wsdl:output message="tns:webGetIGTitembyIDHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <wsdl:input message="tns:webGetCartItembyIDHttpGetIn"/>
+      <wsdl:output message="tns:webGetCartItembyIDHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <wsdl:input message="tns:webGetListaTipoPoisHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaTipoPoisHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <wsdl:input message="tns:webGetListaPoisHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaPoisHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <wsdl:input message="tns:webPesquisaPoisHttpGetIn"/>
+      <wsdl:output message="tns:webPesquisaPoisHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <wsdl:input message="tns:GetChildsPoiHttpGetIn"/>
+      <wsdl:output message="tns:GetChildsPoiHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <wsdl:input message="tns:webGetListaCartasHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaCartasHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <wsdl:input message="tns:webGetListaLayoutsHttpGetIn"/>
+      <wsdl:output message="tns:webGetListaLayoutsHttpGetOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ws_dicofreHttpPost">
+    <wsdl:operation name="RegionalSettings">
+      <wsdl:input message="tns:RegionalSettingsHttpPostIn"/>
+      <wsdl:output message="tns:RegionalSettingsHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <wsdl:input message="tns:testeShellHttpPostIn"/>
+      <wsdl:output message="tns:testeShellHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <wsdl:input message="tns:getDocumentPDF_StringHttpPostIn"/>
+      <wsdl:output message="tns:getDocumentPDF_StringHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <wsdl:input message="tns:getDocumentPDFHttpPostIn"/>
+      <wsdl:output message="tns:getDocumentPDFHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <wsdl:input message="tns:GetLayoutHttpPostIn"/>
+      <wsdl:output message="tns:GetLayoutHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <wsdl:input message="tns:GetMapCenterHttpPostIn"/>
+      <wsdl:output message="tns:GetMapCenterHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <wsdl:input message="tns:MapRefreshHttpPostIn"/>
+      <wsdl:output message="tns:MapRefreshHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <wsdl:input message="tns:GetMetricCoordinateSystemHttpPostIn"/>
+      <wsdl:output message="tns:GetMetricCoordinateSystemHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <wsdl:input message="tns:GetCoordinateSystemHttpPostIn"/>
+      <wsdl:output message="tns:GetCoordinateSystemHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <wsdl:input message="tns:GetMapaHttpPostIn"/>
+      <wsdl:output message="tns:GetMapaHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <wsdl:input message="tns:GetActualViewHttpPostIn"/>
+      <wsdl:output message="tns:GetActualViewHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <wsdl:input message="tns:TestMGConnectHttpPostIn"/>
+      <wsdl:output message="tns:TestMGConnectHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <wsdl:input message="tns:getLayersHttpPostIn"/>
+      <wsdl:output message="tns:getLayersHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <wsdl:input message="tns:setLayerVisibilityHttpPostIn"/>
+      <wsdl:output message="tns:setLayerVisibilityHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <wsdl:input message="tns:getLayerVisibilityHttpPostIn"/>
+      <wsdl:output message="tns:getLayerVisibilityHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <wsdl:input message="tns:TestHistoryLogHttpPostIn"/>
+      <wsdl:output message="tns:TestHistoryLogHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <wsdl:input message="tns:getGeometryCentroidByIdHttpPostIn"/>
+      <wsdl:output message="tns:getGeometryCentroidByIdHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <wsdl:input message="tns:getGeometryByIdHttpPostIn"/>
+      <wsdl:output message="tns:getGeometryByIdHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <wsdl:input message="tns:getGeometryWKTByIdHttpPostIn"/>
+      <wsdl:output message="tns:getGeometryWKTByIdHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <wsdl:input message="tns:getGeometryMBRByIdHttpPostIn"/>
+      <wsdl:output message="tns:getGeometryMBRByIdHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <wsdl:input message="tns:getDistritosHttpPostIn"/>
+      <wsdl:output message="tns:getDistritosHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <wsdl:input message="tns:getDistritoHttpPostIn"/>
+      <wsdl:output message="tns:getDistritoHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <wsdl:input message="tns:getConcelhosHttpPostIn"/>
+      <wsdl:output message="tns:getConcelhosHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <wsdl:input message="tns:getConcelhoHttpPostIn"/>
+      <wsdl:output message="tns:getConcelhoHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <wsdl:input message="tns:getFreguesiasHttpPostIn"/>
+      <wsdl:output message="tns:getFreguesiasHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <wsdl:input message="tns:getFreguesiaHttpPostIn"/>
+      <wsdl:output message="tns:getFreguesiaHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpPostIn"/>
+      <wsdl:output message="tns:HelloWorldHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <wsdl:input message="tns:TestaBaseDadosHttpPostIn"/>
+      <wsdl:output message="tns:TestaBaseDadosHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <wsdl:input message="tns:webGetListaInstrumentosHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaInstrumentosHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <wsdl:input message="tns:webGetListaIGTitemHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaIGTitemHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <wsdl:input message="tns:webGetListaCartografiaHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaCartografiaHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <wsdl:input message="tns:webGetIGTitembyIDHttpPostIn"/>
+      <wsdl:output message="tns:webGetIGTitembyIDHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <wsdl:input message="tns:webGetCartItembyIDHttpPostIn"/>
+      <wsdl:output message="tns:webGetCartItembyIDHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <wsdl:input message="tns:webGetListaTipoPoisHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaTipoPoisHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <wsdl:input message="tns:webGetListaPoisHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaPoisHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <wsdl:input message="tns:webPesquisaPoisHttpPostIn"/>
+      <wsdl:output message="tns:webPesquisaPoisHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <wsdl:input message="tns:GetChildsPoiHttpPostIn"/>
+      <wsdl:output message="tns:GetChildsPoiHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <wsdl:input message="tns:webGetListaCartasHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaCartasHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <wsdl:input message="tns:webGetListaLayoutsHttpPostIn"/>
+      <wsdl:output message="tns:webGetListaLayoutsHttpPostOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ws_dicofreSoap" type="tns:ws_dicofreSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegionalSettings">
+      <soap:operation soapAction="http://tempuri.org/RegionalSettings" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <soap:operation soapAction="http://tempuri.org/testeShell" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <soap:operation soapAction="http://tempuri.org/getDocumentPDF_String" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <soap:operation soapAction="http://tempuri.org/getDocumentPDF" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <soap:operation soapAction="http://tempuri.org/GetLayout" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transform">
+      <soap:operation soapAction="http://tempuri.org/Transform" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapMetricToMap">
+      <soap:operation soapAction="http://tempuri.org/TransformMapMetricToMap" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <soap:operation soapAction="http://tempuri.org/GetMapCenter" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <soap:operation soapAction="http://tempuri.org/MapRefresh" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapToMapMetric">
+      <soap:operation soapAction="http://tempuri.org/TransformMapToMapMetric" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <soap:operation soapAction="http://tempuri.org/GetMetricCoordinateSystem" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <soap:operation soapAction="http://tempuri.org/GetCoordinateSystem" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <soap:operation soapAction="http://tempuri.org/GetMapa" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsImage2Map">
+      <soap:operation soapAction="http://tempuri.org/GetActualViewCoordsImage2Map" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsMap2Image">
+      <soap:operation soapAction="http://tempuri.org/GetActualViewCoordsMap2Image" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <soap:operation soapAction="http://tempuri.org/GetActualView" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <soap:operation soapAction="http://tempuri.org/TestMGConnect" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <soap:operation soapAction="http://tempuri.org/getLayers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <soap:operation soapAction="http://tempuri.org/setLayerVisibility" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <soap:operation soapAction="http://tempuri.org/getLayerVisibility" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <soap:operation soapAction="http://tempuri.org/TestHistoryLog" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <soap:operation soapAction="http://tempuri.org/getGeometryCentroidById" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <soap:operation soapAction="http://tempuri.org/getGeometryById" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <soap:operation soapAction="http://tempuri.org/getGeometryWKTById" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <soap:operation soapAction="http://tempuri.org/getGeometryMBRById" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <soap:operation soapAction="http://tempuri.org/getDistritos" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <soap:operation soapAction="http://tempuri.org/getDistrito" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <soap:operation soapAction="http://tempuri.org/getConcelhos" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <soap:operation soapAction="http://tempuri.org/getConcelho" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <soap:operation soapAction="http://tempuri.org/getFreguesias" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <soap:operation soapAction="http://tempuri.org/getFreguesia" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjects">
+      <soap:operation soapAction="http://tempuri.org/getObjects" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectsEx">
+      <soap:operation soapAction="http://tempuri.org/getObjectsEx" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectOnTop">
+      <soap:operation soapAction="http://tempuri.org/getObjectOnTop" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <soap:operation soapAction="http://tempuri.org/HelloWorld" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <soap:operation soapAction="http://tempuri.org/TestaBaseDados" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <soap:operation soapAction="http://tempuri.org/webGetListaInstrumentos" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <soap:operation soapAction="http://tempuri.org/webGetListaIGTitem" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <soap:operation soapAction="http://tempuri.org/webGetListaCartografia" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <soap:operation soapAction="http://tempuri.org/webGetIGTitembyID" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <soap:operation soapAction="http://tempuri.org/webGetCartItembyID" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <soap:operation soapAction="http://tempuri.org/webGetListaTipoPois" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <soap:operation soapAction="http://tempuri.org/webGetListaPois" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <soap:operation soapAction="http://tempuri.org/webPesquisaPois" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <soap:operation soapAction="http://tempuri.org/GetChildsPoi" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <soap:operation soapAction="http://tempuri.org/webGetListaCartas" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <soap:operation soapAction="http://tempuri.org/webGetListaLayouts" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ws_dicofreSoap12" type="tns:ws_dicofreSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegionalSettings">
+      <soap12:operation soapAction="http://tempuri.org/RegionalSettings" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <soap12:operation soapAction="http://tempuri.org/testeShell" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <soap12:operation soapAction="http://tempuri.org/getDocumentPDF_String" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <soap12:operation soapAction="http://tempuri.org/getDocumentPDF" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <soap12:operation soapAction="http://tempuri.org/GetLayout" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transform">
+      <soap12:operation soapAction="http://tempuri.org/Transform" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapMetricToMap">
+      <soap12:operation soapAction="http://tempuri.org/TransformMapMetricToMap" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <soap12:operation soapAction="http://tempuri.org/GetMapCenter" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <soap12:operation soapAction="http://tempuri.org/MapRefresh" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransformMapToMapMetric">
+      <soap12:operation soapAction="http://tempuri.org/TransformMapToMapMetric" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <soap12:operation soapAction="http://tempuri.org/GetMetricCoordinateSystem" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <soap12:operation soapAction="http://tempuri.org/GetCoordinateSystem" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <soap12:operation soapAction="http://tempuri.org/GetMapa" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsImage2Map">
+      <soap12:operation soapAction="http://tempuri.org/GetActualViewCoordsImage2Map" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualViewCoordsMap2Image">
+      <soap12:operation soapAction="http://tempuri.org/GetActualViewCoordsMap2Image" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <soap12:operation soapAction="http://tempuri.org/GetActualView" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <soap12:operation soapAction="http://tempuri.org/TestMGConnect" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <soap12:operation soapAction="http://tempuri.org/getLayers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <soap12:operation soapAction="http://tempuri.org/setLayerVisibility" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <soap12:operation soapAction="http://tempuri.org/getLayerVisibility" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <soap12:operation soapAction="http://tempuri.org/TestHistoryLog" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <soap12:operation soapAction="http://tempuri.org/getGeometryCentroidById" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <soap12:operation soapAction="http://tempuri.org/getGeometryById" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <soap12:operation soapAction="http://tempuri.org/getGeometryWKTById" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <soap12:operation soapAction="http://tempuri.org/getGeometryMBRById" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <soap12:operation soapAction="http://tempuri.org/getDistritos" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <soap12:operation soapAction="http://tempuri.org/getDistrito" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <soap12:operation soapAction="http://tempuri.org/getConcelhos" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <soap12:operation soapAction="http://tempuri.org/getConcelho" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <soap12:operation soapAction="http://tempuri.org/getFreguesias" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <soap12:operation soapAction="http://tempuri.org/getFreguesia" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjects">
+      <soap12:operation soapAction="http://tempuri.org/getObjects" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectsEx">
+      <soap12:operation soapAction="http://tempuri.org/getObjectsEx" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getObjectOnTop">
+      <soap12:operation soapAction="http://tempuri.org/getObjectOnTop" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <soap12:operation soapAction="http://tempuri.org/HelloWorld" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <soap12:operation soapAction="http://tempuri.org/TestaBaseDados" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaInstrumentos" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaIGTitem" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaCartografia" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <soap12:operation soapAction="http://tempuri.org/webGetIGTitembyID" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <soap12:operation soapAction="http://tempuri.org/webGetCartItembyID" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaTipoPois" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaPois" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <soap12:operation soapAction="http://tempuri.org/webPesquisaPois" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <soap12:operation soapAction="http://tempuri.org/GetChildsPoi" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaCartas" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <soap12:operation soapAction="http://tempuri.org/webGetListaLayouts" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ws_dicofreHttpGet" type="tns:ws_dicofreHttpGet">
+    <http:binding verb="GET"/>
+    <wsdl:operation name="RegionalSettings">
+      <http:operation location="/RegionalSettings"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <http:operation location="/testeShell"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <http:operation location="/getDocumentPDF_String"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <http:operation location="/getDocumentPDF"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <http:operation location="/GetLayout"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <http:operation location="/GetMapCenter"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <http:operation location="/MapRefresh"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <http:operation location="/GetMetricCoordinateSystem"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <http:operation location="/GetCoordinateSystem"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <http:operation location="/GetMapa"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <http:operation location="/GetActualView"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <http:operation location="/TestMGConnect"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <http:operation location="/getLayers"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <http:operation location="/setLayerVisibility"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <http:operation location="/getLayerVisibility"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <http:operation location="/TestHistoryLog"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <http:operation location="/getGeometryCentroidById"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <http:operation location="/getGeometryById"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <http:operation location="/getGeometryWKTById"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <http:operation location="/getGeometryMBRById"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <http:operation location="/getDistritos"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <http:operation location="/getDistrito"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <http:operation location="/getConcelhos"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <http:operation location="/getConcelho"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <http:operation location="/getFreguesias"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <http:operation location="/getFreguesia"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <http:operation location="/TestaBaseDados"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <http:operation location="/webGetListaInstrumentos"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <http:operation location="/webGetListaIGTitem"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <http:operation location="/webGetListaCartografia"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <http:operation location="/webGetIGTitembyID"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <http:operation location="/webGetCartItembyID"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <http:operation location="/webGetListaTipoPois"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <http:operation location="/webGetListaPois"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <http:operation location="/webPesquisaPois"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <http:operation location="/GetChildsPoi"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <http:operation location="/webGetListaCartas"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <http:operation location="/webGetListaLayouts"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ws_dicofreHttpPost" type="tns:ws_dicofreHttpPost">
+    <http:binding verb="POST"/>
+    <wsdl:operation name="RegionalSettings">
+      <http:operation location="/RegionalSettings"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testeShell">
+      <http:operation location="/testeShell"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF_String">
+      <http:operation location="/getDocumentPDF_String"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDocumentPDF">
+      <http:operation location="/getDocumentPDF"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLayout">
+      <http:operation location="/GetLayout"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapCenter">
+      <http:operation location="/GetMapCenter"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MapRefresh">
+      <http:operation location="/MapRefresh"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetricCoordinateSystem">
+      <http:operation location="/GetMetricCoordinateSystem"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinateSystem">
+      <http:operation location="/GetCoordinateSystem"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMapa">
+      <http:operation location="/GetMapa"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetActualView">
+      <http:operation location="/GetActualView"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestMGConnect">
+      <http:operation location="/TestMGConnect"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayers">
+      <http:operation location="/getLayers"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setLayerVisibility">
+      <http:operation location="/setLayerVisibility"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLayerVisibility">
+      <http:operation location="/getLayerVisibility"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestHistoryLog">
+      <http:operation location="/TestHistoryLog"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryCentroidById">
+      <http:operation location="/getGeometryCentroidById"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryById">
+      <http:operation location="/getGeometryById"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryWKTById">
+      <http:operation location="/getGeometryWKTById"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGeometryMBRById">
+      <http:operation location="/getGeometryMBRById"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistritos">
+      <http:operation location="/getDistritos"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDistrito">
+      <http:operation location="/getDistrito"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelhos">
+      <http:operation location="/getConcelhos"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConcelho">
+      <http:operation location="/getConcelho"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesias">
+      <http:operation location="/getFreguesias"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFreguesia">
+      <http:operation location="/getFreguesia"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TestaBaseDados">
+      <http:operation location="/TestaBaseDados"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaInstrumentos">
+      <http:operation location="/webGetListaInstrumentos"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaIGTitem">
+      <http:operation location="/webGetListaIGTitem"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartografia">
+      <http:operation location="/webGetListaCartografia"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetIGTitembyID">
+      <http:operation location="/webGetIGTitembyID"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetCartItembyID">
+      <http:operation location="/webGetCartItembyID"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaTipoPois">
+      <http:operation location="/webGetListaTipoPois"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaPois">
+      <http:operation location="/webGetListaPois"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webPesquisaPois">
+      <http:operation location="/webPesquisaPois"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildsPoi">
+      <http:operation location="/GetChildsPoi"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaCartas">
+      <http:operation location="/webGetListaCartas"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="webGetListaLayouts">
+      <http:operation location="/webGetListaLayouts"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ws_dicofre">
+    <wsdl:port name="ws_dicofreSoap" binding="tns:ws_dicofreSoap">
+      <soap:address location="http://g10.phinformatica.pt/g10ws/g10ws.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="ws_dicofreSoap12" binding="tns:ws_dicofreSoap12">
+      <soap12:address location="http://g10.phinformatica.pt/g10ws/g10ws.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="ws_dicofreHttpGet" binding="tns:ws_dicofreHttpGet">
+      <http:address location="http://g10.phinformatica.pt/g10ws/g10ws.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="ws_dicofreHttpPost" binding="tns:ws_dicofreHttpPost">
+      <http:address location="http://g10.phinformatica.pt/g10ws/g10ws.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
