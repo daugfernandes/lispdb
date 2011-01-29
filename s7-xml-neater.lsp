@@ -27,7 +27,7 @@
 (defvar *document* nil 
   "Parsed document root node.")
 
-(defvar *tree* nil      
+(defvar *tree* nil
   "Stack of elements. (car *tree*) -> element in use.")
 
 (defvar *state* nil
@@ -43,9 +43,6 @@
 
 (defconstant *eol* #\Linefeed
   "End-of-line character.")
-
-(defconstant *void-chars* (string #\Return)
-  "Characters that should be ignored.")
 
 (defconstant *start-tag* (character "<"))
 (defconstant *end-tag* (character ">"))
@@ -91,18 +88,30 @@
   )
 )
 
+
+(defmacro char<-p     (c) `(char= ,c #\<))
+(defmacro char>-p     (c) `(char= ,c #\>))
+(defmacro char/-p     (c) `(char= ,c #\/))
+(defmacro char=-p     (c) `(char= ,c #\=))
+(defmacro char\"-p    (c) `(char= ,c #\"))
+(defmacro space-p     (c) `(char= ,c #\Space))
+
 ;; states
 
 (defun i-state (c)
   "Initial state. Nothing interesting happened, yet."
   (if *debuging* (print "i"))
   (cond
-   ((char= c *start-tag*)        ; ok! first char's a < , good!!
+
+   ((char<-p c)                     ; ok! first char's a < , good!!
     (setf *state* #'t1-state))
-   ((char= c #\Space)
+
+   ((space-p c)
     (setf *state* #'i-state))
-   (t                            ; oopd! no good!!
+
+   (t                               ; oopd! no good!!
     (error "Invalid start!"))
+
    )
   )
 
@@ -110,13 +119,17 @@
   "TAG starting."
   (if *debuging* (print "t1"))
   (cond
-   ((char= c *end-tag*)          ; <> is not a very good TAG!
+
+   ((char>-p c)                   ; <> is not a very good TAG!
     (error "Invalid start for a TAG."))
-   ((char= c #\/)                ; Closing TAG starting
+
+   ((char/-p c)                   ; Closing TAG starting
     (setf *state* #'t2a-state))
-   (t                            ; TAG's name starting
+
+   (t                             ; TAG's name starting
     (add-char c)
     (setf *state* #'t4-state))
+
    )
   )
 
@@ -124,7 +137,8 @@
   "/TAG like."
   (if *debuging* (print "t2a"))
   (cond
-    ((char= c *end-tag*)
+
+    ((char>-p c)
      (setf *current-string* (make-empty-string))
      (setf *state* #'i-state))))
 
@@ -132,11 +146,14 @@
   "Closing TAG starting."
   (if *debuging* (print "t2"))
   (cond
-   ((char= c *end-tag*)            ; TAG's name complete.
+
+   ((char>-p c)            ; TAG's name complete.
     (pop *tree*)
     (setf *state* #'t3-state))
+
    (t
     (error "Invalid char after ending /."))
+
    )
   )
 
@@ -151,12 +168,12 @@
   (if *debuging* (print "t4"))
   (cond
 
-   ((char= c #\Space)            ; TAG's name completed maybe a ATTR follows
+   ((space-p c)            ; TAG's name completed maybe a ATTR follows
     (make-node (list :tag))
     (use-chars-read)
     (setf *state* #'t5-state))
 
-   ((char= c *end-tag*)          ; TAG's name completed
+   ((char>-p c)                ; TAG's name completed
     (make-node (list :tag))
     (use-chars-read)
     (setf *state* #'t6-state))
@@ -164,68 +181,78 @@
    (t
     (add-char c))
 
-   )
   )
+)
 
 (defun t5-state (c)
   "Maybe Attributes."
   (if *debuging* (print "t5"))
   (cond
-   ((char= c #\/)                  ; closing TAG
+
+   ((char/-p c)                        ; closing TAG
     (setf *state* #'t2-state))
-   ((char= c *end-tag*)            ; closed TAG
+
+   ((char>-p c)                        ; closed TAG
     (setf *state* #'t6-state))
-   ((char= c #\Space))             ; do nothing
-   (t                              ; attribute's name starting
+
+   ((space-p c)
+    (setf *state* #'t5-state))         ; do nothing
+
+   (t                                  ; attribute's name starting
     (add-char c)
     (setf *state* #'t9-state))
-   )
+
   )
+)
 
 (defun t9-state (c)
   "Attribute."
   (if *debuging* (print "t9"))
   (cond
-    ((char= c #\=)                 ; attribute's name complete, starting value
+
+    ((char=-p c)                   ; attribute's name complete, starting value
      (make-node (list :attr))
      (use-chars-read)
      (setf *state* #'t10-state))
-    ((char= c #\Space)             ; valueless attribute
+
+    ((space-p c)                   ; valueless attribute
      (make-node (list :attr))
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t5-state))
-    ((or (char= c *end-tag*) (char= c #\/))
+
+    ((or (char>-p c) (char/-p c))
      (make-node (list :attr))
      (use-chars-read)
      (pop *tree*))
+
     (t
      (add-char c))
-    )
-  )
+   )
+)
 
 (defun t10-state (c)
   "Attribute's value"
   (if *debuging* (print "t10"))
   (cond
 
-    ((char= c #\")
+    ((char\"-p c)
      (setf *state* #'t11-state))
 
-    ((char= c *end-tag*)
+    ((char>-p c)
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t6-state))
 
-    ((or (char= c #\/))
+    ((char/-p c)
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t2-state))
 
-    ((char= c *start-tag*)
+    ((char<-p c)
      (error "Invalid inline v in attr value."))
 
-    ((char= c #\Space)
+    ((space-p c)
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t5-state))
@@ -240,10 +267,12 @@
   "Attribute's value between double-quotes."
   (if *debuging* (print "t11"))
   (cond
-    ((char= c #\")
+
+    ((char\"-p c)
      (use-chars-read)
      (pop *tree*)
      (setf *state* #'t5-state))
+
     (t
      (add-char c))))
 
@@ -251,31 +280,41 @@
   "Inner body of element starting."
   (if *debuging* (print "t6"))
   (cond 
-   ((char= c *start-tag*)
+
+   ((char<-p c)
     (setf *current-string* (make-empty-string))
     (setf *state* #'t1-state))
-   ((char= c #\Space))
+
+   ((space-p c)
+    (setf *state* #'t6-state))
+
    (t
     (add-char c)
     (setf *state* #'t8-state))
+
    )
-  )
+)
 
 (defun t8-state (c)
   "Inner body of element."
   (if *debuging* (print "t8"))
   (cond
-   ((char= c #\/)
+
+   ((char/-p c)
     (setf *state* #'t2-state))
-   ((char= c *start-tag*)
+
+   ((char<-p c)
     (use-chars-read)
     (setf *state* #'t1-state))
-   ((char= c *end-tag*)
+
+   ((char>-p c)
     (error "Invalid inline >."))
+
    (t
     (add-char c))
-   )
+
   )
+)
 
 (defun make-node (content)
   "Creates a new node." 
