@@ -26,7 +26,7 @@
 
 
 (defvar *document* nil 
-  "Parsed document root node.")
+  "List-type XML document.")
 
 (defvar *tree* nil
   "Stack of elements. (car *tree*) -> element in use.")
@@ -40,23 +40,14 @@
 (defvar *ns* nil
   "Namespace waiting to be used.")
 
-(defvar *debuging* t)
+(defvar *debuging* t
+  "Flag for debuging prints.")
 
 (defvar *definition* nil
-  "First line <?XML doen't end normaly with />")
-
-(defconstant *escaped-chars* "\\{}*"
-  "Characters that need special prefixing.")
+  "Flag that will handle first line '<?XML' that doesn't end normaly with />")
 
 (defconstant *eol* #\Linefeed
   "End-of-line character.")
-
-(defconstant *start-tag* (character "<"))
-(defconstant *end-tag* (character ">"))
-
-(defun escaped-char-p (c)
-  (not (null (search (string c) *escaped-chars*)))
-)
 
 (defun parse-stream (stream)
   "Parse a stream of characters."
@@ -98,16 +89,15 @@
 
 ;; predicates
 
-(defmacro char<-p     (c) `(char= ,c #\<))
-(defmacro char>-p     (c) `(char= ,c #\>))
-(defmacro char/-p     (c) `(char= ,c #\/))
-(defmacro char=-p     (c) `(char= ,c #\=))
-(defmacro char\:-p     (c) `(char= ,c #\:))
-(defmacro char\"-p    (c) `(char= ,c #\"))
-(defmacro space-p     (c) `(char= ,c #\Space))
+(defmacro char<-p  (c) `(char= ,c #\<))
+(defmacro char>-p  (c) `(char= ,c #\>))
+(defmacro char/-p  (c) `(char= ,c #\/))
+(defmacro char=-p  (c) `(char= ,c #\=))
+(defmacro char\:-p (c) `(char= ,c #\:))
+(defmacro char\"-p (c) `(char= ,c #\"))
+(defmacro space-p  (c) `(char= ,c #\Space))
 
-(defmacro trc (m)
- `(if *debuging* (print ,m))) 
+(defmacro trc (m) `(if *debuging* (print ,m))) 
 
 ;; states
 
@@ -119,10 +109,10 @@
    ((char<-p c)                     ; ok! first char's a < , good!!
     (setf *state* #'t1-state))
 
-   ((space-p c)
+   ((space-p c)                     ; nothing to do.
     (setf *state* #'i-state))
 
-   (t                               ; oopd! no good!!
+   (t                               ; oops! no good!!
     (error "Invalid start!"))
 
    )
