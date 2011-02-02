@@ -146,9 +146,19 @@
   (cond
 
     ((char>-p c)
+     (if 
+       (not (string= (cadar *tree*) *current-string*))
+       (error (format t "Mismatch: closing tag /~s with /~s" (cadar *tree*) *current-string*)))
      (setf *current-string* (make-empty-string))
      (pop *tree*)
-     (setf *state* #'i-state))))
+     (setf *state* #'i-state))
+
+   ((char= c #\:)
+    (setf *ns* *current-string*)
+    (setf *current-string* (make-empty-string)))
+
+    (t
+     (add-char c))))
 
 (defun t2-state (c)
   "Closing TAG starting."
@@ -187,9 +197,20 @@
 	(setf *ns* (make-empty-string))))
     (setf *state* #'t5-state))
 
-   ((char= c #\:)
+   ((char\:-p c)
     (setf *ns* *current-string*)
     (setf *current-string* (make-empty-string)))
+
+   ((char/-p c)            ; TAG's name completed
+    (make-node (list :tag))
+    (use-chars-read)
+     (if
+      (> (length *ns*) 0)
+      (progn
+	(push-tail :ns (car *tree*))
+	(push-tail *ns* (car *tree*))
+	(setf *ns* (make-empty-string))))
+    (setf *state* #'t5-state))
 
    ((char>-p c)                ; TAG's name completed
     (make-node (list :tag))
