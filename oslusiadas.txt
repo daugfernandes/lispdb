@@ -1,19 +1,4 @@
-Os Lusiadas
-by
-Luis Vaz de Camoes
-
-FullBooks.com homepage
-
-This etext produced by Maria Helena Moreira Rodriques and Victor Calha
-
-This Etext is in Portuguese
-
-http://www.fullbooks.com/Os-Lus-adas-Os-Lusiadas.html
-
-Luís Vaz de Camões
-Os Lusíadas
-
-Canto Primeiro
+*
 
 1
 As armas e os barões assinalados,
@@ -1077,8 +1062,7 @@ Onde terá segura a curta vida,
 Que não se arme, e se indigne o Céu sereno
 Contra um bicho da terra tão pequeno?
 
-
-Canto Segundo
+*
 
 1
 Já neste tempo o lúcido Planeta,
@@ -2209,7 +2193,7 @@ O desejo de um nome avantajado,
 Mais razão há que queira eterna glória
 Quem faz obras tão dignas de memória."
 
-Canto Terceiro
+*
 
 1
 Agora tu, Calíope, me ensina 
@@ -3641,7 +3625,7 @@ Para quem tem de amor experiência;
 Mas antes, tendo livre a fantasia,
 Por muito mais culpado o julgaria.
 
-Canto Quarto
+*
 
 1
 "Depois de procelosa tempestade, 
@@ -4683,7 +4667,7 @@ Por fogo, ferro, água, calma e frio,
 Deixa intentado a humana geração.
 Mísera sorte, estranha condição!" -
 
-Canto Quinto
+*
 
 1
 "Estas sentenças tais o velho honrado
@@ -5685,7 +5669,7 @@ Ninguém a grandes obras sempre o peito,
 Que por esta, ou por outra qualquer via,
 Não perderá seu preço, e sua valia.
 
-Canto Sexto
+*
 
 1
 Não sabia em que modo festejasse 
@@ -6676,7 +6660,7 @@ Direito, e não de afeitos ocupado,
 Subirá (como deve) a ilustre mando,
 Contra vontade sua, e não rogando.
 
-Canto Sétimo
+*
 
 1
 Já se viam chegados junto à terra, 
@@ -7548,7 +7532,7 @@ Me dobrarão a fúria concedida,
 Enquanto eu tomo alento descansado,
 Por tornar ao trabalho, mais folgado.
 
-Canto Oitavo
+*
 
 1
 Na primeira figura se detinha
@@ -8558,7 +8542,7 @@ Se dedicam, mil vezes ouvireis
 Que corrompe este encantador, e ilude; 
 Mas não sem cor, contudo, de virtude.
 
-Canto Nono
+*
 
 1
 Tiveram longamente na cidade, 
@@ -9510,7 +9494,7 @@ Que quem quis sempre pôde; e numerados
 Sereis entre os Heróis esclarecidos, 
 E nesta Ilha de Vénus recebidos.
 
-Canto Décimo
+*
 
 1 
 Mas já o claro amador da Larisséia
