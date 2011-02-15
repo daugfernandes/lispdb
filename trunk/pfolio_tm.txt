@@ -1,0 +1,25 @@
+; pfolio
+;
+; Tabela criada por António Dias (ammdias@gmail.com)
+;
+; Valida strings no formato 0^n 1^n 0^n
+; estado inicial -> p
+; estado final   -> f
+;
+
+p 0 q X r
+p Y t Y r
+q 0 q 0 r
+q 1 r Y r
+q Y q Y r
+r 0 s Z l
+r 1 r 1 r
+r Z r Z r
+s 0 s 0 l
+s 1 s 1 l
+s X p X r
+s Y s Y l
+s Z s Z l
+t Y t Y r
+t Z t Z r
+t B f B l

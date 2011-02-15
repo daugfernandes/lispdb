@@ -1,0 +1,18 @@
+; af5
+;
+; Tabela criada por António Dias (ammdias@gmail.com)
+;
+; entrada $nnnnn em que nnnnn é um numero binário
+; soma 1 ao número
+
+q0 $ q0 $ r
+q0 0 q0 0 r
+q0 1 q0 1 r
+q0 B q1 B l
+q1 $ q1 1 l
+q1 0 q2 1 l
+q1 1 q1 0 l
+q1 B qf B l
+q2 $ qf B l
+q2 0 q2 0 l
+q2 1 q2 1 l
