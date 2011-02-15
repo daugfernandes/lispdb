@@ -9,6 +9,7 @@ r z r z r
 s 0 s 0 r
 s 1 s 1 r
 s x p x r
+p 0 q x r
 s y s y r
 s z s z r
 t y t y r
