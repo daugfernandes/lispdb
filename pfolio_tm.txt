@@ -1,6 +1,6 @@
 ; pfolio
 ;
-; Tabela criada por António Dias (ammdias@gmail.com)
+; Tabela criada por AntÃ³nio Dias (ammdias@gmail.com)
 ;
 ; Valida strings no formato 0^n 1^n 0^n
 ; estado inicial -> p

@@ -1,10 +1,10 @@
 ;;;  titm - the incredible turing machine
 ;;
-;;   Uma m�quina de turing 
+;;   Uma mÃ¡quina de turing 
 ;;
 ;;   a partir da ideia do meu amigo e colega na 
-;;   Licenciatura em Inform�tica na Universidade Aberta 
-;;   Ant�nio Dias
+;;   Licenciatura em InformÃ¡tica na Universidade Aberta 
+;;   AntÃ³nio Dias
 ;;
 ;;   Copyright (c) 2011  David Fernandes
 ;;                       <daugfernandes@aim.com>
@@ -26,26 +26,26 @@
 ;;   How to:
 ;;   ======
 ;;
-;;   1 - criar um ficheiro de texto com a defini��o da m�quina e tabela de transi��es
+;;   1 - criar um ficheiro de texto com a definiÃ§Ã£o da mÃ¡quina e tabela de transiÃ§Ãµes
 ;;
-;;          linha de defini��o da m�quina:
+;;          linha de definiÃ§Ã£o da mÃ¡quina:
 ;;
 ;;          # estado-inicial simbolo-blank estado-final [estado-final-n ...] 
 ;;          
-;;          linha de transi��o
-;;          (uma transi��o � um tuplo com 5 elementos separados por espa�o:
+;;          linha de transiÃ§Ã£o
+;;          (uma transiÃ§Ã£o Ã© um tuplo com 5 elementos separados por espaÃ§o:
 ;;             estado actual      (string)
-;;             s�mbolo de entrada (char)
+;;             sÃ­mbolo de entrada (char)
 ;;             estado seguinte    (string)
-;;             s�mbolo de sa�da   (char)
-;;             direc��o da cabe�a ("r" ou "l")
+;;             sÃ­mbolo de saÃ­da   (char)
+;;             direcÃ§Ã£o da cabeÃ§a ("r" ou "l")
 ;;    
-;;          (linhas iniciadas com ; s�o ignoradas e podem ser utilizadas 
-;;           para inserir coment�rios)
+;;          (linhas iniciadas com ; sÃ£o ignoradas e podem ser utilizadas 
+;;           para inserir comentÃ¡rios)
 ;;
-;;   2 - invocar a fun��o test com os seguintes argumentos:
+;;   2 - invocar a funÃ§Ã£o test com os seguintes argumentos:
 ;;             string a testar
-;;             nome do ficheiro com a tabela de transi��es
+;;             nome do ficheiro com a tabela de transiÃ§Ãµes
 ;;             estado inicial
 ;;             estado final
 ;;             
@@ -91,7 +91,7 @@
     
     ; Main loop
 
-    ; `delta� will get the 3 elements tuple of the right hand of the transition
+    ; `deltaÂ´ will get the 3 elements tuple of the right hand of the transition
     ; a complete transition is a 5 elements tuple:
     ;    left-hand  (from-state input-symbol)
     ;    right-hand (to-state output-symbol direction)
@@ -173,12 +173,12 @@
 
   `(let ((h (gethash (transition-from ,tr) ,ta)))
      (if (not (null (cadr h)))
-       (error (format t "Erro na linha [~a]: transi��o [~a] duplicada." ,k ,tr))
+       (error (format t "Erro na linha [~a]: transiÃ§Ã£o [~a] duplicada." ,k ,tr))
        (setf (gethash (transition-from ,tr) ,ta) (transition-to ,tr)))))
 
 ;;----------------------------------------------------------------------
 (defmacro transition (l)
-  "Gets a 5 elements list `L� and convert [1] and [4] to chars."
+  "Gets a 5 elements list `LÂ´ and convert [1] and [4] to chars."
   `(list 
      (car ,l) 
      (character (cadr ,l))
@@ -188,12 +188,12 @@
 
 ;;----------------------------------------------------------------------
 (defmacro transition-from (tr)
-  "`From� part of a transition: (state-from input-symbol)."
+  "`FromÂ´ part of a transition: (state-from input-symbol)."
   `(list (car ,tr) (cadr ,tr)))
 
 ;;----------------------------------------------------------------------
 (defmacro transition-to (tr)
-  "`To� part of a transition: (state-to output-symbol direction."
+  "`ToÂ´ part of a transition: (state-to output-symbol direction."
   `(cddr ,tr))
 
 ;;----------------------------------------------------------------------
@@ -261,7 +261,7 @@
 
 ;;----------------------------------------------------------------------
 (defun has (L element eqf)
-  "Search `L� for `element�."
+  "Search `LÂ´ for `elementÂ´."
   (if (null L)
       nil
       (if
@@ -273,7 +273,7 @@
 ;;                            string-related utilities
 ;;======================================================================
 (defun replicate (s n)
-  "Replicates string `s� `n�times."
+  "Replicates string `sÂ´ `nÂ´times."
   (if (<= n 0)
       ""
       (concatenate 'string s (replicate s (- n 1))))) 

@@ -1,9 +1,9 @@
 ; af5
 ;
-; Tabela criada por António Dias (ammdias@gmail.com)
+; Tabela criada por AntÃ³nio Dias (ammdias@gmail.com)
 ;
-; entrada $nnnnn em que nnnnn é um numero binário
-; soma 1 ao número
+; entrada $nnnnn em que nnnnn Ã© um numero binÃ¡rio
+; soma 1 ao nÃºmero
 
 # q0 B qf
 
