@@ -7,6 +7,8 @@
 ; estado final   -> f
 ;
 
+# p B f
+
 p 0 q X r
 p Y t Y r
 q 0 q 0 r

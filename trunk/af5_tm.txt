@@ -5,6 +5,8 @@
 ; entrada $nnnnn em que nnnnn é um numero binário
 ; soma 1 ao número
 
+# q0 B qf
+
 q0 $ q0 $ r
 q0 0 q0 0 r
 q0 1 q0 1 r
