@@ -53,6 +53,7 @@
 
 (defvar *delta* nil)
 (defvar *start-state* nil)
+(defvar *head-moves* nil)
 
 (defvar *end-states* nil)
 (defvar *cur-state* nil)
@@ -75,10 +76,10 @@
 
   (let* ((idx 1))                         ; head position
 
-    (setf *delta* (make-hash-table :test #'equalp))
-    (setf *previous-states* (make-hash-table :test #'equalp))
-
-    (setf *cur-state* (delta-from-file delta-file)
+    (setf *delta* (make-hash-table :test #'equalp)
+	  *previous-states* (make-hash-table :test #'equalp)
+	  *head-moves* 0
+	  *cur-state* (tm-from-file delta-file)
 		 			  ; read a file with the rm definition
 					  ; and sets startstate
 	  tape (append                    ; adds BLANKS to both ends of 
@@ -111,6 +112,8 @@
 	 
 	 (setf *cur-state* (delta-state-to delta)) ; updates state
 
+	 (incf *head-moves*)
+
 	 (if 
 	     
 	     (head-right-p (delta-direction delta))
@@ -131,12 +134,12 @@
 	 (if                              ; tests for final states
 	     (has *end-states* (delta-state-to delta) #'equal)
 	     (return 
-	      (format t "Yup! [~a] is a good string!~%~%   Tape: [~a]~%   Head: ~a" string tape (+ 1 idx)))))))))
+	      (format t "Yup! [~a] is a good string!~%~%   Tape: [~a]~%   Head: [~a]~%   Final state: [~a]~%   Head moves: [~a]~%~%" string tape (+ 1 idx) (delta-state-to delta) *head-moves*))))))))
 
 ;;======================================================================
 ;;                         file-read stuff
 ;;======================================================================
-(defun delta-from-file (filename)
+(defun tm-from-file (filename)
   "Builds the transitions table from a file."
   (let ((k 0)  ;line counter
 	(in (open filename :if-does-not-exist nil)))
@@ -256,121 +259,6 @@
     (list string)
     (append (list (subseq string 0 p)) (split (subseq string (+ 1 p)) separator))))
 
-;;======================================================================
-;;                         file-read stuff
-;;======================================================================
-(defun delta-from-file (filename)
-  "Builds the transitions table from a file."
-  (setf *delta* (make-hash-table :test #'equalp))
-  (let ((k 0)  ;line counter
-	(in (open filename :if-does-not-exist nil)))
-    (when in
-      (loop for line = (read-line in nil)
-	 while line do
-	   (parse-line line (incf k))))
-    (close in))
-  *start-state*)
-
-;;----------------------------------------------------------------------
-(defun parse-line (line k)
-  "Parse line and add a new transition to delta."
-  (let ((sline (split line #\Space)))
-    (if (> (length line) 0)
-	(if (not (char= (char line 0) #\;))
-	    (if (char= (char line 0) #\#)
-		(progn
-		    (setf *start-state* (cadr sline))
-		    (setf *blank-symbol* (caddr sline))
-		    (setf *end-states* (cdddr sline)))
-	        (add-transition k (transition sline) *delta*))))))
-
-;;======================================================================
-;;                     transition-related utilities
-;;======================================================================
-(defmacro add-transition (k tr ta)
-
-  "Adds transition `tr' to table `ta';
-   `k' is for debug purposes indicating the line number being processed." 
-
-  `(let ((h (gethash (transition-from ,tr) ,ta)))
-     (if (not (null (cadr h)))
-       (error (format t "Erro na linha [~a]: transição [~a] duplicada." ,k ,tr))
-       (setf (gethash (transition-from ,tr) ,ta) (transition-to ,tr)))))
-
-;;----------------------------------------------------------------------
-(defmacro transition (l)
-  "Gets a 5 elements list `L´ and convert [1] and [4] to chars."
-  `(list 
-     (car ,l) 
-     (character (cadr ,l))
-     (caddr ,l) 
-     (character (cadddr ,l))
-     (cadr (cdddr,l))))
-
-;;----------------------------------------------------------------------
-(defmacro transition-from (tr)
-  "`From´ part of a transition: (state-from input-symbol)."
-  `(list (car ,tr) (cadr ,tr)))
-
-;;----------------------------------------------------------------------
-(defmacro transition-to (tr)
-  "`To´ part of a transition: (state-to output-symbol direction."
-  `(cddr ,tr))
-
-;;----------------------------------------------------------------------
-(defun head-right-p (m)
-  "Just two predicates for head direction tests."
-  (equal m head-right))
-(defun head-left-p (m)
-  (equal m head-left))
-
-;;----------------------------------------------------------------------
-(defmacro delta-state-from (tr)
-  "A bunch of accessors to the elements of a transition tuple."
-  `(car ,tr))
-
-(defmacro delta-state-to (tr)
-  `(nth 0 ,tr))
-
-(defmacro delta-input-symbol (tr)
-  `(nth 1 ,tr))
-
-(defmacro delta-output-symbol (tr)
-  `(nth 1 ,tr))
-
-(defmacro delta-direction (tr)
-  `(nth 2 ,tr))
-
-;;======================================================================
-;;                            list-related utilities
-;;======================================================================
-(defun string-to-list (s)
-  "Returns a list of s's chars."
-  (loop for char across s collect char))
-  
-;;----------------------------------------------------------------------
-(defmacro push-tail (element L)
-  "Inserts `element' at the tail of list `L'."
-  `(if (null ,L)
-    (setf ,L (cons ,element nil))
-    (push-tail ,element (cdr ,L))))
-
-;;----------------------------------------------------------------------
-(defmacro pop-tail (L)
-  "Removes last element of list `L'".
-  `(if (null (cdr ,L))
-    (let ((tmp (car ,L)))
-      (setf ,L nil)
-      tmp)
-    (pop-tail (cdr ,L))) )
-
-;;----------------------------------------------------------------------
-(defun tail (L)
-  "Last element of list `L'".
-  (if (null (cdr L))
-    L
-    (tail (cdr L))))
-
 ;;----------------------------------------------------------------------
 (defun has (L element eqf)
   "Search `L´ for `element´."
@@ -380,10 +268,16 @@
 	  (funcall eqf element (car L))
 	  t
 	  (has (cdr L) element eqf))))
+	  
+;;======================================================================
+;;                            string-related utilities
+;;======================================================================
+(defun replicate (s n)
+  "Replicates string `s´ `n´times."
+  (if (<= n 0)
+      ""
+      (concatenate 'string s (replicate s (- n 1))))) 
 
 ;;======================================================================
 
 (myversion)
-
-
-  
