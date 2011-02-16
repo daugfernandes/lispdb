@@ -1,27 +1,27 @@
 SOBRE O PARSER
 ==============
 
-O texto é composto por linhas de 0,1 ou mais carácteres separadas por cr, CRlf ou lf.
+O texto Ã© composto por linhas de 0,1 ou mais carÃ¡cteres separadas por cr, CRlf ou lf.
 
 As linhas podem ser dos seguintes tipos:
 
 A)
 
-Linha branca composta por 0, 1 ou mais espaços
+Linha branca composta por 0, 1 ou mais espaÃ§os
 
-B) Início de canto
+B) InÃ­cio de canto
 
 *
 
-Um asterisco seguido de 0, 1 ou mais expaços
+Um asterisco seguido de 0, 1 ou mais expaÃ§os
 
-C) Início de estrofe
+C) InÃ­cio de estrofe
 
-Um ou mais algarismos indicadores do número da estrofe. NOTA: não vai ser utilizado para efeitos de contagem de estrofes.
+Um ou mais algarismos indicadores do nÃºmero da estrofe. NOTA: nÃ£o vai ser utilizado para efeitos de contagem de estrofes.
 
 D)
 
-Carácteres não inicialmente numericos
+CarÃ¡cteres nÃ£o inicialmente numericos
 
 Verso
 
@@ -30,33 +30,33 @@ NOTA SOBRE VERSOS:
 
 " indica discurso directo:
 
-A parte do texto em discurso directo começa com " que podem ou não surgir no início de um verso e termina também com ".
+A parte do texto em discurso directo comeÃ§a com " que podem ou nÃ£o surgir no inÃ­cio de um verso e termina tambÃ©m com ".
 
 Quando o texto em discurso directo se prolonga por mais do que uma estrofes, cada estrofe do texto pode iniciar-se com ".
 
 Sublinho pode porque nem sempre acontece.
 
-É de supor correcto assumir que um texto em discurso directo,m portanto iniciado com ",m termina em " que não início de verso. Pelo que, em discurso directo, as " em início de estrofe são de ignorar.
+Ã de supor correcto assumir que um texto em discurso directo,m portanto iniciado com ",m termina em " que nÃ£o inÃ­cio de verso. Pelo que, em discurso directo, as " em inÃ­cio de estrofe sÃ£o de ignorar.
 
 NOTA ADICIONAL:
 
-Os vários versos de uma mesma estrofe econtram-se separados por apenas UM, cr, CRLf ou Lf, isto é, não hã linhas do tipo A entre dois versos da mesma estrofe.
+Os vÃ¡rios versos de uma mesma estrofe econtram-se separados por apenas UM, cr, CRLf ou Lf, isto Ã©, nÃ£o hÃ£ linhas do tipo A entre dois versos da mesma estrofe.
 
-Por outro lado, duas estrofes são separadas por uma ou mais linhas brancas do tipo A, e/ou, uma linha do tipo C.
+Por outro lado, duas estrofes sÃ£o separadas por uma ou mais linhas brancas do tipo A, e/ou, uma linha do tipo C.
 
 LRT
 
 Lista representativa do texto
 
-O resultado do PARSER ser'ã uma lista com a seguinte estrutura:
+O resultado do PARSER ser'Ã£ uma lista com a seguinte estrutura:
 
-*pontuação => {, . : ; - ? ( )}
+*pontuaÃ§Ã£o => {, . : ; - ? ( )}
 *palavra => (list palavra capitalizada)  ; palavra minusculizada
 
     Ex: (list "tagides" T)
     	(list "mandas-me" nil)
 
-*ocpalavra => (list pontuação palavra pontuação)
+*ocpalavra => (list pontuaÃ§Ã£o palavra pontuaÃ§Ã£o)
 
     Ex: (list nil (list "portanto" nil) ",")
      	(list "(" (list "depois" nil)   nil)
@@ -69,9 +69,9 @@ O resultado do PARSER ser'ã uma lista com a seguinte estrutura:
 
 *canto   => (list :canto (list *estrofe1 *estrofe2 ...))
 
-'- ' - hifen seguido de espaço indica inicio de discurso directo e pode ocorrer no fim de uma estrofe, iniciando-se o bloco em discurso directo na estrofe seguinte.
+'- ' - hifen seguido de espaÃ§o indica inicio de discurso directo e pode ocorrer no fim de uma estrofe, iniciando-se o bloco em discurso directo na estrofe seguinte.
 
 ' aparece como separador de palavra como por exemplo:
  co'os => com
- D'água => da
- n'água => na
+ D'Ã¡gua => da
+ n'Ã¡gua => na
