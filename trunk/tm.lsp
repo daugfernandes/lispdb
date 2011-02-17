@@ -1,10 +1,10 @@
 ;;;  titm - the incredible turing machine
 ;;
-;;   Uma mÃ¡quina de turing 
+;;   Uma máquina de turing 
 ;;
 ;;   a partir da ideia do meu amigo e colega na 
-;;   Licenciatura em InformÃ¡tica na Universidade Aberta 
-;;   AntÃ³nio Dias
+;;   Licenciatura em Informática na Universidade Aberta 
+;;   António Dias
 ;;
 ;;   Copyright (c) 2011  David Fernandes
 ;;                       <daugfernandes@aim.com>
@@ -26,7 +26,7 @@
 ;;   How to:
 ;;   ======
 ;;
-;;   1 - criar um ficheiro de texto com a definiÃ§Ã£o da mÃ¡quina e tabela de transiÃ§Ãµes
+;;   1 - criar um ficheiro de texto com a definição da máquina e tabela de transiÃ§Ãµes
 ;;
 ;;          linha de definiÃ§Ã£o da mÃ¡quina:
 ;;
@@ -197,11 +197,11 @@
   `(cddr ,tr))
 
 ;;----------------------------------------------------------------------
-(defun head-right-p (m)
+(defmacro head-right-p (m)
   "Just two predicates for head direction tests."
-  (equal m head-right))
-(defun head-left-p (m)
-  (equal m head-left))
+  `(equal ,m head-right))
+(defmacro head-left-p (m)
+  `(equal ,m head-left))
 
 ;;----------------------------------------------------------------------
 (defmacro delta-state-from (tr)
@@ -230,9 +230,7 @@
 ;;----------------------------------------------------------------------
 (defmacro push-tail (element L)
   "Inserts `element' at the tail of list `L'."
-  `(if (null ,L)
-    (setf ,L (cons ,element nil))
-    (push-tail ,element (cdr ,L))))
+  `(append ,L (cons ,element nil)))
 
 ;;----------------------------------------------------------------------
 (defmacro pop-tail (L)
@@ -241,14 +239,12 @@
     (let ((tmp (car ,L)))
       (setf ,L nil)
       tmp)
-    (pop-tail (cdr ,L))) )
+    (pop-tail (cdr ,L))))
 
 ;;----------------------------------------------------------------------
-(defun tail (L)
+(defmacro tail (L)
   "Last element of list `L'".
-  (if (null (cdr L))
-    L
-    (tail (cdr L))))
+  `(last ,L))
 
 ;;----------------------------------------------------------------------
 (defun split (string separator)
