@@ -70,7 +70,7 @@
 
 (defun myversion ()
   (nth-value 0 
-    (format t "~%~%~%titm - the incredible turing machine~3,8@Tv.0.0.1~%~%~%")))
+    (format t "~%~%~%titm - the incredible turing machine~3,8@Tv.1.0~%~%~%")))
 
 (defun test (string delta-file)
 
