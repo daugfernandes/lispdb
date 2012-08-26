@@ -1,3 +1,4 @@
+;	$Id$	
 ;;;  s7-db
 ;;
 ;;   Db
@@ -29,7 +30,7 @@
   (load "s7-db.lsp")
 )
 
-v
+
 ;; ======================================================================
 ;; Save/load relation to file
 ;
@@ -123,7 +124,7 @@ v
 
 ;; union-compatible tests if two relations have the same fields
 (defun union-compatible (relation1 relation2)
-  (equal                                ;compares both lists os field names
+  (equal                                ;compares both lists of field names
     (sort (fields relation1) #'STRING<) ;sort field names alphabeticaly
     (sort (fields relation2) #'STRING<) ;
   )
@@ -159,12 +160,13 @@ v
 ;      (:NOME "david" :IDADE 40)
 ;      (:NOME "manuel" :IDADE 33))
 (defun set-union (relation1 relation2)
-  (if (union-compatible relation1 relation2)
-    (unique-tuples 
-      (projection (append relation1 relation2) (fields relation1))
-    )
+  (assert (union-compatible relation1 relation2))
+  (unique-tuples 
+   (projection 
+    (append relation1 relation2) 
+    (fields relation1))
+   )
   )
-)
 
 (defun tuple-as-string (tuple)
   (format nil "~a" tuple)
@@ -212,31 +214,15 @@ v
 ;       => ((:NEWNAME "MANUEL" :ADDRESS "OAK ST" :CITY "CHICAGO" :AGE 43))
 ;
 (defun rename (relation from to)
-  (if (not (null relation))
-    (let ((newtuple))
-      (dolist (tuple relation)
-        (let 
-          ((proj)) 
-          (dolist (field tuple)
-            (setf proj
-              (append 
-                proj
-                (list
-                  (if (equal field from) to field)
-		)
-              )
-            )
-          )
-          (setf newtuple 
-            (append (list proj) newtuple)
-          )
-        )
-      )
-      newtuple
-    )
-  )
-)
-
+  (loop for record in relation
+     collect
+       (loop for item in record
+	  for y upfrom 1 ; combined with oddp predicate assures that only 
+			 ; item name will be renamed
+	  collect 
+	    (if 
+	     (and (oddp y) (eq item from)) 
+	     to item))))
 
 ;-----------------------------------------------------------------------
 ; Projection (pi)
@@ -255,26 +241,16 @@ v
           ((proj 
             (cons (list (car fields) 
                         (getf tuple (car fields)))
-                   nil)
-          ))
+                   nil)))
           (dolist (field (cdr fields))
             (setf 
               (cdr 
 	        (nthcdr 
 		  (1- (length (car proj))) 
-		  (car proj)
-		)
-	      )
-              (list field (getf tuple field))
-            )
-          )
-          (setf newtuple (append proj newtuple))
-        )
-      )
-      newtuple
-    )
-  )
-)
+		  (car proj)))
+              (list field (getf tuple field))))
+          (setf newtuple (append proj newtuple))))
+      newtuple)))
 
 ;;======================================================================
 ; USE CASES
