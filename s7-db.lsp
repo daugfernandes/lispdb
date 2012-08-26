@@ -234,23 +234,18 @@
 ;           (:NAME "DAVID" :AGE 44 :BIRTHDATE "2011-11-01"))
 ;
 (defun projection (relation fields)
-  (if (not (null relation))
-    (let ((newtuple))
-      (dolist (tuple relation)
-        (let 
-          ((proj 
-            (cons (list (car fields) 
-                        (getf tuple (car fields)))
-                   nil)))
-          (dolist (field (cdr fields))
-            (setf 
-              (cdr 
-	        (nthcdr 
-		  (1- (length (car proj))) 
-		  (car proj)))
-              (list field (getf tuple field))))
-          (setf newtuple (append proj newtuple))))
-      newtuple)))
+
+  (loop for record in relation
+     collect
+       (loop for select-field in fields
+	  append
+	    (loop for item in record
+	       and name = nil then item 
+	       for k upfrom 1 
+	       append 
+		 (if (and (eq select-field name) (find name fields) (evenp k)) 
+		     (list name item))))))
+
 
 ;;======================================================================
 ; USE CASES
