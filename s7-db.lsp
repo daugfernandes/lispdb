@@ -47,17 +47,12 @@
 
 ;;  returns fields list
 (defun fields (relation)
-  (let ((aux nil) 
-        (pcdr (car relation)))
-    (dolist (field (car relation))
-      (if (not (null (car pcdr)))
-        (setf aux (append aux (list (car pcdr))))
-      )
-      (setf pcdr (cdr (cdr pcdr)))
-    ) 
-    aux
-  )
-)
+  (remove-if #'(lambda (X) (null x))
+	     (loop for item in (car relation)
+		for k upfrom 1
+		collect
+		  (if (oddp k)
+		      item))))
 
 ;;=======================================================================
 ;                          PRIMITIVE OPERATORS
